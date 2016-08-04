@@ -117,7 +117,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void startMainActivity() {
-        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+        Intent intent = new Intent(SplashActivity.this, AuthorizeActivity.class);
         startActivity(intent);
         finish();
     }

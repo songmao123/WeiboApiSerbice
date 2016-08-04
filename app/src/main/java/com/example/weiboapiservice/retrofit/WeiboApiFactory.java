@@ -14,7 +14,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import utils.Constants;
+import com.example.weiboapiservice.utils.Constants;
 
 /**
  * Created by 青松 on 2016/8/4.
