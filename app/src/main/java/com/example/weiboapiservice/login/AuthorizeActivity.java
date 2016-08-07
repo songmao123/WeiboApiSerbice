@@ -6,7 +6,14 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.weiboapiservice.BaseActivity;
+import com.example.weiboapiservice.BaseApplication;
+import com.example.weiboapiservice.MainActivity;
 import com.example.weiboapiservice.R;
+import com.example.weiboapiservice.model.AccessToken;
+import com.example.weiboapiservice.model.AccountBean;
+import com.example.weiboapiservice.model.WeiboGroups;
+import com.example.weiboapiservice.model.WeiboUser;
+import com.example.weiboapiservice.retrofit.WeiboApiFactory;
 import com.example.weiboapiservice.utils.Constants;
 import com.sina.weibo.sdk.auth.AuthInfo;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
@@ -16,10 +23,18 @@ import com.sina.weibo.sdk.exception.WeiboException;
 
 import java.text.SimpleDateFormat;
 
+import retrofit2.adapter.rxjava.HttpException;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func2;
+import rx.schedulers.Schedulers;
+
 public class AuthorizeActivity extends BaseActivity {
 
     private SsoHandler mSsoHandler;
     private AuthInfo mAuthInfo;
+    private AccountBean mAccountBean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +57,13 @@ public class AuthorizeActivity extends BaseActivity {
         public void onComplete(Bundle bundle) {
             Oauth2AccessToken accessToken = Oauth2AccessToken.parseAccessToken(bundle);
             if (accessToken != null && accessToken.isSessionValid()) {
-                String date = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(
-                        new java.util.Date(accessToken.getExpiresTime()));
+                String date = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new java.util.Date(accessToken.getExpiresTime()));
                 String format = getString(R.string.weibosdk_demo_token_to_string_format_1);
                 Log.e("sqsong", "Auth Info: " + String.format(format, accessToken.getToken(), date));
+                AccessToken token = generateAccessToken(accessToken);
+                mAccountBean = new AccountBean();
+                mAccountBean.setAccessToken(token);
+                getUserInfos(token);
             }
         }
 
@@ -59,6 +77,67 @@ public class AuthorizeActivity extends BaseActivity {
             Toast.makeText(AuthorizeActivity.this, "Authorize Cancel!", Toast.LENGTH_SHORT).show();
         }
     };
+
+    private void getUserInfos(AccessToken token) {
+        /*Observable.zip(generateUserObservable(token), generateGroupsObservable(token), new Func2<WeiboUser, WeiboGroups, AccountBean>() {
+            @Override
+            public AccountBean call(WeiboUser weiboUser, WeiboGroups weiboGroups) {
+                mAccountBean.setUser(weiboUser);
+                mAccountBean.setGroups(weiboGroups);
+                return mAccountBean;
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Action1<AccountBean>() {
+            @Override
+            public void call(AccountBean accountBean) {
+                BaseApplication.getInstance().setAccountBean(accountBean);
+                Intent intent = new Intent(AuthorizeActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                int code = ((HttpException) throwable).code();
+                Toast.makeText(AuthorizeActivity.this, "Error Code: " + code, Toast.LENGTH_SHORT).show();
+            }
+        });*/
+
+        generateUserObservable(token).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Action1<WeiboUser>() {
+                @Override
+                public void call(WeiboUser weiboUser) {
+                    mAccountBean.setUser(weiboUser);
+                    BaseApplication.getInstance().setAccountBean(mAccountBean);
+                    Intent intent = new Intent(AuthorizeActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }, new Action1<Throwable>() {
+                @Override
+                public void call(Throwable throwable) {
+                    int code = ((HttpException) throwable).code();
+                    Toast.makeText(AuthorizeActivity.this, "Error Code: " + code, Toast.LENGTH_SHORT).show();
+                }
+            });
+    }
+
+    private Observable<WeiboUser> generateUserObservable(AccessToken token) {
+        return WeiboApiFactory.createWeiboApi(null, token.getAccess_token()).getUserInfo(token.getUid());
+    }
+
+    private Observable<WeiboGroups> generateGroupsObservable(AccessToken token) {
+        return WeiboApiFactory.createWeiboApi(null, token.getAccess_token()).getFriendGroups();
+    }
+
+    private AccessToken generateAccessToken(Oauth2AccessToken accessToken) {
+        AccessToken token = new AccessToken();
+        token.setUid(Long.parseLong(accessToken.getUid()));
+        token.setAccess_token(accessToken.getToken());
+        token.setExpires_in(accessToken.getExpiresTime());
+        token.setValidDate(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new java.util.Date(accessToken.getExpiresTime())));
+        token.setRefresh_token(accessToken.getRefreshToken());
+        return token;
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

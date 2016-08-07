@@ -31,7 +31,7 @@ public class WeiboApiFactory {
             @Override
             public Response intercept(Chain chain) throws IOException {
                 Request request = chain.request().newBuilder()
-                        .addHeader("Authorization", "Bearer " + token).build();
+                        .addHeader("Authorization", "OAuth2 " + token).build();
                 return chain.proceed(request);
             }
         });

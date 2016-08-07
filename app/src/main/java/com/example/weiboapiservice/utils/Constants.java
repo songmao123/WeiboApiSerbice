@@ -7,7 +7,7 @@ public class Constants {
 
     public static String BASE_URL_SPLASH = "http://news-at.zhihu.com/api/4/start-image/";
 
-    public static String BASE_URL_WEIBO = "http://news-at.zhihu.com/api/4/start-image";
+    public static String BASE_URL_WEIBO = "https://api.weibo.com/2/";
 
     public static String APP_KEY = "1295520310";
 

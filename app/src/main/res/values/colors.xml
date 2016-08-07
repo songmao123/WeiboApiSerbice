@@ -5,9 +5,13 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="colorWhite">#FFFFFF</color>
+    <color name="colorBlack">#000000</color>
     <color name="colorWhite_AA">#AAFFFFFF</color>
     <color name="colorWhite_CC">#CCFFFFFF</color>
     <color name="colorTransparentBlackBg">#AA000000</color>
     <color name="colorBlackBg_01">#AA17181A</color>
     <color name="colorBlackBg_02">#17181A</color>
+
+    <color name="color_v_grey">#CCCCCC</color>
+    <color name="color_v_yellow">#F1C40F</color>
 </resources>

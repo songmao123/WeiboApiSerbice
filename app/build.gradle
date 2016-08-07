@@ -1,12 +1,13 @@
 apply plugin: 'com.android.application'
+apply plugin: 'realm-android'
 
 repositories {
     mavenCentral() // jcenter() works as well because it pulls from Maven Central
 }
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.0"
 
     defaultConfig {
         applicationId "com.example.weiboapiservice"
@@ -47,4 +48,5 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp-urlconnection:3.4.1'
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:v1.8.8'
     compile 'jp.wasabeef:glide-transformations:2.0.1'
+    compile 'com.android.support:support-v4:24.0.0-beta1'
 }
