@@ -14,4 +14,12 @@
 
     <color name="color_v_grey">#CCCCCC</color>
     <color name="color_v_yellow">#F1C40F</color>
+
+    <color name="colorUserName">#F46200</color>
+    <color name="colorGrey">#828282</color>
+    <color name="colorNormalBlack">#333333</color>
+    <color name="colorNormalLinks">#507DAF</color>
+    <color name="colorStatusBg">#F7F7F7</color>
+    <color name="colorStatusWhiteBg">#FEFEFE</color>
+    <color name="colorLine">#E9E9E9</color>
 </resources>

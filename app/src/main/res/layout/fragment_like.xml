@@ -4,11 +4,6 @@
     android:layout_height="match_parent"
     tools:context="com.example.weiboapiservice.fragment.LikeFragment">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="LikeFragment"
-        android:textSize="20sp" />
+    <include layout="@layout/item_timeline_status" />
 
 </FrameLayout>

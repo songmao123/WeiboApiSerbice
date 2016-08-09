@@ -40,4 +40,8 @@ public class LikeFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
     }
+
+    public void onClick() {
+
+    }
 }
