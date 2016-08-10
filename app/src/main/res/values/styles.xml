@@ -25,4 +25,21 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="Style_Horizontal_Line_2Px">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">2px</item>
+        <item name="android:background">@color/colorLine</item>
+    </style>
+
+    <style name="Style_Horizontal_Line_1Px">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1px</item>
+        <item name="android:background">@color/colorLine</item>
+    </style>
+
+    <style name="Style_Vertical_Line">
+        <item name="android:layout_width">1px</item>
+        <item name="android:layout_height">20dp</item>
+        <item name="android:background">@color/colorLine</item>
+    </style>
 </resources>
