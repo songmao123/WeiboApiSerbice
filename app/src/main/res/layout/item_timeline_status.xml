@@ -133,8 +133,6 @@
         android:id="@+id/status_image_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:orientation="vertical"
         android:visibility="gone" />
 
@@ -194,6 +192,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
+            android:id="@+id/forward_ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -210,6 +209,7 @@
                 android:src="@drawable/ic_status_forward" />
 
             <TextView
+                android:id="@+id/forward_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -223,6 +223,7 @@
         <View style="@style/Style_Vertical_Line" />
 
         <LinearLayout
+            android:id="@+id/comment_ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -238,6 +239,7 @@
                 android:src="@drawable/ic_status_comment" />
 
             <TextView
+                android:id="@+id/comment_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -251,6 +253,7 @@
         <View style="@style/Style_Vertical_Line" />
 
         <LinearLayout
+            android:id="@+id/like_ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -266,6 +269,7 @@
                 android:src="@drawable/ic_status_like" />
 
             <TextView
+                android:id="@+id/like_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
