@@ -40,7 +40,7 @@ public class ImageShowUtil {
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams
                     (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             if (i > 0) {
-                layoutParams.setMargins(0, DensityUtil.dip2px(5), 0, 0);
+                layoutParams.setMargins(0, DensityUtil.dip2px(2), 0, 0);
             }
             linearLayout.setLayoutParams(layoutParams);
             for (int j = 0; j < imageParams.imagePerLine && i * imageParams.imagePerLine + j < totalSize ; j++) {
@@ -49,11 +49,15 @@ public class ImageShowUtil {
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams
                         (imageParams.imageWidth, imageParams.imageWidth);
                 if (j < 2) {
-                    params.setMargins(0, 0, DensityUtil.dip2px(5), 0);
+                    params.setMargins(0, 0, DensityUtil.dip2px(2), 0);
                 }
                 imageView.setLayoutParams(params);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                Glide.with(mContext).load(images.get(position).getThumbnail_pic()).centerCrop().crossFade().into(imageView);
+                String imageUrl = images.get(position).getThumbnail_pic();
+                if (imageUrl.contains("thumbnail")) {
+                    imageUrl = imageUrl.replace("thumbnail", "large");
+                }
+                Glide.with(mContext).load(imageUrl).centerCrop().crossFade().into(imageView);
                 linearLayout.addView(imageView);
             }
             container.addView(linearLayout);
@@ -72,23 +76,23 @@ public class ImageShowUtil {
             } else if (size == 2) {
                 imageParam.totalLine = 1;
                 imageParam.imagePerLine = 2;
-                imageParam.imageWidth = (tempWidth - DensityUtil.dip2px(5)) / 2;
+                imageParam.imageWidth = (tempWidth - DensityUtil.dip2px(2)) / 2;
             } else if (size == 3) {
                 imageParam.totalLine = 1;
                 imageParam.imagePerLine = 3;
-                imageParam.imageWidth = (tempWidth - DensityUtil.dip2px(5) * 2) / 3;
+                imageParam.imageWidth = (tempWidth - DensityUtil.dip2px(2) * 2) / 3;
             } else if (size == 4) {
                 imageParam.totalLine = 2;
                 imageParam.imagePerLine = 2;
-                imageParam.imageWidth = (tempWidth - DensityUtil.dip2px(5)) / 2;
+                imageParam.imageWidth = (tempWidth - DensityUtil.dip2px(2)) / 2;
             } else if (size == 5 || size == 6) {
                 imageParam.totalLine = 2;
                 imageParam.imagePerLine = 3;
-                imageParam.imageWidth = (tempWidth - DensityUtil.dip2px(5) * 2) / 3;
+                imageParam.imageWidth = (tempWidth - DensityUtil.dip2px(2) * 2) / 3;
             } else if (size  == 7 || size == 8 || size == 9) {
                 imageParam.totalLine = 3;
                 imageParam.imagePerLine = 3;
-                imageParam.imageWidth = (tempWidth - DensityUtil.dip2px(5) * 2) / 3;
+                imageParam.imageWidth = (tempWidth - DensityUtil.dip2px(2) * 2) / 3;
             }
             imageParamArray.put(size, imageParam);
         }

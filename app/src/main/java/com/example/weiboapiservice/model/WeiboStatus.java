@@ -2,6 +2,10 @@ package com.example.weiboapiservice.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.SpannableString;
+import android.text.TextUtils;
+
+import com.example.weiboapiservice.fragment.status.util.TimeLineUtil;
 
 import java.util.List;
 
@@ -32,6 +36,7 @@ public class WeiboStatus implements Parcelable {
     private int attitudes_count;
     private int mlevel;
     private String created_at;
+    private SpannableString spannableText;
 
 
     protected WeiboStatus(Parcel in) {
@@ -276,5 +281,17 @@ public class WeiboStatus implements Parcelable {
 
     public void setCreated_at(String created_at) {
         this.created_at = created_at;
+    }
+
+    public SpannableString getSpannableText() {
+        if (!TextUtils.isEmpty(spannableText)) {
+            return spannableText;
+        } else {
+            return TimeLineUtil.convertNormalStringToSpannableString(text);
+        }
+    }
+
+    public void setSpannableText(SpannableString spannableText) {
+        this.spannableText = spannableText;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.weiboapiservice.adapter;
 
+import android.content.Context;
 import android.text.Html;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,6 +26,7 @@ import java.util.List;
 public class WeiboStatusAdapter extends BaseQuickAdapter<WeiboStatus> implements View.OnClickListener {
 
     private ImageShowUtil mImageShowUtil;
+    private Context context;
 
     private View.OnTouchListener touchListener = new View.OnTouchListener() {
         ClickableTextViewMentionLinkOnTouchListener listener = new ClickableTextViewMentionLinkOnTouchListener();
@@ -35,9 +37,10 @@ public class WeiboStatusAdapter extends BaseQuickAdapter<WeiboStatus> implements
         }
     };
 
-    public WeiboStatusAdapter(int layoutResId, List<WeiboStatus> data) {
+    public WeiboStatusAdapter(Context context, int layoutResId, List<WeiboStatus> data) {
         super(layoutResId, data);
-        this.mImageShowUtil = new ImageShowUtil(mContext);
+        this.mImageShowUtil = new ImageShowUtil(context);
+        this.context = context;
     }
 
     @Override
@@ -51,7 +54,7 @@ public class WeiboStatusAdapter extends BaseQuickAdapter<WeiboStatus> implements
         helper.setText(R.id.status_publish_time_tv, Html.fromHtml(weiboStatus.getSource()));
 
         TextView status_content_tv = helper.getView(R.id.status_content_tv);
-        status_content_tv.setText(weiboStatus.getText());
+        status_content_tv.setText(weiboStatus.getSpannableText());
         status_content_tv.setOnTouchListener(touchListener);
 
         LinearLayout status_image_ll = helper.getView(R.id.status_image_ll);
@@ -89,6 +92,25 @@ public class WeiboStatusAdapter extends BaseQuickAdapter<WeiboStatus> implements
         forward_ll.setOnClickListener(this);
         LinearLayout like_ll = helper.getView(R.id.like_ll);
         forward_ll.setOnClickListener(this);
+
+        LinearLayout forward_status_ll = helper.getView(R.id.forward_status_ll);
+        WeiboStatus retweetedStatus = weiboStatus.getRetweeted_status();
+        if (retweetedStatus != null) {
+            forward_status_ll.setVisibility(View.VISIBLE);
+            TextView forward_status_content_tv = helper.getView(R.id.forward_status_content_tv);
+            forward_status_content_tv.setOnTouchListener(touchListener);
+            forward_status_content_tv.setText(retweetedStatus.getSpannableText());
+            LinearLayout forward_status_image_ll = helper.getView(R.id.forward_status_image_ll);
+            List<WeiboPicture> retweetedPicUrls = retweetedStatus.getPic_urls();
+            if (retweetedPicUrls != null && retweetedPicUrls.size() > 0) {
+                forward_status_image_ll.setVisibility(View.VISIBLE);
+                mImageShowUtil.showStatusImages(forward_status_image_ll, retweetedPicUrls);
+            } else {
+                forward_status_image_ll.setVisibility(View.GONE);
+            }
+        } else {
+            forward_status_ll.setVisibility(View.GONE);
+        }
 
     }
 

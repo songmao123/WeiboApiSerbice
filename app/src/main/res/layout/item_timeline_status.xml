@@ -112,7 +112,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:maxLines="5"
+            android:maxLines="10"
             android:text="最近，Google设计伦理学家Tristan Harris用一篇长文解释了人心理上的弱点如何被产品设计师利用，以达到掌控人的注意力的目的。"
             android:textColor="@color/colorNormalBlack"
             android:textSize="14sp" />
@@ -133,6 +133,7 @@
         android:id="@+id/status_image_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:orientation="vertical"
         android:visibility="gone" />
 
@@ -141,12 +142,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorStatusBg"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:orientation="vertical">
 
             <TextView
@@ -175,11 +179,8 @@
             android:id="@+id/forward_status_image_ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="5dp"
             android:orientation="vertical"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
     </LinearLayout>
 
