@@ -3,10 +3,12 @@ package com.example.weiboapiservice.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import io.realm.RealmObject;
+
 /**
  * Created by sqsong on 16-8-7.
  */
-public class AccessToken implements Parcelable {
+public class AccessToken extends RealmObject implements Parcelable {
 
     private long uid;
     private String access_token;

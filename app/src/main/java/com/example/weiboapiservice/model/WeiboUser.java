@@ -5,11 +5,14 @@ import android.os.Parcelable;
 
 import com.example.weiboapiservice.R;
 
+import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
+
 /**
  * Created by sqsong on 16-8-6.
  */
-public class WeiboUser implements Parcelable {
-
+public class WeiboUser extends RealmObject implements Parcelable {
+    @Ignore
     private long id;
     private String idstr;
     private String screen_name;

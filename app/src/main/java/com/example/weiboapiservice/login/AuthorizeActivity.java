@@ -23,10 +23,13 @@ import com.sina.weibo.sdk.exception.WeiboException;
 
 import java.text.SimpleDateFormat;
 
+import io.realm.Realm;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
@@ -102,23 +105,41 @@ public class AuthorizeActivity extends BaseActivity {
             }
         });*/
 
-        generateUserObservable(token).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Action1<WeiboUser>() {
-                @Override
-                public void call(WeiboUser weiboUser) {
-                    mAccountBean.setUser(weiboUser);
-                    BaseApplication.getInstance().setAccountBean(mAccountBean);
-                    Intent intent = new Intent(AuthorizeActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-            }, new Action1<Throwable>() {
-                @Override
-                public void call(Throwable throwable) {
-                    int code = ((HttpException) throwable).code();
-                    Toast.makeText(AuthorizeActivity.this, "Error Code: " + code, Toast.LENGTH_SHORT).show();
-                }
-            });
+        generateUserObservable(token)
+                .flatMap(new Func1<WeiboUser, Observable<WeiboUser>>() {
+                    @Override
+                    public Observable<WeiboUser> call(final WeiboUser weiboUser) {
+                        return Observable.create(new Observable.OnSubscribe<WeiboUser>() {
+                            @Override
+                            public void call(Subscriber<? super WeiboUser> subscriber) {
+                                Realm realm = Realm.getDefaultInstance();
+                                realm.beginTransaction();
+                                WeiboUser realmWeiboUser = realm.copyToRealm(weiboUser);
+                                realm.commitTransaction();
+                                subscriber.onNext(realmWeiboUser);
+                                subscriber.onCompleted();
+                            }
+                        });
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<WeiboUser>() {
+                    @Override
+                    public void call(WeiboUser weiboUser) {
+                        mAccountBean.setUser(weiboUser);
+                        BaseApplication.getInstance().setAccountBean(mAccountBean);
+                        Intent intent = new Intent(AuthorizeActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        int code = ((HttpException) throwable).code();
+                        Toast.makeText(AuthorizeActivity.this, "Error Code: " + code, Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private Observable<WeiboUser> generateUserObservable(AccessToken token) {

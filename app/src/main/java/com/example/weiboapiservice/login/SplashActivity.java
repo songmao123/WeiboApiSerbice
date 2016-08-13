@@ -11,12 +11,15 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import com.bumptech.glide.Glide;
+import com.example.weiboapiservice.BaseApplication;
 import com.example.weiboapiservice.MainActivity;
 import com.example.weiboapiservice.R;
 import com.example.weiboapiservice.databinding.ActivitySplashBinding;
+import com.example.weiboapiservice.model.AccountBean;
 import com.example.weiboapiservice.model.SplashData;
 import com.example.weiboapiservice.retrofit.WeiboApiFactory;
 
+import io.realm.Realm;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -117,7 +120,15 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void startMainActivity() {
-        Intent intent = new Intent(SplashActivity.this, AuthorizeActivity.class);
+        Realm realm = Realm.getDefaultInstance();
+        AccountBean accountBean = realm.where(AccountBean.class).findFirst();
+        Intent intent = null;
+        if (accountBean != null) {
+            BaseApplication.getInstance().setAccountBean(accountBean);
+            intent = new Intent(SplashActivity.this, MainActivity.class);
+        } else {
+            intent = new Intent(SplashActivity.this, AuthorizeActivity.class);
+        }
         startActivity(intent);
         finish();
     }
