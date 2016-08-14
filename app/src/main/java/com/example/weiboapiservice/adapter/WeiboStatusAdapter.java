@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.Html;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -11,10 +12,11 @@ import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.example.weiboapiservice.R;
+import com.example.weiboapiservice.fragment.status.util.ClickableTextViewMentionLinkOnTouchListener;
+import com.example.weiboapiservice.fragment.status.util.TimeLineUtil;
 import com.example.weiboapiservice.model.WeiboPicture;
 import com.example.weiboapiservice.model.WeiboStatus;
 import com.example.weiboapiservice.model.WeiboUser;
-import com.example.weiboapiservice.fragment.status.util.ClickableTextViewMentionLinkOnTouchListener;
 import com.example.weiboapiservice.utils.ImageShowUtil;
 import com.example.weiboapiservice.view.CircleImageView;
 
@@ -50,8 +52,10 @@ public class WeiboStatusAdapter extends BaseQuickAdapter<WeiboStatus> implements
         Glide.with(mContext).load(weiboUser.getAvatar_large()).placeholder(R.drawable.header)
                 .centerCrop().into(user_avatar_civ);
         helper.setText(R.id.user_name_tv, weiboUser.getName());
-        helper.setText(R.id.status_publish_time_tv, weiboStatus.getCreated_at());
-        helper.setText(R.id.status_publish_time_tv, Html.fromHtml(weiboStatus.getSource()));
+        helper.setText(R.id.status_publish_time_tv, TimeLineUtil.getPublishTime(weiboStatus.getCreated_at()));
+        helper.setText(R.id.status_from_tv, Html.fromHtml(weiboStatus.getSource()).toString());
+        ImageView verified_iv = helper.getView(R.id.verified_iv);
+        TimeLineUtil.setImageVerified(verified_iv, weiboUser);
 
         TextView status_content_tv = helper.getView(R.id.status_content_tv);
         status_content_tv.setText(weiboStatus.getSpannableText());
@@ -70,18 +74,18 @@ public class WeiboStatusAdapter extends BaseQuickAdapter<WeiboStatus> implements
         int commentsCount = weiboStatus.getComments_count();
         int attitudesCount = weiboStatus.getAttitudes_count();
         if (repostsCount > 0) {
-            helper.setText(R.id.forward_tv, repostsCount + "");
+            helper.setText(R.id.forward_tv,  TimeLineUtil.getCounter(repostsCount));
         } else {
             helper.setText(R.id.forward_tv, "转发");
         }
 
         if (commentsCount > 0) {
-            helper.setText(R.id.comment_tv, commentsCount + "");
+            helper.setText(R.id.comment_tv, TimeLineUtil.getCounter(commentsCount));
         } else {
             helper.setText(R.id.comment_tv, "评论");
         }
         if (attitudesCount > 0) {
-            helper.setText(R.id.like_tv, attitudesCount + "");
+            helper.setText(R.id.like_tv, TimeLineUtil.getCounter(attitudesCount));
         } else {
             helper.setText(R.id.like_tv, "赞");
         }
@@ -89,9 +93,9 @@ public class WeiboStatusAdapter extends BaseQuickAdapter<WeiboStatus> implements
         LinearLayout forward_ll = helper.getView(R.id.forward_ll);
         forward_ll.setOnClickListener(this);
         LinearLayout comment_ll = helper.getView(R.id.comment_ll);
-        forward_ll.setOnClickListener(this);
+        comment_ll.setOnClickListener(this);
         LinearLayout like_ll = helper.getView(R.id.like_ll);
-        forward_ll.setOnClickListener(this);
+        like_ll.setOnClickListener(this);
 
         LinearLayout forward_status_ll = helper.getView(R.id.forward_status_ll);
         WeiboStatus retweetedStatus = weiboStatus.getRetweeted_status();
@@ -99,7 +103,9 @@ public class WeiboStatusAdapter extends BaseQuickAdapter<WeiboStatus> implements
             forward_status_ll.setVisibility(View.VISIBLE);
             TextView forward_status_content_tv = helper.getView(R.id.forward_status_content_tv);
             forward_status_content_tv.setOnTouchListener(touchListener);
-            forward_status_content_tv.setText(retweetedStatus.getSpannableText());
+            String text = retweetedStatus.getText();
+            String content = "@" + retweetedStatus.getUser().getName() + ": " + text;
+            forward_status_content_tv.setText(TimeLineUtil.convertNormalStringToSpannableString(content));
             LinearLayout forward_status_image_ll = helper.getView(R.id.forward_status_image_ll);
             List<WeiboPicture> retweetedPicUrls = retweetedStatus.getPic_urls();
             if (retweetedPicUrls != null && retweetedPicUrls.size() > 0) {

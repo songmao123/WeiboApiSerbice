@@ -1,5 +1,7 @@
 package com.example.weiboapiservice.fragment.status.util;
 
+import android.util.Patterns;
+
 import com.example.weiboapiservice.BuildConfig;
 
 import java.util.regex.Pattern;
@@ -9,8 +11,9 @@ import java.util.regex.Pattern;
  */
 public class WeiboPattern {
 
-    public static final Pattern WEB_URL = Pattern
-            .compile("http://[a-zA-Z0-9+&@#/%?=~_\\-|!:,\\.;]*[a-zA-Z0-9+&@#/%=~_|]");
+    public static final Pattern WEB_URL = Pattern.compile(Patterns.WEB_URL.pattern(), Pattern.CASE_INSENSITIVE);
+//            Pattern
+//            .compile("http://[a-zA-Z0-9+&@#/%?=~_\\-|!:,\\.;]*[a-zA-Z0-9+&@#/%=~_|]");
     public static final Pattern TOPIC_URL = Pattern
             .compile("#[\\p{Print}\\p{InCJKUnifiedIdeographs}&&[^#]]+#");
     public static final Pattern MENTION_URL = Pattern

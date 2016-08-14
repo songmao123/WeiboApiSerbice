@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.weiboapiservice.BaseApplication;
 import com.example.weiboapiservice.R;
+import com.thefinestartist.finestwebview.FinestWebView;
 
 /**
  * User: qii
@@ -54,11 +55,14 @@ public class WeiboURLSpan extends ClickableSpan {
         Context context = widget.getContext();
         Intent intent;
         if (uri.getScheme().startsWith("http")) {
-            intent = new Intent();
-            intent.setAction("android.intent.action.VIEW");
-            intent.setData(uri);
-            intent.setFlags(268435456);
-            context.startActivity(intent);
+            new FinestWebView.Builder(context)
+                    .theme(R.style.AppTheme)
+                    .toolbarScrollFlags(0)
+                    .titleColorRes(R.color.finestWhite)
+                    .titleDefault("Website")
+                    .iconDefaultColorRes(R.color.finestWhite)
+                    .disableIconMenu(true)
+                    .show(getURL());
         } else {
             intent = new Intent("android.intent.action.VIEW", uri);
             intent.putExtra("com.android.browser.application_id", context.getPackageName());

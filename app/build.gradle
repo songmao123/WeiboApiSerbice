@@ -49,4 +49,6 @@ dependencies {
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:v1.8.8'
     compile 'jp.wasabeef:glide-transformations:2.0.1'
     compile 'com.android.support:support-v4:24.0.0-beta1'
+    compile 'com.thefinestartist:finestwebview:1.2.7'
+    compile 'org.greenrobot:eventbus:3.0.0'
 }

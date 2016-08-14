@@ -19,10 +19,14 @@ public class ImageShowUtil {
 
     private Context mContext;
     private SparseArray<ImageParams> imageParamArray;
+    private int totalImageWidth;
+    private int imageGapWidth;
 
     public ImageShowUtil(Context context) {
         this.mContext = context;
         this.imageParamArray = new SparseArray<>();
+        this.totalImageWidth = DensityUtil.getScreenWidth() - DensityUtil.dip2px(10) * 2;
+        this.imageGapWidth = DensityUtil.dip2px(2);
     }
 
     public void showStatusImages(LinearLayout container, List<WeiboPicture> images) {
@@ -68,31 +72,31 @@ public class ImageShowUtil {
         ImageParams imageParam = imageParamArray.get(size);
         if (imageParam == null) {
             imageParam = new ImageParams();
-            int tempWidth = DensityUtil.getScreenWidth();
+            int tempWidth = totalImageWidth;
             if (size == 1) {
                 imageParam.totalLine = 1;
                 imageParam.imagePerLine = 1;
-                imageParam.imageWidth = tempWidth;
+                imageParam.imageWidth = (tempWidth - imageGapWidth * 2) / 3 * 2;
             } else if (size == 2) {
                 imageParam.totalLine = 1;
                 imageParam.imagePerLine = 2;
-                imageParam.imageWidth = (tempWidth - DensityUtil.dip2px(2)) / 2;
+                imageParam.imageWidth = (tempWidth - imageGapWidth) / 2;
             } else if (size == 3) {
                 imageParam.totalLine = 1;
                 imageParam.imagePerLine = 3;
-                imageParam.imageWidth = (tempWidth - DensityUtil.dip2px(2) * 2) / 3;
+                imageParam.imageWidth = (tempWidth - imageGapWidth * 2) / 3;
             } else if (size == 4) {
                 imageParam.totalLine = 2;
                 imageParam.imagePerLine = 2;
-                imageParam.imageWidth = (tempWidth - DensityUtil.dip2px(2)) / 2;
+                imageParam.imageWidth = (tempWidth - imageGapWidth) / 2;
             } else if (size == 5 || size == 6) {
                 imageParam.totalLine = 2;
                 imageParam.imagePerLine = 3;
-                imageParam.imageWidth = (tempWidth - DensityUtil.dip2px(2) * 2) / 3;
+                imageParam.imageWidth = (tempWidth - imageGapWidth * 2) / 3;
             } else if (size  == 7 || size == 8 || size == 9) {
                 imageParam.totalLine = 3;
                 imageParam.imagePerLine = 3;
-                imageParam.imageWidth = (tempWidth - DensityUtil.dip2px(2) * 2) / 3;
+                imageParam.imageWidth = (tempWidth - imageGapWidth * 2) / 3;
             }
             imageParamArray.put(size, imageParam);
         }

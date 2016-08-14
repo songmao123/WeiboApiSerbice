@@ -3,17 +3,13 @@ package com.example.weiboapiservice.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import io.realm.RealmObject;
-import io.realm.annotations.Ignore;
-
 /**
  * Created by sqsong on 16-8-6.
  */
-public class AccountBean extends RealmObject implements Parcelable {
+public class AccountBean implements Parcelable {
 
     private AccessToken accessToken;
     private WeiboUser user;
-    @Ignore
     private WeiboGroups groups;
 
     public AccountBean() {}

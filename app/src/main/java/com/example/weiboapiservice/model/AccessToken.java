@@ -8,7 +8,7 @@ import io.realm.RealmObject;
 /**
  * Created by sqsong on 16-8-7.
  */
-public class AccessToken extends RealmObject implements Parcelable {
+public class AccessToken implements Parcelable {
 
     private long uid;
     private String access_token;

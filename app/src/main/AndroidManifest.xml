@@ -48,6 +48,12 @@
         <service
             android:name="com.sina.weibo.sdk.net.DownloadService"
             android:exported="false"></service>
+
+        <activity
+            android:name="com.thefinestartist.finestwebview.FinestWebViewActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="sensor"
+            android:theme="@style/FinestWebViewTheme.Light" />
     </application>
 
 </manifest>

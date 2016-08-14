@@ -114,33 +114,31 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.count_down_text:
+
                 startMainActivity();
                 break;
         }
     }
 
     private void startMainActivity() {
-        Realm realm = Realm.getDefaultInstance();
-        AccountBean accountBean = realm.where(AccountBean.class).findFirst();
-        Intent intent = null;
-        if (accountBean != null) {
-            BaseApplication.getInstance().setAccountBean(accountBean);
-            intent = new Intent(SplashActivity.this, MainActivity.class);
-        } else {
-            intent = new Intent(SplashActivity.this, AuthorizeActivity.class);
-        }
+        stopTimer();
+        Intent intent = new Intent(SplashActivity.this, AuthorizeActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private void stopTimer() {
+        if (mHandler != null) {
+            mHandler.removeCallbacks(mRunnable);
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        stopTimer();
         if (mSubscribe != null) {
             mSubscribe.unsubscribe();
-        }
-        if (mHandler != null) {
-            mHandler.removeCallbacks(mRunnable);
         }
     }
 

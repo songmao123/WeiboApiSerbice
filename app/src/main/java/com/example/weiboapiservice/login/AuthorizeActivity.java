@@ -106,7 +106,7 @@ public class AuthorizeActivity extends BaseActivity {
         });*/
 
         generateUserObservable(token)
-                .flatMap(new Func1<WeiboUser, Observable<WeiboUser>>() {
+                /*.flatMap(new Func1<WeiboUser, Observable<WeiboUser>>() {
                     @Override
                     public Observable<WeiboUser> call(final WeiboUser weiboUser) {
                         return Observable.create(new Observable.OnSubscribe<WeiboUser>() {
@@ -121,7 +121,7 @@ public class AuthorizeActivity extends BaseActivity {
                             }
                         });
                     }
-                })
+                })*/
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<WeiboUser>() {
