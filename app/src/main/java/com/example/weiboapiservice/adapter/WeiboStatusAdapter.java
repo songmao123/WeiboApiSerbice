@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.example.weiboapiservice.R;
@@ -50,7 +51,7 @@ public class WeiboStatusAdapter extends BaseQuickAdapter<WeiboStatus> implements
         WeiboUser weiboUser = weiboStatus.getUser();
         CircleImageView user_avatar_civ = helper.getView(R.id.user_avatar_civ);
         Glide.with(mContext).load(weiboUser.getAvatar_large()).placeholder(R.drawable.header)
-                .centerCrop().into(user_avatar_civ);
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE).centerCrop().into(user_avatar_civ);
         helper.setText(R.id.user_name_tv, weiboUser.getName());
         helper.setText(R.id.status_publish_time_tv, TimeLineUtil.getPublishTime(weiboStatus.getCreated_at()));
         helper.setText(R.id.status_from_tv, Html.fromHtml(weiboStatus.getSource()).toString());

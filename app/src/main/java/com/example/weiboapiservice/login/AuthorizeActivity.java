@@ -9,6 +9,7 @@ import com.example.weiboapiservice.BaseActivity;
 import com.example.weiboapiservice.BaseApplication;
 import com.example.weiboapiservice.MainActivity;
 import com.example.weiboapiservice.R;
+import com.example.weiboapiservice.db.WeiboDbExecutor;
 import com.example.weiboapiservice.model.AccessToken;
 import com.example.weiboapiservice.model.AccountBean;
 import com.example.weiboapiservice.model.WeiboGroups;
@@ -23,14 +24,12 @@ import com.sina.weibo.sdk.exception.WeiboException;
 
 import java.text.SimpleDateFormat;
 
-import io.realm.Realm;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
-import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 public class AuthorizeActivity extends BaseActivity {
@@ -64,6 +63,7 @@ public class AuthorizeActivity extends BaseActivity {
                 String format = getString(R.string.weibosdk_demo_token_to_string_format_1);
                 Log.e("sqsong", "Auth Info: " + String.format(format, accessToken.getToken(), date));
                 AccessToken token = generateAccessToken(accessToken);
+                WeiboDbExecutor.getInstance().insertTokenInfo(token, false);
                 mAccountBean = new AccountBean();
                 mAccountBean.setAccessToken(token);
                 getUserInfos(token);
@@ -105,24 +105,19 @@ public class AuthorizeActivity extends BaseActivity {
             }
         });*/
 
-        generateUserObservable(token)
-                /*.flatMap(new Func1<WeiboUser, Observable<WeiboUser>>() {
+        generateUserObservable(token).flatMap(new Func1<WeiboUser, Observable<WeiboUser>>() {
                     @Override
                     public Observable<WeiboUser> call(final WeiboUser weiboUser) {
                         return Observable.create(new Observable.OnSubscribe<WeiboUser>() {
                             @Override
                             public void call(Subscriber<? super WeiboUser> subscriber) {
-                                Realm realm = Realm.getDefaultInstance();
-                                realm.beginTransaction();
-                                WeiboUser realmWeiboUser = realm.copyToRealm(weiboUser);
-                                realm.commitTransaction();
-                                subscriber.onNext(realmWeiboUser);
+                                WeiboDbExecutor.getInstance().insertLoginUser(weiboUser);
+                                subscriber.onNext(weiboUser);
                                 subscriber.onCompleted();
                             }
                         });
                     }
-                })*/
-                .subscribeOn(Schedulers.io())
+                }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<WeiboUser>() {
                     @Override

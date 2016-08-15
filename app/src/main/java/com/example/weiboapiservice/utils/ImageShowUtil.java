@@ -2,12 +2,12 @@ package com.example.weiboapiservice.utils;
 
 import android.content.Context;
 import android.util.SparseArray;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.weiboapiservice.model.WeiboPicture;
 
 import java.util.List;
@@ -61,7 +61,8 @@ public class ImageShowUtil {
                 if (imageUrl.contains("thumbnail")) {
                     imageUrl = imageUrl.replace("thumbnail", "large");
                 }
-                Glide.with(mContext).load(imageUrl).centerCrop().crossFade().into(imageView);
+                Glide.with(mContext).load(imageUrl).diskCacheStrategy(DiskCacheStrategy.SOURCE).centerCrop()
+                        .crossFade().into(imageView);
                 linearLayout.addView(imageView);
             }
             container.addView(linearLayout);

@@ -10,6 +10,7 @@ import com.example.weiboapiservice.R;
  */
 public class WeiboUser implements Parcelable {
     private long id;
+    private long status_id;
     private String idstr;
     private String screen_name;
     private String name;
@@ -45,9 +46,11 @@ public class WeiboUser implements Parcelable {
     private int bi_followers_count;
     private String lang;
 
+    public WeiboUser() {}
 
     protected WeiboUser(Parcel in) {
         id = in.readLong();
+        status_id = in.readLong();
         idstr = in.readString();
         screen_name = in.readString();
         name = in.readString();
@@ -87,6 +90,7 @@ public class WeiboUser implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(id);
+        dest.writeLong(status_id);
         dest.writeString(idstr);
         dest.writeString(screen_name);
         dest.writeString(name);
@@ -146,6 +150,14 @@ public class WeiboUser implements Parcelable {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public long getStatus_id() {
+        return status_id;
+    }
+
+    public void setStatus_id(long status_id) {
+        this.status_id = status_id;
     }
 
     public String getIdstr() {

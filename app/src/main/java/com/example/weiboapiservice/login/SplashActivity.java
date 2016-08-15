@@ -15,11 +15,15 @@ import com.example.weiboapiservice.BaseApplication;
 import com.example.weiboapiservice.MainActivity;
 import com.example.weiboapiservice.R;
 import com.example.weiboapiservice.databinding.ActivitySplashBinding;
+import com.example.weiboapiservice.db.WeiboDbExecutor;
+import com.example.weiboapiservice.model.AccessToken;
 import com.example.weiboapiservice.model.AccountBean;
 import com.example.weiboapiservice.model.SplashData;
+import com.example.weiboapiservice.model.WeiboUser;
 import com.example.weiboapiservice.retrofit.WeiboApiFactory;
 
-import io.realm.Realm;
+import rx.Observable;
+import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -114,7 +118,6 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.count_down_text:
-
                 startMainActivity();
                 break;
         }
@@ -122,9 +125,39 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
 
     private void startMainActivity() {
         stopTimer();
-        Intent intent = new Intent(SplashActivity.this, AuthorizeActivity.class);
-        startActivity(intent);
-        finish();
+        Observable.create(new Observable.OnSubscribe<AccountBean>() {
+            @Override
+            public void call(Subscriber<? super AccountBean> subscriber) {
+                AccountBean accountBean = null;
+                AccessToken token = WeiboDbExecutor.getInstance().getTokenInfoFromDB();
+                if (token != null) {
+                    WeiboUser weiboUser = WeiboDbExecutor.getInstance().getWeiboUserFromDB(token.getUid());
+                    if (weiboUser != null) {
+                        accountBean = new AccountBean();
+                        accountBean.setAccessToken(token);
+                        accountBean.setUser(weiboUser);
+                    }
+                }
+                subscriber.onNext(accountBean);
+                subscriber.onCompleted();
+            }
+        })
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Action1<AccountBean>() {
+        @Override
+        public void call(AccountBean accountBean) {
+                Intent intent = null;
+                if (accountBean != null) {
+                    BaseApplication.getInstance().setAccountBean(accountBean);
+                    intent = new Intent(SplashActivity.this, MainActivity.class);
+                } else {
+                    intent = new Intent(SplashActivity.this, AuthorizeActivity.class);
+                }
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     private void stopTimer() {

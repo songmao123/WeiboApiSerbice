@@ -9,8 +9,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.weiboapiservice.databinding.ActivityMainBinding;
 import com.example.weiboapiservice.databinding.NavHeaderMainBinding;
@@ -29,6 +31,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private ActivityMainBinding mBinding;
     private NavHeaderMainBinding mNavHeaderBinding;
     private List<Fragment> mFragments = new ArrayList<>();
+    private long exitTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,5 +132,19 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             }
         }
         transaction.commit();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if (System.currentTimeMillis() - exitTime > 2000) {
+                Toast.makeText(MainActivity.this, "再按一次退出微博~", Toast.LENGTH_SHORT).show();
+                exitTime = System.currentTimeMillis();
+            } else {
+                finish();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
