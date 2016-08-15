@@ -33,7 +33,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
 
     private ActivitySplashBinding mBinding;
     private Subscription mSubscribe;
-    private int startTime = 5;
+    private int startTime = 3;
 
     private Handler mHandler = new Handler();
     private Runnable mRunnable = new Runnable() {

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="com.example.weiboapiservice.ui.StatusDetailActivity">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:title="微博正文"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:title="微博正文"
+            app:titleTextColor="@color/colorWhite" />
+
+        <com.gxz.library.StickyNavLayout
+            android:id="@+id/id_stick"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include layout="@layout/layout_status_header" />
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/id_stickynavlayout_indicator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorWhite"
+                app:tabIndicatorColor="@color/colorTabIndicator"
+                app:tabMode="scrollable" />
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/id_stickynavlayout_viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="0px"
+                android:layout_weight="1"
+                android:background="@android:color/white" />
+
+        </com.gxz.library.StickyNavLayout>
+
+    </LinearLayout>
+</layout>

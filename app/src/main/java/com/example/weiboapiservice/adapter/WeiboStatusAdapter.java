@@ -1,6 +1,7 @@
 package com.example.weiboapiservice.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.Html;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.example.weiboapiservice.fragment.status.util.TimeLineUtil;
 import com.example.weiboapiservice.model.WeiboPicture;
 import com.example.weiboapiservice.model.WeiboStatus;
 import com.example.weiboapiservice.model.WeiboUser;
+import com.example.weiboapiservice.ui.StatusDetailActivity;
 import com.example.weiboapiservice.utils.ImageShowUtil;
 import com.example.weiboapiservice.view.CircleImageView;
 
@@ -119,6 +121,14 @@ public class WeiboStatusAdapter extends BaseQuickAdapter<WeiboStatus> implements
             forward_status_ll.setVisibility(View.GONE);
         }
 
+        helper.getConvertView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, StatusDetailActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

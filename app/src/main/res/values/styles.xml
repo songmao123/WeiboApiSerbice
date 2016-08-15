@@ -23,7 +23,13 @@
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:textColorSecondary">@color/colorWhite</item>
+        <item name="android:colorControlNormal">@color/colorWhite</item>
+        <item name="android:textColorPrimaryInverse">@color/colorWhite</item>
+        <item name="android:textColorPrimary">@color/colorWhite</item>
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
 
     <style name="Style_Horizontal_Line_2Px">
         <item name="android:layout_width">match_parent</item>
