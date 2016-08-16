@@ -1,0 +1,140 @@
+[
+    {
+        "outputFile": "/home/sqsong/Public/Projects/WeiboApiSerbice/library/build/intermediates/res/merged/androidTest/debug/values/values.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 4,
+                    "startColumn": 4,
+                    "startOffset": 480,
+                    "endColumn": 74,
+                    "endOffset": 550
+                },
+                "from": {
+                    "file": "/home/sqsong/Public/Projects/WeiboApiSerbice/library/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.1.1/res/values/values.xml",
+                    "position": {
+                        "startLine": 5,
+                        "startColumn": 4,
+                        "startOffset": 500,
+                        "endColumn": 74,
+                        "endOffset": 570
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 5,
+                    "startColumn": 4,
+                    "startOffset": 555,
+                    "endColumn": 57,
+                    "endOffset": 608
+                },
+                "from": {
+                    "file": "/home/sqsong/Public/Projects/WeiboApiSerbice/library/build/intermediates/bundles/debug/res/values/values.xml",
+                    "position": {
+                        "startLine": 3,
+                        "startColumn": 4,
+                        "startOffset": 208,
+                        "endColumn": 57,
+                        "endOffset": 261
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 6,
+                    "startColumn": 4,
+                    "startOffset": 613,
+                    "endColumn": 63,
+                    "endOffset": 672
+                },
+                "from": {
+                    "file": "/home/sqsong/Public/Projects/WeiboApiSerbice/library/build/intermediates/bundles/debug/res/values/values.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 4,
+                        "startOffset": 266,
+                        "endColumn": 63,
+                        "endOffset": 325
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 7,
+                    "startColumn": 4,
+                    "startOffset": 677,
+                    "endColumn": 55,
+                    "endOffset": 728
+                },
+                "from": {
+                    "file": "/home/sqsong/Public/Projects/WeiboApiSerbice/library/build/intermediates/bundles/debug/res/values/values.xml",
+                    "position": {
+                        "startLine": 5,
+                        "startColumn": 4,
+                        "startOffset": 330,
+                        "endColumn": 55,
+                        "endOffset": 381
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 8,
+                    "startColumn": 4,
+                    "startOffset": 733,
+                    "endColumn": 57,
+                    "endOffset": 786
+                },
+                "from": {
+                    "file": "/home/sqsong/Public/Projects/WeiboApiSerbice/library/build/intermediates/bundles/debug/res/values/values.xml",
+                    "position": {
+                        "startLine": 6,
+                        "startColumn": 4,
+                        "startOffset": 386,
+                        "endColumn": 57,
+                        "endOffset": 439
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 9,
+                    "startColumn": 4,
+                    "startOffset": 791,
+                    "endColumn": 65,
+                    "endOffset": 852
+                },
+                "from": {
+                    "file": "/home/sqsong/Public/Projects/WeiboApiSerbice/library/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.1.1/res/values/values.xml",
+                    "position": {
+                        "startLine": 8,
+                        "startColumn": 4,
+                        "startOffset": 745,
+                        "endColumn": 65,
+                        "endOffset": 806
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 10,
+                    "startColumn": 4,
+                    "startOffset": 857,
+                    "endColumn": 44,
+                    "endOffset": 897
+                },
+                "from": {
+                    "file": "/home/sqsong/Public/Projects/WeiboApiSerbice/library/build/intermediates/bundles/debug/res/values/values.xml",
+                    "position": {
+                        "startLine": 7,
+                        "startColumn": 4,
+                        "startOffset": 444,
+                        "endColumn": 44,
+                        "endOffset": 484
+                    }
+                }
+            }
+        ]
+    }
+]
