@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import com.example.weiboapiservice.databinding.ActivityMainBinding;
 import com.example.weiboapiservice.databinding.NavHeaderMainBinding;
-import com.example.weiboapiservice.fragment.CommentFragment;
 import com.example.weiboapiservice.fragment.IncludeMeFragment;
 import com.example.weiboapiservice.fragment.LikeFragment;
 import com.example.weiboapiservice.fragment.WeiboFragment;
@@ -59,12 +58,18 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         AccountBean accountBean = BaseApplication.getInstance().getAccountBean();
         WeiboUser weiboUser = accountBean.getUser();
         mNavHeaderBinding.setUser(weiboUser);
+
+        mBinding.appBarMain.toolbar.post(new Runnable() {
+            @Override
+            public void run() {
+                mBinding.appBarMain.toolbar.setTitle("全部微博");
+            }
+        });
     }
 
     private void initFragments() {
         mFragments.add(WeiboFragment.newInstance());
         mFragments.add(IncludeMeFragment.newInstance());
-        mFragments.add(CommentFragment.newInstance());
         mFragments.add(LikeFragment.newInstance());
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -103,12 +108,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         int id = item.getItemId();
         if (id == R.id.nav_weibo) {
             showSelectedFragment(0);
+            mBinding.appBarMain.toolbar.setTitle("全部微博");
         } else if (id == R.id.nav_me) {
             showSelectedFragment(1);
-        } else if (id == R.id.nav_comment) {
+            mBinding.appBarMain.toolbar.setTitle("@ 我");
+        } /*else if (id == R.id.nav_comment) {
             showSelectedFragment(2);
-        } else if (id == R.id.nav_like) {
+            mBinding.appBarMain.toolbar.setTitle("评论我");
+        } */else if (id == R.id.nav_like) {
             showSelectedFragment(3);
+            mBinding.appBarMain.toolbar.setTitle("赞我");
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {

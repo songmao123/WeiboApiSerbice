@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <RelativeLayout
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="10dp">
+
+        <com.example.weiboapiservice.view.CircleImageView
+            android:id="@+id/user_avatar_civ"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/header"
+            app:civ_border_color="@color/color_v_grey"
+            app:civ_border_width="2px" />
+
+        <ImageView
+            android:id="@+id/verified_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/avatar_enterprise_vip" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/user_name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Google谷歌爱好者"
+            android:textColor="@color/colorCommentText"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/repost_time_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="01-16 14:30"
+            android:textColor="@color/colorGrey"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/repost_content_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:ellipsize="end"
+            android:text="最近，Google设计伦理学家Tristan Harris用一篇长文解释了人心理上的弱点如何被产品设计师利用，以达到掌控人的注意力的目的。"
+            android:textColor="@color/colorCommentText"
+            android:textSize="15sp" />
+
+        <View
+            style="@style/Style_Horizontal_Line_2Px"
+            android:layout_marginTop="10dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

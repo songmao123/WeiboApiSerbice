@@ -68,6 +68,7 @@
                     android:textSize="10sp" />
 
                 <TextView
+                    android:id="@+id/from_text_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -145,7 +146,8 @@
         android:background="@color/colorStatusBg"
         android:orientation="vertical"
         android:paddingBottom="10dp"
-        android:paddingTop="10dp">
+        android:paddingTop="10dp"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"

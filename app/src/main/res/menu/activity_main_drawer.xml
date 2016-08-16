@@ -10,10 +10,10 @@
             android:id="@+id/nav_me"
             android:icon="@mipmap/ic_email"
             android:title='\@ Me' />
-        <item
+        <!--<item
             android:id="@+id/nav_comment"
             android:icon="@mipmap/ic_comment"
-            android:title="Comment" />
+            android:title="Comment" />-->
         <item
             android:id="@+id/nav_like"
             android:icon="@mipmap/ic_thumb_up"

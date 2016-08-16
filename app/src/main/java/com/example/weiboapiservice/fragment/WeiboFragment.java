@@ -1,11 +1,14 @@
 package com.example.weiboapiservice.fragment;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,6 +25,7 @@ import com.example.weiboapiservice.fragment.status.util.SpacesItemDecoration;
 import com.example.weiboapiservice.model.WeiboStatus;
 import com.example.weiboapiservice.model.WeiboStatusList;
 import com.example.weiboapiservice.retrofit.WeiboApiFactory;
+import com.example.weiboapiservice.ui.StatusDetailActivity;
 import com.example.weiboapiservice.utils.Constants;
 import com.example.weiboapiservice.utils.DensityUtil;
 
@@ -143,8 +147,44 @@ public class WeiboFragment extends Fragment implements BaseQuickAdapter.RequestL
     }
 
     @Override
-    public void onItemClick(View view, int i) {
+    public void onItemClick(View view, int position) {
+        List<Pair<View, String>> pairList = new ArrayList<>();
+        Pair<View, String> pair1 = new Pair<>(view.findViewById(R.id.user_avatar_civ), "user_avatar_civ");
+        pairList.add(pair1);
+        Pair<View, String> pair2 = new Pair<>(view.findViewById(R.id.user_name_tv), "user_name_tv");
+        pairList.add(pair2);
+        Pair<View, String> pair3 = new Pair<>(view.findViewById(R.id.status_publish_time_tv), "status_publish_time_tv");
+        pairList.add(pair3);
+        Pair<View, String> pair4 = new Pair<>(view.findViewById(R.id.from_text_tv), "from_text_tv");
+        pairList.add(pair4);
+        Pair<View, String> pair5 = new Pair<>(view.findViewById(R.id.status_from_tv), "status_from_tv");
+        pairList.add(pair5);
 
+        if (view.findViewById(R.id.status_content_tv).getVisibility() == View.VISIBLE) {
+            Pair<View, String> pair6 = new Pair<>(view.findViewById(R.id.status_content_tv), "status_content_tv");
+            pairList.add(pair6);
+        }
+        if (view.findViewById(R.id.status_image_ll).getVisibility() == View.VISIBLE) {
+            Pair<View, String> pair7 = new Pair<>(view.findViewById(R.id.status_image_ll), "status_image_ll");
+            pairList.add(pair7);
+        }
+        if (view.findViewById(R.id.forward_status_ll).getVisibility() == View.VISIBLE) {
+            Pair<View, String> pair8 = new Pair<>(view.findViewById(R.id.forward_status_ll), "forward_status_ll");
+            pairList.add(pair8);
+        }
+        if (view.findViewById(R.id.verified_iv).getVisibility() == View.VISIBLE) {
+            Pair<View, String> pair9 = new Pair<>(view.findViewById(R.id.verified_iv), "verified_iv");
+            pairList.add(pair9);
+        }
+        Pair<View, String>[] pairs = new Pair[pairList.size()];
+        for (int i = 0; i < pairList.size(); i++) {
+            pairs[i] = pairList.get(i);
+        }
+        ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
+        WeiboStatus weiboStatus = mWeiboStatusLists.get(position);
+        Intent intent = new Intent(getActivity(), StatusDetailActivity.class);
+        intent.putExtra(StatusDetailActivity.STATUS_INFO, weiboStatus);
+        ActivityCompat.startActivity(getActivity(), intent, compat.toBundle());
     }
 
     @Override

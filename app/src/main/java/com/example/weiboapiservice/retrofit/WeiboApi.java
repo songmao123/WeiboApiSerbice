@@ -1,7 +1,10 @@
 package com.example.weiboapiservice.retrofit;
 
+import com.example.weiboapiservice.model.RepostStatusList;
 import com.example.weiboapiservice.model.SplashData;
+import com.example.weiboapiservice.model.WeiboCommentList;
 import com.example.weiboapiservice.model.WeiboGroups;
+import com.example.weiboapiservice.model.WeiboStatus;
 import com.example.weiboapiservice.model.WeiboStatusList;
 import com.example.weiboapiservice.model.WeiboUser;
 
@@ -29,4 +32,16 @@ public interface WeiboApi {
     /** 获取用户及其关注用户得的微博*/
     @GET("statuses/friends_timeline.json")
     Observable<WeiboStatusList> getHomeStatusLists(@Query("page") int page, @Query("count") int count);
+
+    /** 获取单条微博信息*/
+    @GET("statuses/show.json")
+    Observable<WeiboStatus> getSingleWeiboStatus(@Query("id") long statusId);
+
+    /** 获取某条微博被转发的微博列表*/
+    @GET("statuses/repost_timeline.json")
+    Observable<RepostStatusList> getRepostList(@Query("id") long statusId, @Query("source") String source, @Query("access_token") String access_token, @Query("page") int pageIndex);
+
+    /** 获取某条微博的评论列表*/
+    @GET("comments/show.json ")
+    Observable<WeiboCommentList> getCommentList(@Query("id") long statusId, @Query("page") int pageIndex);
 }

@@ -9,8 +9,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.example.weiboapiservice.R;
@@ -22,6 +20,7 @@ import com.example.weiboapiservice.model.WeiboUser;
 import com.example.weiboapiservice.ui.StatusDetailActivity;
 import com.example.weiboapiservice.utils.ImageShowUtil;
 import com.example.weiboapiservice.view.CircleImageView;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -49,11 +48,10 @@ public class WeiboStatusAdapter extends BaseQuickAdapter<WeiboStatus> implements
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, WeiboStatus weiboStatus) {
+    protected void convert(BaseViewHolder helper, final WeiboStatus weiboStatus) {
         WeiboUser weiboUser = weiboStatus.getUser();
         CircleImageView user_avatar_civ = helper.getView(R.id.user_avatar_civ);
-        Glide.with(mContext).load(weiboUser.getAvatar_large()).placeholder(R.drawable.header)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE).centerCrop().into(user_avatar_civ);
+        Picasso.with(mContext).load(weiboUser.getAvatar_large()).placeholder(R.drawable.header).into(user_avatar_civ);
         helper.setText(R.id.user_name_tv, weiboUser.getName());
         helper.setText(R.id.status_publish_time_tv, TimeLineUtil.getPublishTime(weiboStatus.getCreated_at()));
         helper.setText(R.id.status_from_tv, Html.fromHtml(weiboStatus.getSource()).toString());
@@ -101,7 +99,7 @@ public class WeiboStatusAdapter extends BaseQuickAdapter<WeiboStatus> implements
         like_ll.setOnClickListener(this);
 
         LinearLayout forward_status_ll = helper.getView(R.id.forward_status_ll);
-        WeiboStatus retweetedStatus = weiboStatus.getRetweeted_status();
+        final WeiboStatus retweetedStatus = weiboStatus.getRetweeted_status();
         if (retweetedStatus != null) {
             forward_status_ll.setVisibility(View.VISIBLE);
             TextView forward_status_content_tv = helper.getView(R.id.forward_status_content_tv);
@@ -117,18 +115,29 @@ public class WeiboStatusAdapter extends BaseQuickAdapter<WeiboStatus> implements
             } else {
                 forward_status_image_ll.setVisibility(View.GONE);
             }
+            forward_status_ll.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, StatusDetailActivity.class);
+                    intent.putExtra(StatusDetailActivity.STATUS_INFO, retweetedStatus);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                }
+            });
         } else {
             forward_status_ll.setVisibility(View.GONE);
+            forward_status_ll.setOnClickListener(null);
         }
 
-        helper.getConvertView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, StatusDetailActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-            }
-        });
+//        helper.getConvertView().setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(context, StatusDetailActivity.class);
+//                intent.putExtra(StatusDetailActivity.STATUS_INFO, weiboStatus);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                context.startActivity(intent);
+//            }
+//        });
     }
 
     @Override
