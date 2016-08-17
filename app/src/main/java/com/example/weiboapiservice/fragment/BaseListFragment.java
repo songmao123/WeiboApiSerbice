@@ -16,7 +16,8 @@ import com.example.weiboapiservice.utils.Constants;
 
 import rx.subscriptions.CompositeSubscription;
 
-public abstract class BaseListFragment extends AbstractLazyFragment implements BaseQuickAdapter.RequestLoadMoreListener, BaseQuickAdapter.OnRecyclerViewItemClickListener {
+public abstract class BaseListFragment extends AbstractLazyFragment implements BaseQuickAdapter.RequestLoadMoreListener,
+        BaseQuickAdapter.OnRecyclerViewItemClickListener {
 
     public static final String STATUS_ID = "status_id";
 
@@ -73,13 +74,13 @@ public abstract class BaseListFragment extends AbstractLazyFragment implements B
         if(!isPrepared || !isVisible) {
             return;
         }
-        getRepostStatusList();
+        getDataList();
     }
 
     @Override
     public void onLoadMoreRequested() {
         pageIndex++;
-        getRepostStatusList();
+        getDataList();
     }
 
     @Override
@@ -87,7 +88,14 @@ public abstract class BaseListFragment extends AbstractLazyFragment implements B
 
     }
 
-    protected abstract void getRepostStatusList();
+    protected abstract void getDataList();
+
+    protected void setAdapterEmpty() {
+        View emptyView = LayoutInflater.from(getActivity()).inflate(R.layout.layout_empty_message,
+                (ViewGroup)mRecyclerView.getParent(), false);
+        mBaseQuickAdapter.setEmptyView(emptyView);
+        mRecyclerView.setAdapter(mBaseQuickAdapter);
+    }
 
     @Override
     public void onDestroy() {

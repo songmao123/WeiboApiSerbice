@@ -45,7 +45,7 @@ public class CommentListAdapter extends BaseQuickAdapter<WeiboComment> {
         CircleImageView user_avatar_civ = helper.getView(R.id.user_avatar_civ);
         Picasso.with(mContext).load(weiboUser.getAvatar_large()).placeholder(R.drawable.header).into(user_avatar_civ);
         helper.setText(R.id.user_name_tv, weiboUser.getName());
-        helper.setText(R.id.comment_time_tv, TimeLineUtil.getPublishTime(weiboComment.getCreated_at()));
+        helper.setText(R.id.comment_time_tv, TimeLineUtil.getFormatTime(weiboComment.getCreated_at()));
         ImageView verified_iv = helper.getView(R.id.verified_iv);
         TimeLineUtil.setImageVerified(verified_iv, weiboUser);
 

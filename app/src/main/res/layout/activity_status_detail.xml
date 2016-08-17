@@ -41,6 +41,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@id/id_stickynavlayout_topview"
+
                     android:scrollbars="none">
 
                     <LinearLayout
@@ -312,9 +313,8 @@
                 <android.support.design.widget.TabLayout
                     android:id="@+id/id_stickynavlayout_indicator"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:background="@color/colorWhite"
-
                     app:tabIndicatorColor="@color/colorTabIndicator"
                     app:tabMode="scrollable" />
 

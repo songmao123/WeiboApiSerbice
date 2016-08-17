@@ -45,7 +45,7 @@ public class RepostListFragment extends BaseListFragment {
     }
 
     @Override
-    public void getRepostStatusList() {
+    public void getDataList() {
         mCompositeSubscription.add(WeiboApiFactory.createWeiboApi(null, access_token).getRepostList(mStatusId, Constants.APP_KEY, access_token, pageIndex)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
@@ -55,6 +55,11 @@ public class RepostListFragment extends BaseListFragment {
                 List<WeiboStatus> weiboStatuses = repostStatusList.getReposts();
                 if (pageIndex == 1) {
                     mRepostStatusList.clear();
+                    if (weiboStatuses == null || weiboStatuses.size() < 1) {
+                        setAdapterEmpty();
+                        return;
+                    }
+
                     mRepostStatusList.addAll(weiboStatuses);
                     mBaseQuickAdapter.notifyDataSetChanged();
                 } else {
@@ -73,6 +78,7 @@ public class RepostListFragment extends BaseListFragment {
             public void call(Throwable throwable) {
                 int code = ((HttpException) throwable).code();
                 Toast.makeText(getActivity(), "Error Code: " + code, Toast.LENGTH_SHORT).show();
+                setAdapterEmpty();
             }
         }));
     }

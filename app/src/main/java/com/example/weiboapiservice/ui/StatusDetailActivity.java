@@ -99,6 +99,7 @@ public class StatusDetailActivity extends BaseActivity implements View.OnClickLi
                 mBinding.idStick.updateTopViews();
             }
         });
+        mBinding.idStickynavlayoutViewpager.setCurrentItem(1);
 
         mBinding.idStick.setOnStickStateChangeListener(stickStateChangeListener);
         mBinding.swipLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccent);

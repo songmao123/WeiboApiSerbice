@@ -38,7 +38,7 @@ public class CommentListFragment extends BaseListFragment {
     }
 
     @Override
-    protected void getRepostStatusList() {
+    protected void getDataList() {
         mCompositeSubscription.add(WeiboApiFactory.createWeiboApi(null, access_token).getCommentList(mStatusId, pageIndex)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -48,6 +48,11 @@ public class CommentListFragment extends BaseListFragment {
                         List<WeiboComment> commentList = weiboCommentList.getComments();
                         if (pageIndex == 1) {
                             mCommentList.clear();
+                            if (commentList == null || commentList.size() < 1) {
+                                setAdapterEmpty();
+                                return;
+                            }
+
                             mCommentList.addAll(commentList);
                             mBaseQuickAdapter.notifyDataSetChanged();
                         } else {
@@ -66,6 +71,9 @@ public class CommentListFragment extends BaseListFragment {
                     public void call(Throwable throwable) {
                         int code = ((HttpException) throwable).code();
                         Toast.makeText(getActivity(), "Error Code: " + code, Toast.LENGTH_SHORT).show();
+                        if (pageIndex == 1) {
+                            setAdapterEmpty();
+                        }
                     }
                 }));
     }
