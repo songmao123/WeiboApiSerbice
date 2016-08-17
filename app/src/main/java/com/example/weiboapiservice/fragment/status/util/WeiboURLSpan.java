@@ -64,9 +64,9 @@ public class WeiboURLSpan extends ClickableSpan {
                     .disableIconMenu(true)
                     .show(getURL());
         } else {
-            intent = new Intent("android.intent.action.VIEW", uri);
-            intent.putExtra("com.android.browser.application_id", context.getPackageName());
-            context.startActivity(intent);
+//            intent = new Intent("android.intent.action.VIEW", uri);
+//            intent.putExtra("com.android.browser.application_id", context.getPackageName());
+//            context.startActivity(intent);
         }
 
     }

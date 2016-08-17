@@ -1,5 +1,6 @@
 package com.example.weiboapiservice;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -21,6 +22,7 @@ import com.example.weiboapiservice.fragment.LikeFragment;
 import com.example.weiboapiservice.fragment.WeiboFragment;
 import com.example.weiboapiservice.model.AccountBean;
 import com.example.weiboapiservice.model.WeiboUser;
+import com.example.weiboapiservice.ui.UserInfoActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,7 +121,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             showSelectedFragment(3);
             mBinding.appBarMain.toolbar.setTitle("赞我");
         } else if (id == R.id.nav_share) {
-
+            startActivity(new Intent(this, UserInfoActivity.class));
         } else if (id == R.id.nav_send) {
 
         }
@@ -147,7 +149,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
             if (System.currentTimeMillis() - exitTime > 2000) {
-                Toast.makeText(MainActivity.this, "再按一次退出微博~", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "再按一次退出微博", Toast.LENGTH_SHORT).show();
                 exitTime = System.currentTimeMillis();
             } else {
                 finish();

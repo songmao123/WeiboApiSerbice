@@ -7,9 +7,9 @@ import android.support.v4.app.Fragment;
  */
 public abstract class AbstractLazyFragment extends Fragment {
     protected boolean isVisible;
+    private boolean isFirst = true;
     /**
      * 在这里实现Fragment数据的缓加载.
-     *
      * @param isVisibleToUser
      */
     @Override
@@ -25,7 +25,10 @@ public abstract class AbstractLazyFragment extends Fragment {
     }
 
     protected void onVisible() {
-        lazyLoad();
+        if (isFirst) {
+            isFirst = false;
+            lazyLoad();
+        }
     }
 
     protected abstract void lazyLoad();

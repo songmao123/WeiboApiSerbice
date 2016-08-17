@@ -17,6 +17,7 @@
 
     <color name="colorUserName">#F46200</color>
     <color name="colorGrey">#828282</color>
+    <color name="colorGrey_B5">#B5B5B5</color>
     <color name="colorNormalBlack">#333333</color>
     <color name="colorCommentText">#5D5D5D</color>
     <color name="colorNormalLinks">#507DAF</color>

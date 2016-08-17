@@ -55,15 +55,21 @@ public class TimeLineUtil {
             currentcal.setTimeInMillis(System.currentTimeMillis());
             long diffTime = (currentcal.getTimeInMillis() - createCal.getTimeInMillis()) / 1000;
             if (currentcal.get(Calendar.MONTH) == createCal.get(Calendar.MONTH)) { // 同一月
-                // 同一天
-                if (currentcal.get(Calendar.DAY_OF_MONTH) == createCal.get(Calendar.DAY_OF_MONTH)) {
-                    if (diffTime < 3600 && diffTime >= 60) {
-                        buffer.append((diffTime / 60) + "分钟前");
-                    } else if (diffTime < 60) {
+                if (currentcal.get(Calendar.DAY_OF_MONTH) == createCal.get(Calendar.DAY_OF_MONTH)) { // 同一天
+                    if (diffTime < 60) {
                         buffer.append("刚刚");
+                    } else if (diffTime < 3600) {
+                        buffer.append((diffTime / 60) + "分钟前");
                     } else {
-                        buffer.append("今天").append(" ").append(formatDate(createCal.getTimeInMillis(), "HH:mm"));
+                        buffer.append((diffTime / 3600) + "小时前");
                     }
+//                    if (diffTime < 3600 && diffTime >= 60) {
+//                        buffer.append((diffTime / 60) + "分钟前");
+//                    } else if (diffTime < 60) {
+//                        buffer.append("刚刚");
+//                    } else {
+//                        buffer.append("今天").append(" ").append(formatDate(createCal.getTimeInMillis(), "HH:mm"));
+//                    }
                 } else if (currentcal.get(Calendar.DAY_OF_MONTH) - createCal.get(Calendar.DAY_OF_MONTH) == 1) {// 前一天
                     buffer.append("昨天").append(" ").append(formatDate(createCal.getTimeInMillis(), "HH:mm"));
                 }
@@ -73,10 +79,31 @@ public class TimeLineUtil {
             }
             String timeStr = buffer.toString();
             if (currentcal.get(Calendar.YEAR) != createCal.get(Calendar.YEAR)) {
-                timeStr = createCal.get(Calendar.YEAR) + " " + timeStr;
+                timeStr = createCal.get(Calendar.YEAR) + "-" + timeStr;
             }
             return timeStr;
         } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        return time;
+    }
+
+    public static String getFormatTime(String originTime) {
+        String time = "";
+        try {
+            long parse = Date.parse(originTime);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(parse);
+            int publishYear = calendar.get(Calendar.YEAR);
+            calendar.setTimeInMillis(System.currentTimeMillis());
+            int currentYear = calendar.get(Calendar.YEAR);
+            String format = "MM-dd HH:mm";
+            if (publishYear != currentYear) {
+                format = "yyyy-MM-dd HH:mm";
+            }
+            time = formatDate(parse, format);
+        } catch (Exception e) {
+            time = originTime;
             e.printStackTrace();
         }
         return time;

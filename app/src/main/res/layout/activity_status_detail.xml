@@ -37,192 +37,146 @@
                 android:visibility="visible"
                 app:isStickNav="false">
 
-                <LinearLayout
+                <ScrollView
                     android:id="@id/id_stickynavlayout_topview"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none">
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="15dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@color/colorStatusWhiteBg"
+                        android:layout_height="match_parent"
                         android:orientation="vertical">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginBottom="15dp"
                             android:layout_marginTop="10dp"
-                            android:orientation="horizontal">
-
-                            <RelativeLayout
-                                android:layout_width="40dp"
-                                android:layout_height="40dp">
-
-                                <com.example.weiboapiservice.view.CircleImageView
-                                    android:id="@+id/user_avatar_civ"
-                                    android:layout_width="40dp"
-                                    android:layout_height="40dp"
-                                    android:src="@drawable/ic_account_circle_grey"
-                                    android:transitionName="user_avatar_civ" />
-
-                                <ImageView
-                                    android:id="@+id/verified_iv"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentBottom="true"
-                                    android:layout_alignParentRight="true"
-                                    android:src="@drawable/avatar_enterprise_vip"
-                                    android:transitionName="verified_iv" />
-
-                            </RelativeLayout>
+                            android:background="@color/colorStatusWhiteBg"
+                            android:orientation="vertical">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="40dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="5dp"
                                 android:layout_marginLeft="10dp"
-                                android:layout_weight="1"
-                                android:orientation="vertical"
-                                android:paddingTop="3dp">
+                                android:layout_marginTop="10dp"
+                                android:orientation="horizontal">
 
-                                <TextView
-                                    android:id="@+id/user_name_tv"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:ellipsize="end"
-                                    android:maxLines="1"
-                                    android:text="Google谷歌爱好者"
-                                    android:textColor="@color/colorUserName"
-                                    android:textSize="15sp"
-                                    android:transitionName="user_name_tv" />
+                                <RelativeLayout
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp">
+
+                                    <com.example.weiboapiservice.view.CircleImageView
+                                        android:id="@+id/user_avatar_civ"
+                                        android:layout_width="40dp"
+                                        android:layout_height="40dp"
+                                        android:src="@drawable/ic_account_circle_grey"
+                                        android:transitionName="user_avatar_civ" />
+
+                                    <ImageView
+                                        android:id="@+id/verified_iv"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentBottom="true"
+                                        android:layout_alignParentRight="true"
+                                        android:src="@drawable/avatar_enterprise_vip"
+                                        android:transitionName="verified_iv" />
+
+                                </RelativeLayout>
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="2dp"
-                                    android:orientation="horizontal">
+                                    android:layout_height="40dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical"
+                                    android:paddingTop="3dp">
 
                                     <TextView
-                                        android:id="@+id/status_publish_time_tv"
+                                        android:id="@+id/user_name_tv"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:ellipsize="end"
                                         android:maxLines="1"
-                                        android:text="10分钟前"
-                                        android:textColor="@color/colorGrey"
-                                        android:textSize="10sp"
-                                        android:transitionName="status_publish_time_tv" />
+                                        android:text="Google谷歌爱好者"
+                                        android:textColor="@color/colorUserName"
+                                        android:textSize="15sp"
+                                        android:transitionName="user_name_tv" />
 
-                                    <TextView
-                                        android:id="@+id/from_text_tv"
-                                        android:layout_width="wrap_content"
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginLeft="10dp"
-                                        android:text="来自"
-                                        android:textColor="@color/colorGrey"
-                                        android:textSize="10sp"
-                                        android:transitionName="from_text_tv" />
+                                        android:layout_marginTop="2dp"
+                                        android:orientation="horizontal">
 
-                                    <TextView
-                                        android:id="@+id/status_from_tv"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginLeft="2dp"
-                                        android:text="Android"
-                                        android:textColor="@color/colorNormalLinks"
-                                        android:textSize="10sp"
-                                        android:transitionName="status_from_tv" />
+                                        <TextView
+                                            android:id="@+id/status_publish_time_tv"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:ellipsize="end"
+                                            android:maxLines="1"
+                                            android:text="10分钟前"
+                                            android:textColor="@color/colorGrey"
+                                            android:textSize="10sp"
+                                            android:transitionName="status_publish_time_tv" />
+
+                                        <TextView
+                                            android:id="@+id/from_text_tv"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="10dp"
+                                            android:text="来自"
+                                            android:textColor="@color/colorGrey"
+                                            android:textSize="10sp"
+                                            android:transitionName="from_text_tv" />
+
+                                        <TextView
+                                            android:id="@+id/status_from_tv"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="2dp"
+                                            android:text="Android"
+                                            android:textColor="@color/colorNormalLinks"
+                                            android:textSize="10sp"
+                                            android:transitionName="status_from_tv" />
+
+                                    </LinearLayout>
 
                                 </LinearLayout>
 
+                                <ImageView
+                                    android:id="@+id/more_action_iv"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginRight="2dp"
+                                    android:padding="8dp"
+                                    android:src="@drawable/ic_arrow_down" />
+
                             </LinearLayout>
-
-                            <ImageView
-                                android:id="@+id/more_action_iv"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="2dp"
-                                android:padding="8dp"
-                                android:src="@drawable/ic_arrow_down" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/status_content_tv"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:ellipsize="end"
-                                android:maxLines="10"
-                                android:text="最近，Google设计伦理学家Tristan Harris用一篇长文解释了人心理上的弱点如何被产品设计师利用，以达到掌控人的注意力的目的。"
-                                android:textColor="@color/colorNormalBlack"
-                                android:textSize="15sp"
-                                android:transitionName="status_content_tv" />
-
-                            <TextView
-                                android:id="@+id/full_text_tv"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="2dp"
-                                android:text="全文"
-                                android:textColor="@color/colorNormalLinks"
-                                android:textSize="14sp"
-                                android:visibility="gone" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/status_image_ll"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
-                            android:orientation="vertical"
-                            android:transitionName="status_image_ll"
-                            android:visibility="gone" />
-
-                        <LinearLayout
-                            android:id="@+id/forward_status_ll"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/colorStatusBg"
-                            android:orientation="vertical"
-                            android:paddingBottom="10dp"
-                            android:paddingTop="10dp"
-                            android:transitionName="forward_status_ll"
-                            android:visibility="gone">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_marginBottom="5dp"
                                 android:layout_marginLeft="10dp"
                                 android:layout_marginRight="10dp"
                                 android:orientation="vertical">
 
                                 <TextView
-                                    android:id="@+id/forward_status_content_tv"
+                                    android:id="@+id/status_content_tv"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:ellipsize="end"
-                                    android:maxLines="5"
-                                    android:text="Google的创新哲学！"
+                                    android:maxLines="10"
+                                    android:text="最近，Google设计伦理学家Tristan Harris用一篇长文解释了人心理上的弱点如何被产品设计师利用，以达到掌控人的注意力的目的。"
                                     android:textColor="@color/colorNormalBlack"
-                                    android:textSize="15sp" />
+                                    android:textSize="15sp"
+                                    android:transitionName="status_content_tv" />
 
                                 <TextView
-                                    android:id="@+id/forward_full_text_tv"
+                                    android:id="@+id/full_text_tv"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="2dp"
@@ -234,78 +188,131 @@
                             </LinearLayout>
 
                             <LinearLayout
-                                android:id="@+id/forward_status_image_ll"
+                                android:id="@+id/status_image_ll"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_marginBottom="10dp"
                                 android:layout_marginLeft="10dp"
                                 android:layout_marginRight="10dp"
-                                android:layout_marginTop="5dp"
                                 android:orientation="vertical"
-                                android:visibility="visible" />
+                                android:transitionName="status_image_ll"
+                                android:visibility="gone" />
 
                             <LinearLayout
-                                android:layout_width="wrap_content"
+                                android:id="@+id/forward_status_ll"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="right"
-                                android:layout_marginRight="7dp"
-                                android:layout_marginTop="10dp"
-                                android:orientation="horizontal">
+                                android:background="@color/colorStatusBg"
+                                android:orientation="vertical"
+                                android:paddingBottom="10dp"
+                                android:paddingTop="10dp"
+                                android:transitionName="forward_status_ll"
+                                android:visibility="gone">
 
-                                <TextView
-                                    android:id="@+id/forward_repost_tv"
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/forward_status_content_tv"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:ellipsize="end"
+                                        android:maxLines="5"
+                                        android:text="Google的创新哲学！"
+                                        android:textColor="@color/colorNormalBlack"
+                                        android:textSize="15sp" />
+
+                                    <TextView
+                                        android:id="@+id/forward_full_text_tv"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="2dp"
+                                        android:text="全文"
+                                        android:textColor="@color/colorNormalLinks"
+                                        android:textSize="14sp"
+                                        android:visibility="gone" />
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:id="@+id/forward_status_image_ll"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="5dp"
+                                    android:orientation="vertical"
+                                    android:visibility="visible" />
+
+                                <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginRight="20dp"
-                                    android:background="?attr/selectableItemBackground"
-                                    android:drawableLeft="@drawable/ic_status_forward_24"
-                                    android:drawablePadding="3dp"
-                                    android:gravity="center"
-                                    android:paddingLeft="3dp"
-                                    android:paddingRight="3dp"
-                                    android:text="6"
-                                    android:textSize="10sp" />
+                                    android:layout_gravity="right"
+                                    android:layout_marginRight="7dp"
+                                    android:layout_marginTop="10dp"
+                                    android:orientation="horizontal">
 
-                                <TextView
-                                    android:id="@+id/forward_comment_tv"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginRight="20dp"
-                                    android:background="?attr/selectableItemBackground"
-                                    android:drawableLeft="@drawable/ic_comment_24"
-                                    android:drawablePadding="3dp"
-                                    android:gravity="center"
-                                    android:paddingLeft="3dp"
-                                    android:paddingRight="3dp"
-                                    android:text="20"
-                                    android:textSize="10sp" />
+                                    <TextView
+                                        android:id="@+id/forward_repost_tv"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginRight="20dp"
+                                        android:background="?attr/selectableItemBackground"
+                                        android:drawableLeft="@drawable/ic_status_forward_24"
+                                        android:drawablePadding="3dp"
+                                        android:gravity="center"
+                                        android:paddingLeft="3dp"
+                                        android:paddingRight="3dp"
+                                        android:text="6"
+                                        android:textSize="10sp" />
 
-                                <TextView
-                                    android:id="@+id/forward_like_tv"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:background="?attr/selectableItemBackground"
-                                    android:drawableLeft="@drawable/ic_thmub_24"
-                                    android:drawablePadding="3dp"
-                                    android:gravity="center"
-                                    android:paddingLeft="3dp"
-                                    android:paddingRight="3dp"
-                                    android:text="25"
-                                    android:textSize="10sp" />
+                                    <TextView
+                                        android:id="@+id/forward_comment_tv"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginRight="20dp"
+                                        android:background="?attr/selectableItemBackground"
+                                        android:drawableLeft="@drawable/ic_comment_24"
+                                        android:drawablePadding="3dp"
+                                        android:gravity="center"
+                                        android:paddingLeft="3dp"
+                                        android:paddingRight="3dp"
+                                        android:text="20"
+                                        android:textSize="10sp" />
+
+                                    <TextView
+                                        android:id="@+id/forward_like_tv"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:background="?attr/selectableItemBackground"
+                                        android:drawableLeft="@drawable/ic_thmub_24"
+                                        android:drawablePadding="3dp"
+                                        android:gravity="center"
+                                        android:paddingLeft="3dp"
+                                        android:paddingRight="3dp"
+                                        android:text="25"
+                                        android:textSize="10sp" />
+
+                                </LinearLayout>
 
                             </LinearLayout>
 
-                        </LinearLayout>
+                            <View style="@style/Style_Horizontal_Line_1Px" />
 
-                        <View style="@style/Style_Horizontal_Line_1Px" />
+                        </LinearLayout>
 
                     </LinearLayout>
 
-                </LinearLayout>
+                </ScrollView>
 
                 <android.support.design.widget.TabLayout
                     android:id="@+id/id_stickynavlayout_indicator"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:background="@color/colorWhite"
                     app:tabIndicatorColor="@color/colorTabIndicator"
                     app:tabMode="scrollable" />

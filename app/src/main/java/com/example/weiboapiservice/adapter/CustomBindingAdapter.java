@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.weiboapiservice.R;
+import com.squareup.picasso.Picasso;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
@@ -21,7 +22,7 @@ public class CustomBindingAdapter {
     @BindingAdapter({"bind:imageUrl", "bind:type"})
     public static void loadImage(final View view, final String url, int type) {
         if (type == 1) {
-            Glide.with(view.getContext()).load(url)/*.bitmapTransform(new CropCircleTransformation(imageView.getContext()))*/
+            Picasso.with(view.getContext()).load(url)/*.bitmapTransform(new CropCircleTransformation(imageView.getContext()))*/
                     .placeholder(R.drawable.ic_account_circle_grey)
                     .error(R.drawable.ic_account_circle_grey).into((ImageView) view);
         } else if (type == 2) {
