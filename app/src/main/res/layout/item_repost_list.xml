@@ -10,7 +10,7 @@
         android:layout_height="40dp"
         android:layout_margin="10dp">
 
-        <com.example.weiboapiservice.view.CircleImageView
+        <com.modong.service.view.CircleImageView
             android:id="@+id/user_avatar_civ"
             android:layout_width="40dp"
             android:layout_height="40dp"

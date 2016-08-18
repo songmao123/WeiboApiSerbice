@@ -4,9 +4,9 @@
 
     <data>
 
-        <import type="com.example.weiboapiservice.model.WeiboUser" />
+        <import type="com.modong.service.model.WeiboUser" />
 
-        <import type="com.example.weiboapiservice.MainActivity.ClickListenerHandler" />
+        <import type="com.modong.service.MainActivity.ClickListenerHandler" />
 
         <variable
             name="user"
@@ -32,7 +32,7 @@
         app:imageUrl="@{user.getCover_image_phone()}"
         app:type="@{4}">
 
-        <com.example.weiboapiservice.view.CircleImageView
+        <com.modong.service.view.CircleImageView
             android:id="@+id/imageView"
             android:layout_width="60dp"
             android:layout_height="60dp"

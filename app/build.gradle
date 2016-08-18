@@ -10,7 +10,7 @@ android {
     buildToolsVersion "24.0.0"
 
     defaultConfig {
-        applicationId "com.example.weiboapiservice"
+        applicationId "com.modong.service"
         minSdkVersion 18
         targetSdkVersion 23
         versionCode 1

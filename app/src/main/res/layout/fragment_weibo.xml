@@ -5,7 +5,7 @@
         android:id="@+id/swipLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.example.weiboapiservice.fragment.WeiboFragment">
+        tools:context="com.modong.service.fragment.WeiboFragment">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"

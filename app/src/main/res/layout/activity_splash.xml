@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorTransparentBlackBg"
-        tools:context="com.example.weiboapiservice.login.SplashActivity">
+        tools:context="com.modong.service.login.SplashActivity">
 
         <ImageView
             android:id="@+id/splash_image"

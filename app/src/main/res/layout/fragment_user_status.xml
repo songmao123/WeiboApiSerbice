@@ -5,5 +5,5 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.example.weiboapiservice.fragment.user.UserStatusFragment" />
+        tools:context="com.modong.service.fragment.user.UserStatusFragment" />
 </layout>

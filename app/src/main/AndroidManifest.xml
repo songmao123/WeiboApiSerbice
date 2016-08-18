@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.weiboapiservice">
+    package="com.modong.service">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name=".BaseApplication"
+        android:name="com.modong.service.BaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -17,12 +17,12 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.modong.service.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".login.SplashActivity"
+            android:name="com.modong.service.login.SplashActivity"
             android:theme="@style/FullScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".login.AuthorizeActivity" />
+        <activity android:name="com.modong.service.login.AuthorizeActivity" />
 
         <activity
             android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
@@ -48,13 +48,13 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="sensor"
             android:theme="@style/FinestWebViewTheme.Light" />
-        <activity android:name=".ui.StatusDetailActivity" />
+        <activity android:name="com.modong.service.ui.StatusDetailActivity" />
 
-        <activity android:name=".ui.UserInfoActivity">
+        <activity android:name="com.modong.service.ui.UserInfoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="com.example.weiboapiservice.mention" />
+                <data android:scheme="com.modong.service.mention" />
             </intent-filter>
         </activity>
     </application>
