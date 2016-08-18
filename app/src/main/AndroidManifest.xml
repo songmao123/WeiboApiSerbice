@@ -9,20 +9,18 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name="com.modong.service.BaseApplication"
+        android:name=".BaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
-            android:name="com.modong.service.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
-            android:name="com.modong.service.login.SplashActivity"
+            android:name=".login.SplashActivity"
             android:theme="@style/FullScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,9 +28,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name="com.modong.service.login.AuthorizeActivity" />
-
+        <activity android:name=".login.AuthorizeActivity" />
         <activity
             android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
             android:configChanges="keyboardHidden|orientation"
@@ -48,15 +44,18 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="sensor"
             android:theme="@style/FinestWebViewTheme.Light" />
-        <activity android:name="com.modong.service.ui.StatusDetailActivity" />
-
-        <activity android:name="com.modong.service.ui.UserInfoActivity">
+        <activity android:name=".ui.StatusDetailActivity" />
+        <activity android:name=".ui.UserInfoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:scheme="com.modong.service.mention" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.ImagePreviewActivity"></activity>
     </application>
 
 </manifest>

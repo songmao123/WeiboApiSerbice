@@ -25,4 +25,6 @@
     <color name="colorStatusWhiteBg">#FEFEFE</color>
     <color name="colorLine">#E9E9E9</color>
     <color name="colorTabIndicator">#FF8200</color>
+    <color name="colorGrey_800">#424242</color>
+    <color name="transparent_grey_900_eighty">#CC212121</color>
 </resources>

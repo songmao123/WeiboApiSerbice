@@ -34,6 +34,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile files('libs/weiboSDKCore_3.1.4.jar')
     compile project(':library')
+    compile "com.android.support:palette-v7:24.1.1"
     compile 'com.android.support:appcompat-v7:24.1.1'
     compile 'com.android.support:design:24.1.1'
     compile 'io.reactivex:rxandroid:1.2.1'

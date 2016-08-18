@@ -113,7 +113,14 @@ public class WeiboStatusAdapter extends BaseQuickAdapter<WeiboStatus> implements
             TextView forward_status_content_tv = helper.getView(R.id.forward_status_content_tv);
             forward_status_content_tv.setOnTouchListener(touchListener);
             String text = retweetedStatus.getText();
-            String content = "@" + retweetedStatus.getUser().getName() + ": " + text;
+
+            WeiboUser retweetedStatusUser = retweetedStatus.getUser();
+            String content;
+            if (retweetedStatusUser != null) {
+                content = "@" + retweetedStatusUser.getScreen_name() + ": " + text;
+            } else {
+                content = text;
+            }
             forward_status_content_tv.setText(TimeLineUtil.convertNormalStringToSpannableString(content));
             LinearLayout forward_status_image_ll = helper.getView(R.id.forward_status_image_ll);
             List<WeiboPicture> retweetedPicUrls = retweetedStatus.getPic_urls();

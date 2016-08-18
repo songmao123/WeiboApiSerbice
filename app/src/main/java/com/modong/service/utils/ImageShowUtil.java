@@ -1,15 +1,22 @@
 package com.modong.service.utils;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Pair;
 import android.util.SparseArray;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.modong.service.R;
 import com.modong.service.model.WeiboPicture;
+import com.modong.service.ui.ImagePreviewActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,12 +28,36 @@ public class ImageShowUtil {
     private SparseArray<ImageParams> imageParamArray;
     private int totalImageWidth;
     private int imageGapWidth;
+    private LayoutInflater inflater;
 
     public ImageShowUtil(Context context) {
         this.mContext = context;
         this.imageParamArray = new SparseArray<>();
         this.totalImageWidth = DensityUtil.getScreenWidth() - DensityUtil.dip2px(10) * 2;
         this.imageGapWidth = DensityUtil.dip2px(2);
+        this.inflater = LayoutInflater.from(context);
+    }
+
+    private View.OnClickListener imageClickListener = new View.OnClickListener(){
+        @Override
+        public void onClick(View view) {
+            Pair<Integer, List<WeiboPicture>> pair = (Pair<Integer, List<WeiboPicture>>) view.getTag();
+            int position = pair.first;
+            List<WeiboPicture> pictures = pair.second;
+            Intent intent = new Intent(mContext, ImagePreviewActivity.class);
+            intent.putExtra(ImagePreviewActivity.IMAGE_POSITION, position);
+            intent.putStringArrayListExtra(ImagePreviewActivity.IMAGE_LIST, getImageStringList(pictures));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mContext.startActivity(intent);
+        }
+    };
+
+    private ArrayList<String> getImageStringList(List<WeiboPicture> pictures) {
+        ArrayList<String> imageStrs = new ArrayList<>();
+        for (WeiboPicture picture: pictures) {
+            imageStrs.add(picture.getThumbnail_pic());
+        }
+        return imageStrs;
     }
 
     public void showStatusImages(LinearLayout container, List<WeiboPicture> images) {
@@ -49,21 +80,23 @@ public class ImageShowUtil {
             linearLayout.setLayoutParams(layoutParams);
             for (int j = 0; j < imageParams.imagePerLine && i * imageParams.imagePerLine + j < totalSize ; j++) {
                 int position = i * imageParams.imagePerLine + j;
-                ImageView imageView = new ImageView(mContext);
+                View frame = inflater.inflate(R.layout.layout_grid_image, null, false);
+                ImageView imageView = (ImageView) frame.findViewById(R.id.imageView);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams
                         (imageParams.imageWidth, imageParams.imageWidth);
                 if (j < 2) {
                     params.setMargins(0, 0, DensityUtil.dip2px(2), 0);
                 }
-                imageView.setLayoutParams(params);
-                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                frame.setLayoutParams(params);
+                frame.setTag(new Pair(position, images));
+                frame.setOnClickListener(imageClickListener);
                 String imageUrl = images.get(position).getThumbnail_pic();
                 if (imageUrl.contains("thumbnail")) {
                     imageUrl = imageUrl.replace("thumbnail", "large");
                 }
                 Glide.with(mContext).load(imageUrl).diskCacheStrategy(DiskCacheStrategy.SOURCE).centerCrop()
                         .crossFade().into(imageView);
-                linearLayout.addView(imageView);
+                linearLayout.addView(frame);
             }
             container.addView(linearLayout);
         }
