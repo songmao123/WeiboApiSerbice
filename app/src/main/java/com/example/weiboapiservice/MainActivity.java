@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.weiboapiservice.databinding.ActivityMainBinding;
@@ -60,6 +61,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         AccountBean accountBean = BaseApplication.getInstance().getAccountBean();
         WeiboUser weiboUser = accountBean.getUser();
         mNavHeaderBinding.setUser(weiboUser);
+        mNavHeaderBinding.setClickHandler(new ClickListenerHandler());
 
         mBinding.appBarMain.toolbar.post(new Runnable() {
             @Override
@@ -148,6 +150,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if (mBinding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                mBinding.drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            }
             if (System.currentTimeMillis() - exitTime > 2000) {
                 Toast.makeText(MainActivity.this, "再按一次退出微博", Toast.LENGTH_SHORT).show();
                 exitTime = System.currentTimeMillis();
@@ -157,5 +163,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    public class ClickListenerHandler {
+        public void onViewClick(View view) {
+            WeiboUser weiboUser = BaseApplication.getInstance().getAccountBean().getUser();
+            UserInfoActivity.lunchUserInfoActivity(MainActivity.this, null, weiboUser);
+        }
     }
 }

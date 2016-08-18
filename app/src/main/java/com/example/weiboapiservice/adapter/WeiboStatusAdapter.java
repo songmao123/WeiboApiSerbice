@@ -18,6 +18,7 @@ import com.example.weiboapiservice.model.WeiboPicture;
 import com.example.weiboapiservice.model.WeiboStatus;
 import com.example.weiboapiservice.model.WeiboUser;
 import com.example.weiboapiservice.ui.StatusDetailActivity;
+import com.example.weiboapiservice.ui.UserInfoActivity;
 import com.example.weiboapiservice.utils.ImageShowUtil;
 import com.example.weiboapiservice.view.CircleImageView;
 import com.squareup.picasso.Picasso;
@@ -51,8 +52,15 @@ public class WeiboStatusAdapter extends BaseQuickAdapter<WeiboStatus> implements
     protected void convert(BaseViewHolder helper, final WeiboStatus weiboStatus) {
         WeiboUser weiboUser = weiboStatus.getUser();
         CircleImageView user_avatar_civ = helper.getView(R.id.user_avatar_civ);
+        user_avatar_civ.setOnClickListener(this);
+        user_avatar_civ.setTag(weiboUser);
+
         Picasso.with(mContext).load(weiboUser.getAvatar_large()).placeholder(R.drawable.header).into(user_avatar_civ);
+        TextView user_name_tv = helper.getView(R.id.user_name_tv);
+        user_name_tv.setOnClickListener(this);
+        user_name_tv.setTag(weiboUser);
         helper.setText(R.id.user_name_tv, weiboUser.getName());
+
         helper.setText(R.id.status_publish_time_tv, TimeLineUtil.getPublishTime(weiboStatus.getCreated_at()));
         helper.setText(R.id.status_from_tv, Html.fromHtml(weiboStatus.getSource()).toString());
         ImageView verified_iv = helper.getView(R.id.verified_iv);
@@ -128,20 +136,16 @@ public class WeiboStatusAdapter extends BaseQuickAdapter<WeiboStatus> implements
             forward_status_ll.setVisibility(View.GONE);
             forward_status_ll.setOnClickListener(null);
         }
-
-//        helper.getConvertView().setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(context, StatusDetailActivity.class);
-//                intent.putExtra(StatusDetailActivity.STATUS_INFO, weiboStatus);
-//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                context.startActivity(intent);
-//            }
-//        });
     }
 
     @Override
     public void onClick(View view) {
-
+        switch (view.getId()) {
+            case R.id.user_avatar_civ:
+            case R.id.user_name_tv:
+                WeiboUser weiboUser = (WeiboUser) view.getTag();
+                UserInfoActivity.lunchUserInfoActivity(context, null, weiboUser);
+                break;
+        }
     }
 }

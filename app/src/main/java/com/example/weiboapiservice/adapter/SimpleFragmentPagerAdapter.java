@@ -13,13 +13,14 @@ import java.util.List;
 public class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
 
     private Context mContext;
-    private String[] tabTitles = {"转发", "评论"};
+    private String[] mTabTitles;
     private List<Fragment> mFragments;
 
-    public SimpleFragmentPagerAdapter(FragmentManager fm, Context context, List<Fragment> fragments) {
+    public SimpleFragmentPagerAdapter(FragmentManager fm, Context context, String[] tabTitles, List<Fragment> fragments) {
         super(fm);
         this.mContext = context;
         this.mFragments = fragments;
+        this.mTabTitles = tabTitles;
     }
 
     @Override
@@ -34,6 +35,6 @@ public class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return tabTitles[position];
+        return mTabTitles[position];
     }
 }

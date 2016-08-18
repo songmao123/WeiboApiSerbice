@@ -6,9 +6,15 @@
 
         <import type="com.example.weiboapiservice.model.WeiboUser" />
 
+        <import type="com.example.weiboapiservice.MainActivity.ClickListenerHandler" />
+
         <variable
             name="user"
             type="WeiboUser" />
+
+        <variable
+            name="clickHandler"
+            type="ClickListenerHandler" />
     </data>
 
     <LinearLayout
@@ -35,6 +41,7 @@
             android:src="@drawable/header"
             app:civ_border_color="@color/colorWhite"
             app:civ_border_width="1dp"
+            android:onClick="@{(theView) -> clickHandler.onViewClick(theView)}"
             app:imageUrl="@{user.getAvatar_large()}"
             app:type="@{1}" />
 

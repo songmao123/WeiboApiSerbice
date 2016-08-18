@@ -41,7 +41,7 @@ public class StatusDetailActivity extends BaseActivity implements View.OnClickLi
     private CompositeSubscription mCompositeSubscription;
     private List<Fragment> mFragments = new ArrayList<>();
     private WeiboStatus mWeiboStatus;
-    private StatusDetailHelper mStatusHelper;
+    private DataInflateHelper mStatusHelper;
     private long mStatusId;
 
     @Override
@@ -49,7 +49,7 @@ public class StatusDetailActivity extends BaseActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_status_detail);
 
-        mStatusHelper = new StatusDetailHelper(this, this);
+        mStatusHelper = new DataInflateHelper(this, this);
         getIntentParams();
         initFragments();
         initEvents();
@@ -89,7 +89,8 @@ public class StatusDetailActivity extends BaseActivity implements View.OnClickLi
 
         mCompositeSubscription = new CompositeSubscription();
 
-        SimpleFragmentPagerAdapter mFragmentPagerAdapter = new SimpleFragmentPagerAdapter(getSupportFragmentManager(), this, mFragments);
+        String[] tabTitles = {"转发", "评论"};
+        SimpleFragmentPagerAdapter mFragmentPagerAdapter = new SimpleFragmentPagerAdapter(getSupportFragmentManager(), this, tabTitles, mFragments);
         mBinding.idStickynavlayoutViewpager.setAdapter(mFragmentPagerAdapter);
         mBinding.idStickynavlayoutIndicator.setupWithViewPager(mBinding.idStickynavlayoutViewpager);
         mBinding.idStickynavlayoutIndicator.setTabMode(TabLayout.MODE_SCROLLABLE);

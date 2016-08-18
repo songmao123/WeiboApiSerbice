@@ -138,7 +138,7 @@ public class AuthorizeActivity extends BaseActivity {
     }
 
     private Observable<WeiboUser> generateUserObservable(AccessToken token) {
-        return WeiboApiFactory.createWeiboApi(null, token.getAccess_token()).getUserInfo(token.getUid());
+        return WeiboApiFactory.createWeiboApi(null, token.getAccess_token()).getUserInfoByUid(token.getUid());
     }
 
     private Observable<WeiboGroups> generateGroupsObservable(AccessToken token) {

@@ -19,7 +19,7 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
  */
 public class CustomBindingAdapter {
 
-    @BindingAdapter({"bind:imageUrl", "bind:type"})
+    @BindingAdapter({"imageUrl", "type"})
     public static void loadImage(final View view, final String url, int type) {
         if (type == 1) {
             Picasso.with(view.getContext()).load(url)/*.bitmapTransform(new CropCircleTransformation(imageView.getContext()))*/

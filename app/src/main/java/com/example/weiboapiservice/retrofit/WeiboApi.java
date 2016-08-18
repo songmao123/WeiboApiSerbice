@@ -21,9 +21,13 @@ public interface WeiboApi {
     @GET("1080*1776")
     Observable<SplashData> getSplashData();
 
-    /** 获取某个用户信息*/
+    /** 通过Uid获取某个用户信息*/
     @GET("users/show.json")
-    Observable<WeiboUser> getUserInfo(@Query("uid") long uid);
+    Observable<WeiboUser> getUserInfoByUid(@Query("uid") long uid);
+
+    /** 通过screen_name获取某个用户信息*/
+    @GET("users/show.json")
+    Observable<WeiboUser> getUserInfoByScreenName(@Query("screen_name") String screenName);
 
     /** 获取好友分组列表*/
     @GET("friendships/groups.json")
@@ -32,6 +36,10 @@ public interface WeiboApi {
     /** 获取用户及其关注用户得的微博*/
     @GET("statuses/friends_timeline.json")
     Observable<WeiboStatusList> getHomeStatusLists(@Query("page") int page, @Query("count") int count);
+
+    /** 获取某个用户发布的微博*/
+    @GET("statuses/home_timeline.json")
+    Observable<WeiboStatusList> getUserStatusLists(@Query("screen_name") String screenName, @Query("page") int page, @Query("count") int count);
 
     /** 获取单条微博信息*/
     @GET("statuses/show.json")

@@ -3,6 +3,7 @@ package com.example.weiboapiservice.retrofit;
 import android.text.TextUtils;
 
 import com.example.weiboapiservice.BuildConfig;
+import com.example.weiboapiservice.utils.Constants;
 
 import java.io.IOException;
 
@@ -14,7 +15,6 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import com.example.weiboapiservice.utils.Constants;
 
 /**
  * Created by 青松 on 2016/8/4.

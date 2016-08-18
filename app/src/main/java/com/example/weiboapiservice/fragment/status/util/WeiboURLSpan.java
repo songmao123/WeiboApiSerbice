@@ -53,7 +53,6 @@ public class WeiboURLSpan extends ClickableSpan {
         Log.v(WeiboURLSpan.class.getSimpleName(), String.format("the link(%s) was clicked ", new Object[]{this.getURL()}));
         Uri uri = Uri.parse(this.getURL());
         Context context = widget.getContext();
-        Intent intent;
         if (uri.getScheme().startsWith("http")) {
             new FinestWebView.Builder(context)
                     .theme(R.style.AppTheme)
@@ -63,7 +62,10 @@ public class WeiboURLSpan extends ClickableSpan {
                     .iconDefaultColorRes(R.color.finestWhite)
                     .disableIconMenu(true)
                     .show(getURL());
-        } else {
+         }else {
+            Intent intent = new Intent("android.intent.action.VIEW", uri);
+            intent.putExtra("com.android.browser.application_id", context.getPackageName());
+            context.startActivity(intent);
 //            intent = new Intent("android.intent.action.VIEW", uri);
 //            intent.putExtra("com.android.browser.application_id", context.getPackageName());
 //            context.startActivity(intent);

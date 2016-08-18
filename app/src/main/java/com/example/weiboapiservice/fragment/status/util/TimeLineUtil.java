@@ -150,4 +150,16 @@ public class TimeLineUtil {
             imgVerified.setVisibility(View.GONE);
     }
 
+    public static int getUserGenderResource(String genderString) {
+        int resId;
+        if ("m".equals(genderString)) {
+            resId = R.drawable.ic_gender_male;
+        } else if ("f".equals(genderString)) {
+            resId = R.drawable.ic_gender_female;
+        } else {
+            resId = R.drawable.ic_gender_unknow;
+        }
+        return resId;
+    }
+
 }
