@@ -2,42 +2,34 @@ package com.modong.service.ui;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.media.Image;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.graphics.Palette;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.Target;
-import com.bumptech.glide.request.target.ViewTarget;
 import com.modong.service.BaseActivity;
 import com.modong.service.R;
 import com.modong.service.adapter.ImageGalleryAdapter;
 import com.modong.service.databinding.ActivityImagePreviewBinding;
+import com.modong.service.utils.DensityUtil;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class ImagePreviewActivity extends BaseActivity implements ImageGalleryAdapter.FullScreenImageLoader, View.OnClickListener {
+import uk.co.senab.photoview.PhotoViewAttacher;
+
+public class ImagePreviewActivity extends BaseActivity implements ImageGalleryAdapter.FullScreenImageLoader,
+        View.OnClickListener {
 
     public static final String IMAGE_LIST = "image_list";
     public static final String IMAGE_POSITION = "image_position";
@@ -49,14 +41,30 @@ public class ImagePreviewActivity extends BaseActivity implements ImageGalleryAd
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        hiddenNavigationBar();
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_image_preview);
 
         getIntentParams();
         initEvents();
+    }
+
+    private void hiddenNavigationBar() {
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        final View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        decorView.setSystemUiVisibility(uiOptions);
+
+        decorView.setOnSystemUiVisibilityChangeListener (new View.OnSystemUiVisibilityChangeListener() {
+            @Override
+            public void onSystemUiVisibilityChange(int visibility) {
+                if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                    decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+                }
+            }
+        });
     }
 
     private void getIntentParams() {
@@ -78,7 +86,14 @@ public class ImagePreviewActivity extends BaseActivity implements ImageGalleryAd
         mBinding.viewpager.addOnPageChangeListener(onPageChangeListener);
         mBinding.viewpager.setCurrentItem(position);
 
+        setTitlebarMargin();
         setToolbarText(position);
+    }
+
+    private void setTitlebarMargin() {
+        int height = DensityUtil.getStatusBarHeight(this);
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mBinding.titleRl.getLayoutParams();
+        params.topMargin = height;
     }
 
     private void setToolbarText(final int position) {
@@ -102,7 +117,7 @@ public class ImagePreviewActivity extends BaseActivity implements ImageGalleryAd
     };
 
     @Override
-    public void loadFullScreenImage(final ImageView iv, String imageUrl, int width, final LinearLayout bglinearLayout) {
+    public void loadFullScreenImage(final PhotoViewAttacher attacher, final ImageView iv, String imageUrl, int width, final LinearLayout bglinearLayout) {
         if (TextUtils.isEmpty(imageUrl)) return;
         if (imageUrl.contains("thumbnail")) {
             imageUrl = imageUrl.replace("thumbnail", "large");
@@ -113,6 +128,7 @@ public class ImagePreviewActivity extends BaseActivity implements ImageGalleryAd
 
             @Override
             public void onSuccess() {
+                attacher.update();
                 Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
                 Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                     public void onGenerated(Palette palette) {
@@ -135,6 +151,11 @@ public class ImagePreviewActivity extends BaseActivity implements ImageGalleryAd
                     });
                 }
         });*/
+    }
+
+    @Override
+    public void onViewSingleTab() {
+        ActivityCompat.finishAfterTransition(this);
     }
 
     private void applyPalette(Palette palette, LinearLayout bgLinearLayout){
@@ -280,7 +301,6 @@ public class ImagePreviewActivity extends BaseActivity implements ImageGalleryAd
         LIGHT_MUTED,
         DARK_MUTED
     }
-
 
     @Override
     protected void onDestroy() {

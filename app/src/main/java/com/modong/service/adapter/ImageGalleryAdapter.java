@@ -13,6 +13,8 @@ import com.modong.service.utils.DensityUtil;
 
 import java.util.List;
 
+import uk.co.senab.photoview.PhotoViewAttacher;
+
 /**
  * Created by sqsong on 16-8-18.
  */
@@ -22,7 +24,8 @@ public class ImageGalleryAdapter extends PagerAdapter {
     private FullScreenImageLoader fullScreenImageLoader;
 
     public interface FullScreenImageLoader {
-        void loadFullScreenImage(ImageView iv, String imageUrl, int width, LinearLayout bglinearLayout);
+        void loadFullScreenImage(PhotoViewAttacher attacher, ImageView iv, String imageUrl, int width, LinearLayout bglinearLayout);
+        void onViewSingleTab();
     }
 
     public ImageGalleryAdapter(List<String> images) {
@@ -38,7 +41,19 @@ public class ImageGalleryAdapter extends PagerAdapter {
         final LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.ll);
         String image = images.get(position);
         int width = DensityUtil.getScreenWidth();
-        fullScreenImageLoader.loadFullScreenImage(imageView, image, width, linearLayout);
+        PhotoViewAttacher attacher = new PhotoViewAttacher(imageView);
+        attacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+            @Override
+            public void onPhotoTap(View view, float v, float v1) {
+                fullScreenImageLoader.onViewSingleTab();
+            }
+
+            @Override
+            public void onOutsidePhotoTap() {
+                fullScreenImageLoader.onViewSingleTab();
+            }
+        });
+        fullScreenImageLoader.loadFullScreenImage(attacher, imageView, image, width, linearLayout);
         container.addView(view, 0);
         return view;
     }
