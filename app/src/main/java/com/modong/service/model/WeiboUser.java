@@ -2,6 +2,7 @@ package com.modong.service.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.os.StrictMode;
 
 import com.modong.service.R;
 
@@ -45,6 +46,7 @@ public class WeiboUser implements Parcelable {
     private int online_status;
     private int bi_followers_count;
     private String lang;
+    private int urank;
 
     public WeiboUser() {}
 
@@ -55,6 +57,7 @@ public class WeiboUser implements Parcelable {
         screen_name = in.readString();
         name = in.readString();
         province = in.readInt();
+        urank = in.readInt();
         city = in.readInt();
         location = in.readString();
         description = in.readString();
@@ -95,6 +98,7 @@ public class WeiboUser implements Parcelable {
         dest.writeString(screen_name);
         dest.writeString(name);
         dest.writeInt(province);
+        dest.writeInt(urank);
         dest.writeInt(city);
         dest.writeString(location);
         dest.writeString(description);
@@ -434,5 +438,13 @@ public class WeiboUser implements Parcelable {
 
     public int getVerifiedColor() {
         return isVerified() ? R.color.color_v_yellow : R.color.color_v_grey;
+    }
+
+    public int getUrank() {
+        return urank;
+    }
+
+    public void setUrank(int urank) {
+        this.urank = urank;
     }
 }

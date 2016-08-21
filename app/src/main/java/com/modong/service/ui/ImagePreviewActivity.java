@@ -122,7 +122,7 @@ public class ImagePreviewActivity extends BaseActivity implements ImageGalleryAd
         if (imageUrl.contains("thumbnail")) {
             imageUrl = imageUrl.replace("thumbnail", "large");
         }
-        Picasso.with(this).load(imageUrl).resize(width, 0).into(iv, new Callback() {
+        Picasso.with(this).load(imageUrl)/*.resize(width, 0)*/.into(iv, new Callback() {
             @Override
             public void onError() {}
 

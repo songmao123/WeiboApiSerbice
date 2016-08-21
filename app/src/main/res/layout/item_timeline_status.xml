@@ -10,13 +10,15 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="10dp"
-
         android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <RelativeLayout
+            android:id="@+id/avatar_rl"
             android:layout_width="40dp"
-            android:layout_height="40dp">
+            android:layout_height="40dp"
+            android:layout_marginRight="10dp"
+            android:visibility="visible">
 
             <com.modong.service.view.CircleImageView
                 android:id="@+id/user_avatar_civ"
@@ -37,7 +39,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:orientation="vertical"
             android:paddingTop="3dp">

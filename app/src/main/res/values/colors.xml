@@ -27,4 +27,8 @@
     <color name="colorTabIndicator">#FF8200</color>
     <color name="colorGrey_800">#424242</color>
     <color name="transparent_grey_900_eighty">#CC212121</color>
+
+    <color name="color_939393">#939393</color>
+    <color name="color_343434">#343434</color>
+    <color name="color_C9C9C9">#C9C9C9</color>
 </resources>

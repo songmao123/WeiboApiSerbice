@@ -21,6 +21,8 @@ import com.modong.service.R;
 import com.modong.service.adapter.SimpleFragmentPagerAdapter;
 import com.modong.service.databinding.ActivityUserInfoBinding;
 import com.modong.service.fragment.BlankFragment;
+import com.modong.service.fragment.user.UserInfoFragment;
+import com.modong.service.fragment.user.UserPhotoListFragment;
 import com.modong.service.fragment.user.UserStatusFragment;
 import com.modong.service.model.WeiboUser;
 import com.modong.service.retrofit.WeiboApiFactory;
@@ -44,11 +46,13 @@ public class UserInfoActivity extends BaseActivity implements AppBarLayout.OnOff
     private int mMaxScrollSize;
 
     private ActivityUserInfoBinding mBinding;
-    private DataInflateHelper mDataInflateHelper;
     private CompositeSubscription mCompositeSubscription;
+    private UserInfoFragment mUserInfoFragment;
+    private DataInflateHelper mDataInflateHelper;
     private List<Fragment> mFragments = new ArrayList<>();
-    private WeiboUser mWeiboUser;
+    public WeiboUser mWeiboUser;
     private String mScreenName;
+    public long mUid;
 
     public static void lunchUserInfoActivity(Context context, String screenName, WeiboUser weiboUser) {
         Intent intent = new Intent(context, UserInfoActivity.class);
@@ -79,6 +83,7 @@ public class UserInfoActivity extends BaseActivity implements AppBarLayout.OnOff
             mWeiboUser = intent.getParcelableExtra(USER_INFO);
             if (mWeiboUser != null) {
                 mScreenName = mWeiboUser.getScreen_name();
+                mUid =  mWeiboUser.getId();
                 mDataInflateHelper.setUserInfos(mBinding, mWeiboUser);
             } else {
                 Uri data = intent.getData();
@@ -93,9 +98,10 @@ public class UserInfoActivity extends BaseActivity implements AppBarLayout.OnOff
     }
 
     private void initFragments() {
-        mFragments.add(BlankFragment.newInstance());
+        mUserInfoFragment = UserInfoFragment.newInstance();
+        mFragments.add(mUserInfoFragment);
         mFragments.add(UserStatusFragment.newInstance(mScreenName));
-        mFragments.add(BlankFragment.newInstance());
+        mFragments.add(UserPhotoListFragment.newInstance(mUid));
     }
 
     @Override
@@ -166,6 +172,11 @@ public class UserInfoActivity extends BaseActivity implements AppBarLayout.OnOff
             public void onNext(WeiboUser weiboUser) {
                 if (weiboUser != null) {
                     mDataInflateHelper.setUserInfos(mBinding, weiboUser);
+                    mWeiboUser = weiboUser;
+                    mUid = weiboUser.getId();
+                    if (mUserInfoFragment != null) {
+                        mUserInfoFragment.setUserInfo(weiboUser);
+                    }
                 }
             }
         }));

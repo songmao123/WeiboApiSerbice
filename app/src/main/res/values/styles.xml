@@ -49,4 +49,31 @@
         <item name="android:layout_height">20dp</item>
         <item name="android:background">@color/colorLine</item>
     </style>
+
+    <style name="Style_User_Info_Container">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/colorWhite</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingTop">12dp</item>
+    </style>
+
+    <style name="Style_User_Info_Left">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">7.5</item>
+        <item name="android:textColor">@color/color_939393</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Style_User_Info_Right">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">2.5</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
 </resources>

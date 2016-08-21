@@ -39,7 +39,12 @@ public interface WeiboApi {
 
     /** 获取某个用户发布的微博*/
     @GET("statuses/home_timeline.json")
+    Observable<WeiboStatusList> getUserAllStatusLists(@Query("screen_name") String screenName, @Query("page") int page, @Query("count") int count);
+
+    /** 获取某个用户发布的微博*/
+    @GET("statuses/user_timeline.json")
     Observable<WeiboStatusList> getUserStatusLists(@Query("screen_name") String screenName, @Query("page") int page, @Query("count") int count);
+
 
     /** 获取单条微博信息*/
     @GET("statuses/show.json")
@@ -52,4 +57,7 @@ public interface WeiboApi {
     /** 获取某条微博的评论列表*/
     @GET("comments/show.json ")
     Observable<WeiboCommentList> getCommentList(@Query("id") long statusId, @Query("page") int pageIndex);
+
+    @GET("place/users/photos.json")
+    Observable<WeiboStatusList> getUserPhotoList(@Query("uid") long uid, @Query("page") int page/*, @Query("count") int count*/);
 }

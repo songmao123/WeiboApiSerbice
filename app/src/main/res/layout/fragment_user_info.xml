@@ -1,0 +1,270 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.modong.service.model.WeiboUser" />
+
+        <import type="android.text.TextUtils" />
+
+        <import type="android.view.View" />
+
+        <import type="com.modong.service.fragment.status.util.TimeLineUtil" />
+
+        <variable
+            name="user"
+            type="WeiboUser" />
+    </data>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.modong.service.fragment.BlankFragment">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <View
+                style="@style/Style_Horizontal_Line_2Px"
+                android:layout_marginTop="15dp" />
+
+            <LinearLayout style="@style/Style_User_Info_Container">
+
+                <TextView
+                    style="@style/Style_User_Info_Left"
+                    android:text="昵称" />
+
+                <TextView
+                    style="@style/Style_User_Info_Right"
+                    android:text="@{TextUtils.isEmpty(user.screen_name) ? @string/unknown : user.screen_name}"
+                    android:textColor="@{TextUtils.isEmpty(user.screen_name) ? @color/color_C9C9C9 : @color/color_343434}" />
+
+            </LinearLayout>
+
+            <View
+                style="@style/Style_Horizontal_Line_2Px"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
+
+            <LinearLayout style="@style/Style_User_Info_Container">
+
+                <TextView
+                    style="@style/Style_User_Info_Left"
+                    android:text="备注" />
+
+                <TextView
+                    style="@style/Style_User_Info_Right"
+                    android:text="@{TextUtils.isEmpty(user.name) ? @string/unknown : user.name}"
+                    android:textColor="@{TextUtils.isEmpty(user.name) ? @color/color_C9C9C9 : @color/color_343434}" />
+
+            </LinearLayout>
+
+            <View
+                style="@style/Style_Horizontal_Line_2Px"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
+
+            <LinearLayout style="@style/Style_User_Info_Container">
+
+                <TextView
+                    style="@style/Style_User_Info_Left"
+                    android:text="微博认证" />
+
+                <TextView
+                    style="@style/Style_User_Info_Right"
+                    android:text="@{TextUtils.isEmpty(user.verified_reason) ? @string/unknown : user.verified_reason}"
+                    android:textColor="@{TextUtils.isEmpty(user.verified_reason) ? @color/color_C9C9C9 : @color/color_343434}" />
+
+            </LinearLayout>
+
+            <View
+                style="@style/Style_Horizontal_Line_2Px"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
+
+            <LinearLayout style="@style/Style_User_Info_Container">
+
+                <TextView
+                    style="@style/Style_User_Info_Left"
+                    android:text="标签" />
+
+                <TextView
+                    style="@style/Style_User_Info_Right"
+                    android:text="@string/unknown"
+                    android:textColor="@color/color_C9C9C9" />
+
+            </LinearLayout>
+
+            <View
+                style="@style/Style_Horizontal_Line_2Px"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
+
+            <LinearLayout style="@style/Style_User_Info_Container">
+
+                <TextView
+                    style="@style/Style_User_Info_Left"
+                    android:text="性别" />
+
+                <TextView
+                    style="@style/Style_User_Info_Right"
+                    android:text="@{TimeLineUtil.getUserGenderString(user.gender)}"
+                    android:textColor="@{TextUtils.isEmpty(user.gender) ? @color/color_C9C9C9 : @color/color_343434}" />
+
+            </LinearLayout>
+
+            <View
+                style="@style/Style_Horizontal_Line_2Px"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
+
+            <LinearLayout style="@style/Style_User_Info_Container">
+
+                <TextView
+                    style="@style/Style_User_Info_Left"
+                    android:text="所在地" />
+
+                <TextView
+                    style="@style/Style_User_Info_Right"
+                    android:text="@{TextUtils.isEmpty(user.location) ? @string/unknown : user.location}"
+                    android:textColor="@{TextUtils.isEmpty(user.location) ? @color/color_C9C9C9 : @color/color_343434}" />
+
+            </LinearLayout>
+
+            <View
+                style="@style/Style_Horizontal_Line_2Px"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
+
+            <LinearLayout style="@style/Style_User_Info_Container">
+
+                <TextView
+                    style="@style/Style_User_Info_Left"
+                    android:text="简介" />
+
+                <TextView
+                    style="@style/Style_User_Info_Right"
+                    android:text="@{TextUtils.isEmpty(user.description) ? @string/unknown : user.description}"
+                    android:textColor="@{TextUtils.isEmpty(user.description) ? @color/color_C9C9C9 : @color/color_343434}" />
+
+            </LinearLayout>
+
+            <View
+                style="@style/Style_Horizontal_Line_2Px"
+                android:visibility="gone" />
+
+
+            <View
+                style="@style/Style_Horizontal_Line_2Px"
+                android:layout_marginTop="10dp"
+                android:visibility="gone" />
+
+
+            <LinearLayout
+                style="@style/Style_User_Info_Container"
+                android:visibility="gone">
+
+                <TextView
+                    style="@style/Style_User_Info_Left"
+                    android:text="公司" />
+
+                <TextView
+                    style="@style/Style_User_Info_Right"
+                    android:text="@string/unknown"
+                    android:textColor="@color/color_C9C9C9" />
+
+            </LinearLayout>
+
+            <View
+                style="@style/Style_Horizontal_Line_2Px"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:visibility="gone" />
+
+            <LinearLayout
+                style="@style/Style_User_Info_Container"
+                android:visibility="gone">
+
+                <TextView
+                    style="@style/Style_User_Info_Left"
+                    android:text="学校" />
+
+                <TextView
+                    style="@style/Style_User_Info_Right"
+                    android:text="@string/unknown"
+                    android:textColor="@color/color_343434" />
+
+            </LinearLayout>
+
+            <View style="@style/Style_Horizontal_Line_2Px" />
+
+
+            <View
+                style="@style/Style_Horizontal_Line_2Px"
+                android:layout_marginTop="10dp" />
+
+            <LinearLayout style="@style/Style_User_Info_Container">
+
+                <TextView
+                    style="@style/Style_User_Info_Left"
+                    android:text="等级" />
+
+                <TextView
+                    style="@style/Style_User_Info_Right"
+                    android:text="@{String.format(@string/rank, user.urank)}"
+                    android:textColor="@color/color_343434" />
+
+            </LinearLayout>
+
+
+            <View
+                style="@style/Style_Horizontal_Line_2Px"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
+
+            <LinearLayout style="@style/Style_User_Info_Container">
+
+                <TextView
+                    style="@style/Style_User_Info_Left"
+                    android:text="博客" />
+
+                <TextView
+                    style="@style/Style_User_Info_Right"
+                    android:text="@{TextUtils.isEmpty(user.url) ? @string/unknown : user.url}"
+                    android:textColor="@{TextUtils.isEmpty(user.url) ? @color/color_C9C9C9 : @color/color_343434}" />
+
+            </LinearLayout>
+
+            <View style="@style/Style_Horizontal_Line_2Px" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="注册时间: "
+                    android:textColor="@color/color_939393"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text='@{TimeLineUtil.formatTime(user.created_at, "yyyy-MM-dd")}'
+                    android:textColor="@color/color_939393"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</layout>

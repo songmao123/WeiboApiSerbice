@@ -32,6 +32,7 @@ public class WeiboStatusAdapter extends BaseQuickAdapter<WeiboStatus> implements
 
     private ImageShowUtil mImageShowUtil;
     private Context context;
+    private boolean isUserInfo;
 
     private View.OnTouchListener touchListener = new View.OnTouchListener() {
         ClickableTextViewMentionLinkOnTouchListener listener = new ClickableTextViewMentionLinkOnTouchListener();
@@ -48,14 +49,23 @@ public class WeiboStatusAdapter extends BaseQuickAdapter<WeiboStatus> implements
         this.context = context;
     }
 
+    public void setIsUserInfo(boolean isUserInfo) {
+        this.isUserInfo = isUserInfo;
+    }
+
     @Override
     protected void convert(BaseViewHolder helper, final WeiboStatus weiboStatus) {
         WeiboUser weiboUser = weiboStatus.getUser();
-        CircleImageView user_avatar_civ = helper.getView(R.id.user_avatar_civ);
-        user_avatar_civ.setOnClickListener(this);
-        user_avatar_civ.setTag(weiboUser);
+        if (isUserInfo) {
+            helper.setVisible(R.id.avatar_rl, false);
+        } else {
+            helper.setVisible(R.id.avatar_rl, true);
+            CircleImageView user_avatar_civ = helper.getView(R.id.user_avatar_civ);
+            user_avatar_civ.setOnClickListener(this);
+            user_avatar_civ.setTag(weiboUser);
+            Picasso.with(mContext).load(weiboUser.getAvatar_large()).placeholder(R.drawable.header).into(user_avatar_civ);
+        }
 
-        Picasso.with(mContext).load(weiboUser.getAvatar_large()).placeholder(R.drawable.header).into(user_avatar_civ);
         TextView user_name_tv = helper.getView(R.id.user_name_tv);
         user_name_tv.setOnClickListener(this);
         user_name_tv.setTag(weiboUser);

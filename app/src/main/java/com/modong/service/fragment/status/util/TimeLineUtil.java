@@ -109,6 +109,17 @@ public class TimeLineUtil {
         return time;
     }
 
+    public static String formatTime(String originTime, String format) {
+        String time = "";
+        try {
+            long parse = Date.parse(originTime);
+            time = formatDate(parse, format);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return time;
+    }
+
     public static String getCounter(int count) {
         if (count < 1000) {
             return String.valueOf(count);
@@ -160,6 +171,18 @@ public class TimeLineUtil {
             resId = R.drawable.ic_gender_unknow;
         }
         return resId;
+    }
+
+    public static String getUserGenderString(String genderString) {
+        String gender;
+        if ("m".equals(genderString)) {
+            gender = "男";
+        } else if ("f".equals(genderString)) {
+            gender = "女";
+        } else {
+            gender = "未知";
+        }
+        return gender;
     }
 
 }

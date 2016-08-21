@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.adapter.rxjava.HttpException;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -40,13 +41,13 @@ import rx.subscriptions.CompositeSubscription;
 public class UserStatusFragment extends AbstractLazyFragment implements BaseQuickAdapter.RequestLoadMoreListener, BaseQuickAdapter.OnRecyclerViewItemClickListener {
 
     private FragmentUserStatusBinding mBinding;
+    private RecyclerView mRecyclerView;
     protected CompositeSubscription mCompositeSubscription;
     private List<WeiboStatus> mWeiboStatusLists = new ArrayList<>();
+    private WeiboStatusAdapter mStatusAdapter;
     private String mScreenName;
     private boolean isPrepared;
     private int pageIndex = 1;
-    private WeiboStatusAdapter mStatusAdapter;
-    private RecyclerView mRecyclerView;
 
     public static UserStatusFragment newInstance(String screenName) {
         UserStatusFragment fragment = new UserStatusFragment();
@@ -86,6 +87,7 @@ public class UserStatusFragment extends AbstractLazyFragment implements BaseQuic
         mRecyclerView.setLayoutManager(layoutManager);
 
         mStatusAdapter = new WeiboStatusAdapter(getActivity(), R.layout.item_timeline_status, mWeiboStatusLists);
+        mStatusAdapter.setIsUserInfo(true);
         mStatusAdapter.openLoadAnimation(BaseQuickAdapter.SCALEIN);
         mStatusAdapter.isFirstOnly(true);
         mStatusAdapter.setOnLoadMoreListener(this);
@@ -152,9 +154,7 @@ public class UserStatusFragment extends AbstractLazyFragment implements BaseQuic
     }
 
     private void getStatusList() {
-        String accessToken = BaseApplication.getInstance().getAccountBean().getAccessToken().getAccess_token();
-        mCompositeSubscription.add(WeiboApiFactory.createWeiboApi(null, accessToken)
-            .getUserStatusLists(mScreenName, pageIndex, 10)
+        mCompositeSubscription.add(getObservable()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new Action1<WeiboStatusList>() {
@@ -190,6 +190,16 @@ public class UserStatusFragment extends AbstractLazyFragment implements BaseQuic
                     }
                 }
             }));
+    }
+
+    private Observable<WeiboStatusList> getObservable() {
+        String userScreenName = BaseApplication.getInstance().getAccountBean().getUser().getScreen_name();
+        String accessToken = BaseApplication.getInstance().getAccountBean().getAccessToken().getAccess_token();
+        if (mScreenName.equals(userScreenName)) {
+            return WeiboApiFactory.createWeiboApi(null, accessToken).getUserStatusLists(mScreenName, pageIndex, 10);
+        } else {
+            return WeiboApiFactory.createWeiboApi(null, accessToken).getUserAllStatusLists(mScreenName, pageIndex, 10);
+        }
     }
 
     protected void setAdapterEmpty() {
