@@ -1,28 +1,43 @@
 package com.modong.service.fragment.status.util;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.os.AsyncTask;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.modong.service.R;
+import com.modong.service.db.EmojiAssetDbHelper;
+import com.modong.service.model.WeiboComment;
+import com.modong.service.model.WeiboStatus;
 import com.modong.service.model.WeiboUser;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by sqsong on 16-8-11.
  */
 public class TimeLineUtil {
 
+    public interface OnSpannableTextFinishListener {
+        void onSpannableTextFinish();
+    }
+
     public static SpannableString convertNormalStringToSpannableString(String text) {
         SpannableString spannable = new SpannableString(text);
-        Linkify.addLinks(spannable, WeiboPattern.EMOTION_URL, WeiboPattern.MENTION_SCHEME);
         Linkify.addLinks(spannable, WeiboPattern.WEB_URL, WeiboPattern.WEB_SCHEME);
         Linkify.addLinks(spannable, WeiboPattern.MENTION_URL, WeiboPattern.MENTION_SCHEME);
         Linkify.addLinks(spannable, WeiboPattern.TOPIC_URL, WeiboPattern.TOPIC_SCHEME);
@@ -36,6 +51,100 @@ public class TimeLineUtil {
             spannable.setSpan(weiboSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         return spannable;
+    }
+
+    public static void setSpannableText(final TextView textView, final WeiboStatus weiboStatus, final OnSpannableTextFinishListener listener) {
+        textView.setText(weiboStatus.getText());
+        final Context context = textView.getContext();
+        new AsyncTask<String, Void, SpannableString>() {
+            @Override
+            protected SpannableString doInBackground(String... params) {
+                SpannableString spannStr = convertNormalStringToSpannableString(params[0]);
+                Matcher matcher = Pattern.compile("\\[(\\S+?)\\]").matcher(spannStr);
+                EmojiAssetDbHelper dbHelper = new EmojiAssetDbHelper(context);
+                while (matcher.find()) {
+                    if (isCancelled()) break;
+                    String key = matcher.group(0);
+                    int k = matcher.start();
+                    int m = matcher.end();
+
+                    Bitmap cacheBitmap = ImageBitmapCache.getInstance().getBitmapFromMemCache(key);
+                    Bitmap bitmap = null;
+                    if (cacheBitmap != null) {
+                        bitmap = cacheBitmap;
+                    } else {
+                        byte[] data = dbHelper.getEmojiBlob(key);
+                        if (data == null) continue;
+                        bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                        int size = context.getResources().getDimensionPixelSize(R.dimen.emotion_size);
+                        bitmap = zoomBitmap(bitmap, size);
+                        ImageBitmapCache.getInstance().addBitmapToMemCache(key, bitmap);
+                    }
+                    ImageSpan imageSpan = new ImageSpan(context, bitmap, ImageSpan.ALIGN_BOTTOM);
+                    spannStr.setSpan(imageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+                return spannStr;
+            }
+
+            @Override
+            protected void onPostExecute(SpannableString spannStr) {
+                weiboStatus.setSpannableText(spannStr);
+                textView.setText(spannStr);
+                if (listener != null) {
+                    listener.onSpannableTextFinish();
+                }
+            }
+        }.execute(weiboStatus.getText());
+    }
+
+    public static void setSpannableText(final TextView textView, final WeiboComment comment) {
+        textView.setText(comment.getText());
+        final Context context = textView.getContext();
+        new AsyncTask<String, Void, SpannableString>() {
+            @Override
+            protected SpannableString doInBackground(String... params) {
+                SpannableString spannStr = convertNormalStringToSpannableString(params[0]);
+                Matcher matcher = Pattern.compile("\\[(\\S+?)\\]").matcher(spannStr);
+                EmojiAssetDbHelper dbHelper = new EmojiAssetDbHelper(context);
+                while (matcher.find()) {
+                    if (isCancelled()) break;
+                    String key = matcher.group(0);
+                    int k = matcher.start();
+                    int m = matcher.end();
+
+                    Bitmap cacheBitmap = ImageBitmapCache.getInstance().getBitmapFromMemCache(key);
+                    Bitmap bitmap = null;
+                    if (cacheBitmap != null) {
+                        bitmap = cacheBitmap;
+                    } else {
+                        byte[] data = dbHelper.getEmojiBlob(key);
+                        if (data == null) continue;
+                        bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                        int size = context.getResources().getDimensionPixelSize(R.dimen.emotion_size);
+                        bitmap = zoomBitmap(bitmap, size);
+                        ImageBitmapCache.getInstance().addBitmapToMemCache(key, bitmap);
+                    }
+                    ImageSpan imageSpan = new ImageSpan(context, bitmap, ImageSpan.ALIGN_BOTTOM);
+                    spannStr.setSpan(imageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+                return spannStr;
+            }
+
+            @Override
+            protected void onPostExecute(SpannableString spannStr) {
+                comment.setSpannableText(spannStr);
+                textView.setText(spannStr);
+            }
+        }.execute(comment.getText());
+    }
+
+
+    public static Bitmap zoomBitmap(Bitmap source, int width) {
+        Matrix matrix = new Matrix();
+        float scale = (float)width * 1.0F / (float)source.getWidth();
+        matrix.setScale(scale, scale);
+        Bitmap result = Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+        return result;
     }
 
     public static String getPublishTime(String time) {

@@ -3,9 +3,6 @@ package com.modong.service.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.SpannableString;
-import android.text.TextUtils;
-
-import com.modong.service.fragment.status.util.TimeLineUtil;
 
 /**
  * Created by sqsong on 16-8-6.
@@ -137,11 +134,12 @@ public class WeiboComment implements Parcelable {
     }
 
     public SpannableString getSpannableText() {
-        if (!TextUtils.isEmpty(spannableText)) {
-            return spannableText;
-        } else {
-            return TimeLineUtil.convertNormalStringToSpannableString(text);
-        }
+//        if (!TextUtils.isEmpty(spannableText)) {
+//            return spannableText;
+//        } else {
+//            return TimeLineUtil.convertNormalStringToSpannableString(text);
+//        }
+        return spannableText;
     }
 
     public void setSpannableText(SpannableString spannableText) {

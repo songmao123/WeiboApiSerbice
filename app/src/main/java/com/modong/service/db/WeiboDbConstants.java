@@ -78,4 +78,29 @@ public class WeiboDbConstants {
             + COLUMN_USER_FOLLOW_ME + " BOOLEAN, "+ COLUMN_USER_ONLINE_STATUS + " INTEGER, "
             + COLUMN_USER_BI_FOLLOWERS_COUNT + " INTEGER, "+ COLUMN_USER_LANG + " TEXT)";
 
+
+    //Emoji
+    public static final String COLUMN_PHRASE = "phrase";
+    public static final String COLUMN_TYPE = "type";
+    public static final String COLUMN_URL = "url";
+    public static final String COLUMN_HOT = "hot";
+    public static final String COLUMN_COMMON = "common";
+    public static final String COLUMN_CATEGORY = "category";
+    public static final String COLUMN_ICON = "icon";
+    public static final String COLUMN_VALUE = "value";
+    public static final String COLUMN_PICID = "picid";
+    public static final String COLUMN_PICBYTES = "pic_bytes";
+
+    public static final String SQL_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " + "emoji.db"
+            + "(id INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + COLUMN_PHRASE + " TEXT, "
+            + COLUMN_TYPE + " TEXT, "
+            + COLUMN_URL + " TEXT, "
+            + COLUMN_PICBYTES + " BLOB, "
+            + COLUMN_HOT + " INTEGER, "
+            + COLUMN_COMMON + " INTEGER, "
+            + COLUMN_CATEGORY + " TEXT, "
+            + COLUMN_ICON + " TEXT, "
+            + COLUMN_VALUE + " TEXT, "
+            + COLUMN_PICID + " TEXT)";
 }

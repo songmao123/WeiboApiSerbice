@@ -77,7 +77,11 @@ public class WeiboStatusAdapter extends BaseQuickAdapter<WeiboStatus> implements
         TimeLineUtil.setImageVerified(verified_iv, weiboUser);
 
         TextView status_content_tv = helper.getView(R.id.status_content_tv);
-        status_content_tv.setText(weiboStatus.getSpannableText());
+        if (weiboStatus.getSpannableText() != null) {
+            status_content_tv.setText(weiboStatus.getSpannableText());
+        } else {
+            TimeLineUtil.setSpannableText(status_content_tv, weiboStatus, null);
+        }
         status_content_tv.setOnTouchListener(touchListener);
 
         LinearLayout status_image_ll = helper.getView(R.id.status_image_ll);

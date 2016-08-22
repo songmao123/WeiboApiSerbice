@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.gxz.library.StickyNavLayout;
 import com.modong.service.BaseActivity;
 import com.modong.service.BaseApplication;
 import com.modong.service.R;
@@ -19,9 +20,9 @@ import com.modong.service.adapter.SimpleFragmentPagerAdapter;
 import com.modong.service.databinding.ActivityStatusDetailBinding;
 import com.modong.service.fragment.CommentListFragment;
 import com.modong.service.fragment.RepostListFragment;
+import com.modong.service.fragment.status.util.TimeLineUtil;
 import com.modong.service.model.WeiboStatus;
 import com.modong.service.retrofit.WeiboApiFactory;
-import com.gxz.library.StickyNavLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +62,7 @@ public class StatusDetailActivity extends BaseActivity implements View.OnClickLi
             mWeiboStatus = intent.getParcelableExtra(STATUS_INFO);
             if (mWeiboStatus != null) {
                 mStatusId = mWeiboStatus.getId();
-                mStatusHelper.setStatusInfo(mBinding, mWeiboStatus);
+                mStatusHelper.setStatusInfo(mBinding, mWeiboStatus, spannableTextFinishListener);
                 statusRequestComplete();
             } else {
                 mStatusId = intent.getLongExtra(STATUS_ID, -1);
@@ -75,6 +76,15 @@ public class StatusDetailActivity extends BaseActivity implements View.OnClickLi
             }
         }
     }
+
+    private TimeLineUtil.OnSpannableTextFinishListener spannableTextFinishListener = new TimeLineUtil.OnSpannableTextFinishListener() {
+        @Override
+        public void onSpannableTextFinish() {
+            if (mBinding.idStick != null) {
+                mBinding.idStick.updateTopViews();
+            }
+        }
+    };
 
     private void initFragments() {
         mFragments.add(RepostListFragment.newInstance(mStatusId));
@@ -173,7 +183,7 @@ public class StatusDetailActivity extends BaseActivity implements View.OnClickLi
                 public void call(WeiboStatus weiboStatus) {
                     statusRequestComplete();
                     if (weiboStatus != null) {
-                        mStatusHelper.setStatusInfo(mBinding, weiboStatus);
+                        mStatusHelper.setStatusInfo(mBinding, weiboStatus, spannableTextFinishListener);
                     }
                 }
             }, new Action1<Throwable>() {

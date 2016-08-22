@@ -1,6 +1,7 @@
 package com.modong.service.adapter;
 
 import android.content.Context;
+import android.text.SpannableString;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -50,7 +51,12 @@ public class CommentListAdapter extends BaseQuickAdapter<WeiboComment> {
         TimeLineUtil.setImageVerified(verified_iv, weiboUser);
 
         TextView status_content_tv = helper.getView(R.id.comment_content_tv);
-        status_content_tv.setText(weiboComment.getSpannableText());
+        SpannableString spannableText = weiboComment.getSpannableText();
+        if (spannableText != null) {
+            status_content_tv.setText(weiboComment.getSpannableText());
+        } else {
+            TimeLineUtil.setSpannableText(status_content_tv, weiboComment);
+        }
         status_content_tv.setOnTouchListener(touchListener);
     }
 }

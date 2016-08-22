@@ -1,6 +1,7 @@
 package com.modong.service.ui;
 
 import android.text.Html;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -47,14 +48,19 @@ public class DataInflateHelper {
         }
     }
 
-    public void setStatusInfo(ActivityStatusDetailBinding binding, WeiboStatus weiboStatus) {
+    public void setStatusInfo(ActivityStatusDetailBinding binding, WeiboStatus weiboStatus, TimeLineUtil.OnSpannableTextFinishListener l) {
         WeiboUser weiboUser = weiboStatus.getUser();
         Picasso.with(mContext).load(weiboUser.getAvatar_large()).placeholder(R.drawable.header).into(binding.userAvatarCiv);
         binding.userNameTv.setText(weiboUser.getName());
         binding.statusPublishTimeTv.setText(TimeLineUtil.getPublishTime(weiboStatus.getCreated_at()));
         binding.statusFromTv.setText(Html.fromHtml(weiboStatus.getSource()).toString());
         TimeLineUtil.setImageVerified(binding.verifiedIv, weiboUser);
-        binding.statusContentTv.setText(weiboStatus.getSpannableText());
+        SpannableString spannableText = weiboStatus.getSpannableText();
+        if (spannableText != null) {
+            binding.statusContentTv.setText(weiboStatus.getSpannableText());
+        } else {
+            TimeLineUtil.setSpannableText(binding.statusContentTv, weiboStatus, l);
+        }
         binding.statusContentTv.setOnTouchListener(touchListener);
 
         List<WeiboPicture> picUrls = weiboStatus.getPic_urls();
