@@ -119,6 +119,7 @@ public class WeiboStatusAdapter extends BaseQuickAdapter<WeiboStatus> implements
         comment_ll.setOnClickListener(this);
         LinearLayout like_ll = helper.getView(R.id.like_ll);
         like_ll.setOnClickListener(this);
+        comment_ll.setTag(weiboStatus);
 
         LinearLayout forward_status_ll = helper.getView(R.id.forward_status_ll);
         final WeiboStatus retweetedStatus = weiboStatus.getRetweeted_status();
@@ -166,6 +167,19 @@ public class WeiboStatusAdapter extends BaseQuickAdapter<WeiboStatus> implements
             case R.id.user_name_tv:
                 WeiboUser weiboUser = (WeiboUser) view.getTag();
                 UserInfoActivity.lunchUserInfoActivity(context, null, weiboUser);
+                break;
+            case R.id.forward_ll:
+
+                break;
+            case R.id.comment_ll:
+                WeiboStatus weiboStatus = (WeiboStatus) view.getTag();
+                Intent intent = new Intent(view.getContext(), StatusDetailActivity.class);
+                intent.putExtra(StatusDetailActivity.STATUS_INFO, weiboStatus);
+                intent.putExtra(StatusDetailActivity.IS_SCROLL_TO_NAV, true);
+                view.getContext().startActivity(intent);
+                break;
+            case R.id.like_ll:
+
                 break;
         }
     }

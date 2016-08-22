@@ -37,6 +37,7 @@ public class StatusDetailActivity extends BaseActivity implements View.OnClickLi
 
     public static final String STATUS_INFO = "status_info";
     public static final String STATUS_ID = "status_id";
+    public static final String IS_SCROLL_TO_NAV = "is_scroll_to_nav";
 
     private ActivityStatusDetailBinding mBinding;
     private CompositeSubscription mCompositeSubscription;
@@ -44,6 +45,7 @@ public class StatusDetailActivity extends BaseActivity implements View.OnClickLi
     private WeiboStatus mWeiboStatus;
     private DataInflateHelper mStatusHelper;
     private long mStatusId;
+    private boolean isScrollToNav = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,7 @@ public class StatusDetailActivity extends BaseActivity implements View.OnClickLi
         Intent intent = getIntent();
         if (intent != null) {
             mWeiboStatus = intent.getParcelableExtra(STATUS_INFO);
+            isScrollToNav = intent.getBooleanExtra(IS_SCROLL_TO_NAV, false);
             if (mWeiboStatus != null) {
                 mStatusId = mWeiboStatus.getId();
                 mStatusHelper.setStatusInfo(mBinding, mWeiboStatus, spannableTextFinishListener);
@@ -114,6 +117,10 @@ public class StatusDetailActivity extends BaseActivity implements View.OnClickLi
 
         mBinding.idStick.setOnStickStateChangeListener(stickStateChangeListener);
         mBinding.swipLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccent);
+
+        if (isScrollToNav) {
+            mBinding.idStick.setStickNavAndScrollToNav();
+        }
     }
 
     private SwipeRefreshLayout.OnRefreshListener mOnRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
@@ -126,6 +133,7 @@ public class StatusDetailActivity extends BaseActivity implements View.OnClickLi
     private StickyNavLayout.onStickStateChangeListener stickStateChangeListener = new StickyNavLayout.onStickStateChangeListener() {
         @Override
         public void isStick(boolean isStick) {
+
         }
 
         @Override

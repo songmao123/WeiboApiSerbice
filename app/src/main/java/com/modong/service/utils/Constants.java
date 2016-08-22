@@ -21,4 +21,6 @@ public class Constants {
 
 
     public static final int PER_PAGE_COUNT = 10;
+
+    public static final int FAB_SCROLL_OFFSET = 4;
 }

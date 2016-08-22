@@ -1,5 +1,6 @@
 package com.modong.service.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -39,15 +40,22 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class WeiboFragment extends Fragment implements BaseQuickAdapter.RequestLoadMoreListener, BaseQuickAdapter.OnRecyclerViewItemClickListener {
+public class WeiboFragment extends Fragment implements BaseQuickAdapter.RequestLoadMoreListener,
+        BaseQuickAdapter.OnRecyclerViewItemClickListener {
 
     private FragmentWeiboBinding mBinding;
+    private SwipeRefreshLayout mSwipLayout;
     private CompositeSubscription mCompositeSubscription;
+    private WeiboStatusAdapter mStatusAdapter;
     private List<WeiboStatus> mWeiboStatusLists = new ArrayList<>();
+    private OnFloatButtonShowListener listener;
 
     private int startPage = 1;
-    private WeiboStatusAdapter mStatusAdapter;
-    private SwipeRefreshLayout mSwipLayout;
+
+    public interface OnFloatButtonShowListener {
+        void showButton();
+        void hiddenButton();
+    }
 
     public static WeiboFragment newInstance() {
         WeiboFragment fragment = new WeiboFragment();
@@ -83,6 +91,19 @@ public class WeiboFragment extends Fragment implements BaseQuickAdapter.RequestL
         SpacesItemDecoration decoration = new SpacesItemDecoration(DensityUtil.dip2px(10));
         mRecyclerView.addItemDecoration(decoration);
         mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (Math.abs(dy) > Constants.FAB_SCROLL_OFFSET) {
+                    if (dy > 0) {
+                        listener.hiddenButton();
+                    } else {
+                        listener.showButton();
+                    }
+                }
+            }
+        });
 
         mStatusAdapter = new WeiboStatusAdapter(getActivity(), R.layout.item_timeline_status, mWeiboStatusLists);
         mStatusAdapter.openLoadAnimation(BaseQuickAdapter.SCALEIN);
@@ -185,6 +206,23 @@ public class WeiboFragment extends Fragment implements BaseQuickAdapter.RequestL
         Intent intent = new Intent(getActivity(), StatusDetailActivity.class);
         intent.putExtra(StatusDetailActivity.STATUS_INFO, weiboStatus);
         ActivityCompat.startActivity(getActivity(), intent, compat.toBundle());
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFloatButtonShowListener) {
+            listener = (OnFloatButtonShowListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
     }
 
     @Override

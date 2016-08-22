@@ -14,6 +14,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.modong.service.databinding.ActivityMainBinding;
@@ -28,7 +29,8 @@ import com.modong.service.ui.UserInfoActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,
+        WeiboFragment.OnFloatButtonShowListener {
 
     private ActivityMainBinding mBinding;
     private NavHeaderMainBinding mNavHeaderBinding;
@@ -68,6 +70,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 mBinding.appBarMain.toolbar.setTitle("全部微博");
             }
         });
+
+        mBinding.appBarMain.fam.setMenuButtonShowAnimation(AnimationUtils.loadAnimation(this, R.anim.show_from_bottom));
+        mBinding.appBarMain.fam.setMenuButtonHideAnimation(AnimationUtils.loadAnimation(this, R.anim.hide_to_bottom));
     }
 
     private void initFragments() {
@@ -162,6 +167,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void showButton() {
+        mBinding.appBarMain.fam.showMenu(true);
+    }
+
+    @Override
+    public void hiddenButton() {
+        mBinding.appBarMain.fam.hideMenu(true);
     }
 
     public class ClickListenerHandler {
