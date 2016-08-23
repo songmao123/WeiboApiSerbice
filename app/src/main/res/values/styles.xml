@@ -84,4 +84,9 @@
         <item name="android:ellipsize">end</item>
     </style>
 
+    <style name="SelectPhotoPopAnim">
+        <item name="android:windowEnterAnimation">@anim/anim_pop_top_show</item>
+        <item name="android:windowExitAnimation">@anim/anim_pop_top_hide</item>
+    </style>
+
 </resources>

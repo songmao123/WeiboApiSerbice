@@ -24,6 +24,7 @@ import com.modong.service.fragment.LikeFragment;
 import com.modong.service.fragment.WeiboFragment;
 import com.modong.service.model.AccountBean;
 import com.modong.service.model.WeiboUser;
+import com.modong.service.ui.SelectPhotoActivity;
 import com.modong.service.ui.UserInfoActivity;
 
 import java.util.ArrayList;
@@ -73,6 +74,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         mBinding.appBarMain.fam.setMenuButtonShowAnimation(AnimationUtils.loadAnimation(this, R.anim.show_from_bottom));
         mBinding.appBarMain.fam.setMenuButtonHideAnimation(AnimationUtils.loadAnimation(this, R.anim.hide_to_bottom));
+
+        mBinding.appBarMain.fabText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mBinding.appBarMain.fam.close(true);
+            }
+        });
     }
 
     private void initFragments() {
@@ -127,7 +135,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             showSelectedFragment(3);
             mBinding.appBarMain.toolbar.setTitle("赞我");
         } else if (id == R.id.nav_share) {
-            startActivity(new Intent(this, UserInfoActivity.class));
+            startActivity(new Intent(this, SelectPhotoActivity.class));
         } else if (id == R.id.nav_send) {
 
         }

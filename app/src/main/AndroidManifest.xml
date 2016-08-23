@@ -54,8 +54,11 @@
                 <data android:scheme="com.modong.service.mention" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.ImagePreviewActivity" />
         <activity
-            android:name=".ui.ImagePreviewActivity"></activity>
+            android:name=".ui.SelectPhotoActivity"
+            android:label="@string/title_activity_select_photo"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

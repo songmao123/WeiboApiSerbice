@@ -22,4 +22,5 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
 
     <string name="unknown">未填写</string>
     <string name="rank">LV %d</string>
+    <string name="title_activity_select_photo">SelectPhotoActivity</string>
 </resources>
