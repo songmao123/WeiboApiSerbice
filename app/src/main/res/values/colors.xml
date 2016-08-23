@@ -9,7 +9,7 @@
     <color name="colorWhite_AA">#AAFFFFFF</color>
     <color name="colorWhite_CC">#CCFFFFFF</color>
     <color name="colorTransparentBlackBg">#AA000000</color>
-    <color name="colorBlackTransParent">#88000000</color>
+    <color name="colorBlackTransParent">#55000000</color>
     <color name="colorBlackBg_01">#AA17181A</color>
     <color name="colorBlackBg_02">#17181A</color>
 
@@ -33,4 +33,5 @@
     <color name="color_343434">#343434</color>
     <color name="color_C9C9C9">#C9C9C9</color>
     <color name="color_E2E2E2">#E2E2E2</color>
+    <color name="color_F2F2F2">#F2F2F2</color>
 </resources>

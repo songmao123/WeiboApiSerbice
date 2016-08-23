@@ -15,7 +15,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.PopupWindow;
-import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.modong.service.BaseActivity;
@@ -30,6 +29,7 @@ import com.modong.service.view.SelectPhotoFolderPop;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -132,6 +132,7 @@ public class SelectPhotoActivity extends BaseActivity implements CompoundButton.
                 }
                 cursor.close();
 
+                Collections.reverse(photoLists);
                 List<PhotoFolderItem> photoFolderItemList = getPhotoFolderItemLists(photoLists);
                 subscriber.onNext(photoFolderItemList);
                 subscriber.onCompleted();
@@ -189,7 +190,9 @@ public class SelectPhotoActivity extends BaseActivity implements CompoundButton.
 
     @Override
     public void onPhotoFolderItemClicked(PhotoFolderItem item, int position) {
-        Toast.makeText(SelectPhotoActivity.this, item.getFolderName() + " Clicked!  Position: " + position, Toast.LENGTH_SHORT).show();
+        mPhotoItems.clear();
+        mPhotoItems.addAll(item.getPhotos());
+        mPhotoGridAdapter.notifyDataSetChanged();
     }
 
     @Override

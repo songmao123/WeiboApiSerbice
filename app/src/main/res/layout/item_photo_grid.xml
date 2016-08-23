@@ -10,9 +10,16 @@
         android:id="@+id/photo_iv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorGrey_800"
+        android:layout_gravity="center"
         android:contentDescription="content description"
         android:scaleType="centerCrop" />
+
+    <View
+        android:id="@+id/mask_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorBlackTransParent"
+        android:visibility="gone" />
 
     <com.modong.service.view.SmoothCheckBox
         android:id="@+id/photo_cb"
@@ -20,9 +27,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:layout_margin="10dp"
-        android:padding="10dp"
-        app:checked="true"
-        app:color_checked="@color/colorPrimary"
+        app:checked="false"
+        app:color_checked="@color/colorUserName"
         app:stroke_width="2px" />
 
 </FrameLayout>

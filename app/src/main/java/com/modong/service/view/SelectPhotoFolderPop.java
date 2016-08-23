@@ -111,7 +111,7 @@ public class SelectPhotoFolderPop extends PopupWindow implements BaseQuickAdapte
         @Override
         protected void convert(BaseViewHolder helper, PhotoFolderItem photoFolderItem) {
             ArrayList<PhotoItem> photos = photoFolderItem.getPhotos();
-            PhotoItem item = photos.get(0);
+            PhotoItem item = photos.get(1);
             String folderName = photoFolderItem.getFolderName();
 
             ImageView photo_preview_iv = helper.getView(R.id.photo_preview_iv);
