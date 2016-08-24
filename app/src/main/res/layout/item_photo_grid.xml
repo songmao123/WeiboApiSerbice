@@ -21,7 +21,7 @@
         android:background="@color/colorBlackTransParent"
         android:visibility="gone" />
 
-    <com.modong.service.view.SmoothCheckBox
+    <!--<com.modong.service.view.SmoothCheckBox
         android:id="@+id/photo_cb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,6 +29,14 @@
         android:layout_margin="10dp"
         app:checked="false"
         app:color_checked="@color/colorUserName"
-        app:stroke_width="2px" />
+        app:stroke_width="2px" />-->
+
+    <ImageView
+        android:id="@+id/photo_check_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:padding="10dp"
+        android:src="@drawable/compose_photo_preview_default" />
 
 </FrameLayout>

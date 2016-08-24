@@ -44,10 +44,15 @@ import rx.subscriptions.CompositeSubscription;
 public class SelectPhotoActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener,
         View.OnClickListener, SelectPhotoFolderPop.OnFolderItemClickListener, BaseQuickAdapter.OnRecyclerViewItemClickListener {
 
+    public static final String MAX_SELECT_PHOTO_COUNT = "max_select_photo_count";
+    public static final int DEFAULT_MAX_SELECT_COUNT = 9;
+
     private ActivitySelectPhotoBinding mBinding;
     private CompositeSubscription mCompositeSubscription;
     private SelectPhotoFolderPop mSelectPhotoPop;
     private List<PhotoItem> mPhotoItems = new ArrayList<>();
+    private List<PhotoItem> mSelectedPhotos = new ArrayList<>();
+    private int mMaxSelectCount = DEFAULT_MAX_SELECT_COUNT;
     private PhotoGridAdapter mPhotoGridAdapter;
 
     @Override
@@ -55,10 +60,18 @@ public class SelectPhotoActivity extends BaseActivity implements CompoundButton.
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_select_photo);
 
+        getIntentParams();
         initPopupWindow();
         initRecyclerView();
         initEvents();
         getPhotoFromPhone();
+    }
+
+    private void getIntentParams() {
+        Intent intent = getIntent();
+        if (intent != null) {
+            mMaxSelectCount = intent.getIntExtra(MAX_SELECT_PHOTO_COUNT, DEFAULT_MAX_SELECT_COUNT);
+        }
     }
 
     private void initPopupWindow() {
@@ -75,7 +88,7 @@ public class SelectPhotoActivity extends BaseActivity implements CompoundButton.
         mBinding.recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         GridSpacingItemDecoration decoration = new GridSpacingItemDecoration(3, DensityUtil.dip2px(3), true);
         mBinding.recyclerView.addItemDecoration(decoration);
-        mPhotoGridAdapter = new PhotoGridAdapter(R.layout.item_photo_grid, mPhotoItems);
+        mPhotoGridAdapter = new PhotoGridAdapter(R.layout.item_photo_grid, mPhotoItems, mSelectedPhotos, mMaxSelectCount);
         mPhotoGridAdapter.setOnRecyclerViewItemClickListener(this);
         mBinding.recyclerView.setAdapter(mPhotoGridAdapter);
     }
@@ -191,6 +204,7 @@ public class SelectPhotoActivity extends BaseActivity implements CompoundButton.
     @Override
     public void onPhotoFolderItemClicked(PhotoFolderItem item, int position) {
         mPhotoItems.clear();
+
         mPhotoItems.addAll(item.getPhotos());
         mPhotoGridAdapter.notifyDataSetChanged();
     }

@@ -9,6 +9,7 @@ import android.os.Parcelable;
 public class PhotoItem implements Parcelable {
     private String filePath;
     private boolean isChecked;
+    private boolean isSetClick;
 
     public PhotoItem(String filePath) {
         this.filePath = filePath;
@@ -17,12 +18,14 @@ public class PhotoItem implements Parcelable {
     protected PhotoItem(Parcel in) {
         filePath = in.readString();
         isChecked = in.readByte() != 0;
+        isSetClick = in.readByte() != 0;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(filePath);
         dest.writeByte((byte) (isChecked ? 1 : 0));
+        dest.writeByte((byte) (isSetClick ? 1 : 0));
     }
 
     @Override
@@ -56,5 +59,13 @@ public class PhotoItem implements Parcelable {
 
     public void setChecked(boolean checked) {
         isChecked = checked;
+    }
+
+    public boolean isSetClick() {
+        return isSetClick;
+    }
+
+    public void setSetClick(boolean setClick) {
+        isSetClick = setClick;
     }
 }
