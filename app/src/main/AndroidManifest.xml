@@ -58,7 +58,9 @@
         <activity
             android:name=".ui.SelectPhotoActivity"
             android:label="@string/title_activity_select_photo"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".ui.PhotoSelectPreviewActivity" />
+        <activity android:name=".ui.PublishStatusActivity"></activity>
     </application>
 
 </manifest>

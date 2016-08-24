@@ -18,19 +18,17 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.modong.service.R;
 import com.modong.service.model.PhotoFolderItem;
-import com.modong.service.model.PhotoItem;
 import com.modong.service.ui.SelectPhotoActivity;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by 青松 on 2016/8/23.
  */
 public class SelectPhotoFolderPop extends PopupWindow implements BaseQuickAdapter.OnRecyclerViewItemClickListener {
 
-    private List<PhotoFolderItem> mPhotoItems = new ArrayList<>();
+    private ArrayList<PhotoFolderItem> mPhotoItems = new ArrayList<>();
     private OnFolderItemClickListener listener;
     private PhotoFolderListAdapter mAdapter;
     private SelectPhotoActivity mContext;
@@ -91,7 +89,7 @@ public class SelectPhotoFolderPop extends PopupWindow implements BaseQuickAdapte
         dismiss();
     }
 
-    public void setPhotoDatas(List<PhotoFolderItem> items) {
+    public void setPhotoDatas(ArrayList<PhotoFolderItem> items) {
         mPhotoItems.clear();
         mPhotoItems.addAll(items);
         mAdapter.notifyDataSetChanged();
@@ -104,21 +102,21 @@ public class SelectPhotoFolderPop extends PopupWindow implements BaseQuickAdapte
 
     private class PhotoFolderListAdapter extends BaseQuickAdapter<PhotoFolderItem> {
 
-        public PhotoFolderListAdapter(int layoutResId, List<PhotoFolderItem> data) {
+        public PhotoFolderListAdapter(int layoutResId, ArrayList<PhotoFolderItem> data) {
             super(layoutResId, data);
         }
 
         @Override
         protected void convert(BaseViewHolder helper, PhotoFolderItem photoFolderItem) {
-            ArrayList<PhotoItem> photos = photoFolderItem.getPhotos();
-            PhotoItem item = photos.get(1);
+            ArrayList<String> photos = photoFolderItem.getPhotos();
+            String item = photos.get(1);
             String folderName = photoFolderItem.getFolderName();
 
             ImageView photo_preview_iv = helper.getView(R.id.photo_preview_iv);
             TextView photo_folder_tv = helper.getView(R.id.photo_folder_tv);
             TextView photo_count_tv = helper.getView(R.id.photo_count_tv);
 
-            Glide.with(mContext).load(new File(item.getFilePath())).centerCrop().into(photo_preview_iv);
+            Glide.with(mContext).load(new File(item)).centerCrop().into(photo_preview_iv);
             photo_folder_tv.setText(folderName);
             photo_count_tv.setText("(" + (photos.size() - 1) + ")");
 

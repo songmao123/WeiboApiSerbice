@@ -17,19 +17,16 @@
             android:padding="5dp"
             android:src="@drawable/ic_arrow_left_42" />
 
-        <CheckBox
-            android:id="@+id/photo_title_cb"
+        <TextView
+            android:id="@+id/photo_title_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_centerVertical="true"
             android:background="?attr/selectableItemBackground"
-            android:button="@null"
-            android:drawablePadding="5dp"
-            android:drawableRight="@drawable/selector_toolbar_title"
             android:gravity="center_vertical"
             android:padding="5dp"
-            android:text="所有照片"
+            android:text="发微博"
             android:textColor="@color/colorWhite"
             android:textSize="18sp" />
 
@@ -43,7 +40,7 @@
             android:layout_marginRight="5dp"
             android:background="?attr/selectableItemBackground"
             android:padding="5dp"
-            android:text="下一步"
+            android:text="发送"
             android:textColor="@color/colorWhite"
             android:textSize="18sp" />
 

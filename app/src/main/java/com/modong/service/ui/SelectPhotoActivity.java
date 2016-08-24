@@ -22,7 +22,6 @@ import com.modong.service.R;
 import com.modong.service.adapter.PhotoGridAdapter;
 import com.modong.service.databinding.ActivitySelectPhotoBinding;
 import com.modong.service.model.PhotoFolderItem;
-import com.modong.service.model.PhotoItem;
 import com.modong.service.utils.DensityUtil;
 import com.modong.service.view.GridSpacingItemDecoration;
 import com.modong.service.view.SelectPhotoFolderPop;
@@ -31,7 +30,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import rx.Observable;
@@ -42,16 +40,18 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 public class SelectPhotoActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener,
-        View.OnClickListener, SelectPhotoFolderPop.OnFolderItemClickListener, BaseQuickAdapter.OnRecyclerViewItemClickListener {
+        View.OnClickListener, SelectPhotoFolderPop.OnFolderItemClickListener, BaseQuickAdapter.OnRecyclerViewItemClickListener,
+        PhotoGridAdapter.OnCheckBoxClickListener {
 
     public static final String MAX_SELECT_PHOTO_COUNT = "max_select_photo_count";
     public static final int DEFAULT_MAX_SELECT_COUNT = 9;
+    public static final int REQUEST_CODE_IMAGE_PREVIEW = 1;
 
     private ActivitySelectPhotoBinding mBinding;
     private CompositeSubscription mCompositeSubscription;
     private SelectPhotoFolderPop mSelectPhotoPop;
-    private List<PhotoItem> mPhotoItems = new ArrayList<>();
-    private List<PhotoItem> mSelectedPhotos = new ArrayList<>();
+    private ArrayList<String> mPhotoItems = new ArrayList<>();
+    private ArrayList<String> mSelectedPhotos = new ArrayList<>();
     private int mMaxSelectCount = DEFAULT_MAX_SELECT_COUNT;
     private PhotoGridAdapter mPhotoGridAdapter;
 
@@ -90,6 +90,7 @@ public class SelectPhotoActivity extends BaseActivity implements CompoundButton.
         mBinding.recyclerView.addItemDecoration(decoration);
         mPhotoGridAdapter = new PhotoGridAdapter(R.layout.item_photo_grid, mPhotoItems, mSelectedPhotos, mMaxSelectCount);
         mPhotoGridAdapter.setOnRecyclerViewItemClickListener(this);
+        mPhotoGridAdapter.setCheckBoxClickListener(this);
         mBinding.recyclerView.setAdapter(mPhotoGridAdapter);
     }
 
@@ -130,9 +131,9 @@ public class SelectPhotoActivity extends BaseActivity implements CompoundButton.
     }
 
     private void getPhotoFromPhone() {
-        mCompositeSubscription.add(Observable.create(new Observable.OnSubscribe<List<PhotoFolderItem>>() {
+        mCompositeSubscription.add(Observable.create(new Observable.OnSubscribe<ArrayList<PhotoFolderItem>>() {
             @Override
-            public void call(Subscriber<? super List<PhotoFolderItem>> subscriber) {
+            public void call(Subscriber<? super ArrayList<PhotoFolderItem>> subscriber) {
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 Uri uri = intent.getData();
                 String[] proj = {MediaStore.Images.Media.DATA};
@@ -146,20 +147,20 @@ public class SelectPhotoActivity extends BaseActivity implements CompoundButton.
                 cursor.close();
 
                 Collections.reverse(photoLists);
-                List<PhotoFolderItem> photoFolderItemList = getPhotoFolderItemLists(photoLists);
+                ArrayList<PhotoFolderItem> photoFolderItemList = getPhotoFolderItemLists(photoLists);
                 subscriber.onNext(photoFolderItemList);
                 subscriber.onCompleted();
             }
         }).subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Action1<List<PhotoFolderItem>>() {
+        .subscribe(new Action1<ArrayList<PhotoFolderItem>>() {
             @Override
-            public void call(List<PhotoFolderItem> photoFolderItems) {
+            public void call(ArrayList<PhotoFolderItem> photoFolderItems) {
                 if (photoFolderItems != null) {
                     mSelectPhotoPop.setPhotoDatas(photoFolderItems);
 
                     mPhotoItems.clear();
-                    ArrayList<PhotoItem> photos = photoFolderItems.get(0).getPhotos();
+                    ArrayList<String> photos = photoFolderItems.get(0).getPhotos();
                     mPhotoItems.addAll(photos);
                     mPhotoGridAdapter.notifyDataSetChanged();
                 }
@@ -167,38 +168,79 @@ public class SelectPhotoActivity extends BaseActivity implements CompoundButton.
         }));
     }
 
-    private List<PhotoFolderItem> getPhotoFolderItemLists(ArrayList<String> photoLists) {
-        List<PhotoFolderItem> photoItems = new ArrayList<>();
+    private ArrayList<PhotoFolderItem> getPhotoFolderItemLists(ArrayList<String> photoLists) {
+        ArrayList<PhotoFolderItem> photoItems = new ArrayList<>();
 
         PhotoFolderItem allPhoto = new PhotoFolderItem();
         allPhoto.setFolderName("所有照片");
         allPhoto.setChecked(true);
-        allPhoto.setPhotos(new ArrayList<PhotoItem>());
-        allPhoto.getPhotos().add(new PhotoItem(R.drawable.ic_camera + ""));
+        allPhoto.setPhotos(new ArrayList<String>());
+        allPhoto.getPhotos().add(R.drawable.ic_camera + "");
         photoItems.add(allPhoto);
 
         Map<String, PhotoFolderItem> map = new HashMap<>();
         for (String path: photoLists) {
-            allPhoto.getPhotos().add(new PhotoItem(path));
+            allPhoto.getPhotos().add(path);
 
             File file = new File(path);
             PhotoFolderItem parentDirName = map.get(file.getParentFile().getName());
             if (parentDirName == null) {
                 parentDirName = new PhotoFolderItem();
                 parentDirName.setFolderName(file.getParentFile().getName());
-                parentDirName.setPhotos(new ArrayList<PhotoItem>());
-                parentDirName.getPhotos().add(new PhotoItem(R.drawable.ic_camera + ""));
+                parentDirName.setPhotos(new ArrayList<String>());
+                parentDirName.getPhotos().add(R.drawable.ic_camera + "");
                 photoItems.add(parentDirName);
                 map.put(file.getParentFile().getName(), parentDirName);
             }
-            parentDirName.getPhotos().add(new PhotoItem(path));
+            parentDirName.getPhotos().add(path);
         }
         return photoItems;
     }
 
     @Override
-    public void onItemClick(View view, int i) {
+    public void onItemClick(View view, int position) {
+        Intent intent = new Intent(this, PhotoSelectPreviewActivity.class);
+        ArrayList<String> allImages = new ArrayList<>();
+        allImages.addAll(mPhotoItems.subList(1, mPhotoItems.size()));
+        intent.putStringArrayListExtra(PhotoSelectPreviewActivity.ALL_IMAGES, allImages);
+        intent.putStringArrayListExtra(PhotoSelectPreviewActivity.SELECTED_IMAGES, mSelectedPhotos);
+        intent.putExtra(PhotoSelectPreviewActivity.CURRENT_POSITION, position - 1);
+        startActivityForResult(intent, REQUEST_CODE_IMAGE_PREVIEW);
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_IMAGE_PREVIEW) {
+            if (data != null) {
+                boolean isComplete = data.getBooleanExtra(PhotoSelectPreviewActivity.PREVIEW_COMPLETE, false);
+                ArrayList<String> selectPhotos = data.getStringArrayListExtra(PhotoSelectPreviewActivity.SELECTED_IMAGES);
+                if (isComplete) {
+                    Intent intent = new Intent();
+                    intent.putStringArrayListExtra(PhotoSelectPreviewActivity.SELECTED_IMAGES, selectPhotos);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                } else {
+                    mSelectedPhotos.clear();
+                    mSelectedPhotos.addAll(selectPhotos);
+                    mPhotoGridAdapter.notifyDataSetChanged();
+                    setNextStepText(mSelectedPhotos.size());
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onCheckBoxClicked(int count) {
+        setNextStepText(count);
+    }
+
+    private void setNextStepText(int count) {
+        if (count > 0) {
+            mBinding.toolbarInclude.nextTv.setText("下一步 (" + count + ")");
+        } else {
+            mBinding.toolbarInclude.nextTv.setText("下一步");
+        }
     }
 
     @Override
@@ -227,5 +269,4 @@ public class SelectPhotoActivity extends BaseActivity implements CompoundButton.
             mCompositeSubscription.unsubscribe();
         }
     }
-
 }

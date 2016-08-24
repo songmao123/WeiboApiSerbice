@@ -12,21 +12,21 @@ public class PhotoFolderItem implements Parcelable {
 
     private String folderName;
     private boolean isChecked;
-    private ArrayList<PhotoItem> photos;
+    private ArrayList<String> photos;
 
     public PhotoFolderItem(){}
 
     protected PhotoFolderItem(Parcel in) {
         folderName = in.readString();
         isChecked = in.readByte() != 0;
-        photos = in.createTypedArrayList(PhotoItem.CREATOR);
+        photos = in.createStringArrayList();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(folderName);
         dest.writeByte((byte) (isChecked ? 1 : 0));
-        dest.writeTypedList(photos);
+        dest.writeStringList(photos);
     }
 
     @Override
@@ -62,11 +62,11 @@ public class PhotoFolderItem implements Parcelable {
         isChecked = checked;
     }
 
-    public ArrayList<PhotoItem> getPhotos() {
+    public ArrayList<String> getPhotos() {
         return photos;
     }
 
-    public void setPhotos(ArrayList<PhotoItem> photos) {
+    public void setPhotos(ArrayList<String> photos) {
         this.photos = photos;
     }
 }

@@ -24,6 +24,7 @@ import com.modong.service.fragment.LikeFragment;
 import com.modong.service.fragment.WeiboFragment;
 import com.modong.service.model.AccountBean;
 import com.modong.service.model.WeiboUser;
+import com.modong.service.ui.PublishStatusActivity;
 import com.modong.service.ui.SelectPhotoActivity;
 import com.modong.service.ui.UserInfoActivity;
 
@@ -31,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,
-        WeiboFragment.OnFloatButtonShowListener {
+        WeiboFragment.OnFloatButtonShowListener, View.OnClickListener {
 
     private ActivityMainBinding mBinding;
     private NavHeaderMainBinding mNavHeaderBinding;
@@ -50,6 +51,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public void initEvents() {
         setSupportActionBar(mBinding.appBarMain.toolbar);
+
+        mBinding.appBarMain.fabText.setOnClickListener(this);
+        mBinding.appBarMain.fabImage.setOnClickListener(this);
 
         DrawerLayout drawer = mBinding.drawerLayout;
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -74,13 +78,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         mBinding.appBarMain.fam.setMenuButtonShowAnimation(AnimationUtils.loadAnimation(this, R.anim.show_from_bottom));
         mBinding.appBarMain.fam.setMenuButtonHideAnimation(AnimationUtils.loadAnimation(this, R.anim.hide_to_bottom));
-
-        mBinding.appBarMain.fabText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mBinding.appBarMain.fam.close(true);
-            }
-        });
     }
 
     private void initFragments() {
@@ -167,7 +164,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 return true;
             }
             if (System.currentTimeMillis() - exitTime > 2000) {
-                Toast.makeText(MainActivity.this, "再按一次退出微博", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "再按一次退出魔动", Toast.LENGTH_SHORT).show();
                 exitTime = System.currentTimeMillis();
             } else {
                 finish();
@@ -185,6 +182,22 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public void hiddenButton() {
         mBinding.appBarMain.fam.hideMenu(true);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.fab_text:
+                Intent publishIntent = new Intent(this, PublishStatusActivity.class);
+                startActivity(publishIntent);
+                mBinding.appBarMain.fam.close(true);
+                break;
+            case R.id.fab_image:
+                Intent intent = new Intent(this, SelectPhotoActivity.class);
+                startActivity(intent);
+                mBinding.appBarMain.fam.close(true);
+                break;
+        }
     }
 
     public class ClickListenerHandler {
