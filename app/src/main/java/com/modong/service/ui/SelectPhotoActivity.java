@@ -44,6 +44,7 @@ public class SelectPhotoActivity extends BaseActivity implements CompoundButton.
         PhotoGridAdapter.OnCheckBoxClickListener {
 
     public static final String MAX_SELECT_PHOTO_COUNT = "max_select_photo_count";
+    public static final String DATA_SELECTED_PHOTO = "data_selected_photo";
     public static final int DEFAULT_MAX_SELECT_COUNT = 9;
     public static final int REQUEST_CODE_IMAGE_PREVIEW = 1;
 
@@ -86,7 +87,7 @@ public class SelectPhotoActivity extends BaseActivity implements CompoundButton.
 
     private void initRecyclerView() {
         mBinding.recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-        GridSpacingItemDecoration decoration = new GridSpacingItemDecoration(3, DensityUtil.dip2px(3), true);
+        GridSpacingItemDecoration decoration = new GridSpacingItemDecoration(3, DensityUtil.dip2px(3), true, false);
         mBinding.recyclerView.addItemDecoration(decoration);
         mPhotoGridAdapter = new PhotoGridAdapter(R.layout.item_photo_grid, mPhotoItems, mSelectedPhotos, mMaxSelectCount);
         mPhotoGridAdapter.setOnRecyclerViewItemClickListener(this);
@@ -111,7 +112,10 @@ public class SelectPhotoActivity extends BaseActivity implements CompoundButton.
                 ActivityCompat.finishAfterTransition(this);
                 break;
             case R.id.next_tv:
-
+                Intent intent = new Intent();
+                intent.putStringArrayListExtra(DATA_SELECTED_PHOTO, mSelectedPhotos);
+                setResult(RESULT_OK, intent);
+                finish();
                 break;
         }
     }
@@ -217,7 +221,7 @@ public class SelectPhotoActivity extends BaseActivity implements CompoundButton.
                 ArrayList<String> selectPhotos = data.getStringArrayListExtra(PhotoSelectPreviewActivity.SELECTED_IMAGES);
                 if (isComplete) {
                     Intent intent = new Intent();
-                    intent.putStringArrayListExtra(PhotoSelectPreviewActivity.SELECTED_IMAGES, selectPhotos);
+                    intent.putStringArrayListExtra(DATA_SELECTED_PHOTO, selectPhotos);
                     setResult(RESULT_OK, intent);
                     finish();
                 } else {
