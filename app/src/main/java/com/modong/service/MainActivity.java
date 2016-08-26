@@ -194,6 +194,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
             case R.id.fab_image:
                 Intent intent = new Intent(this, SelectPhotoActivity.class);
+                intent.putExtra(SelectPhotoActivity.DIRECT_SELECT_PHOTO, true);
                 startActivity(intent);
                 mBinding.appBarMain.fam.close(true);
                 break;

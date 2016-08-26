@@ -53,8 +53,8 @@
             android:layout_height="wrap_content"
             android:background="@color/color_F9F9F9"
             android:orientation="horizontal"
-            android:paddingBottom="8dp"
-            android:paddingTop="8dp">
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -65,8 +65,9 @@
 
                 <ImageView
                     android:id="@+id/publish_image_iv"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:padding="5dp"
                     android:src="@drawable/selector_publish_image" />
 
             </LinearLayout>
@@ -80,8 +81,9 @@
 
                 <ImageView
                     android:id="@+id/publish_alt_iv"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:padding="5dp"
                     android:src="@drawable/selector_publish_alt" />
 
             </LinearLayout>
@@ -95,8 +97,9 @@
 
                 <ImageView
                     android:id="@+id/publish_topic_iv"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:padding="4dp"
                     android:src="@drawable/selector_publish_topic" />
 
             </LinearLayout>
@@ -110,8 +113,9 @@
 
                 <ImageView
                     android:id="@+id/publish_emoji_iv"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:padding="5dp"
                     android:src="@drawable/selector_publish_face" />
 
             </LinearLayout>
@@ -126,10 +130,83 @@
 
                 <ImageView
                     android:id="@+id/publish_more_iv"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:padding="5dp"
                     android:src="@drawable/selector_publish_plus" />
 
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/emotion_ll"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:background="@color/color_F2F2F2"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <View style="@style/Style_Horizontal_Line_2Px" />
+
+            <com.modong.service.view.FixedViewPager
+                android:id="@+id/emotion_viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/color_F1F1F1"
+                android:orientation="vertical">
+
+                <View style="@style/Style_Horizontal_Line_2Px" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:scrollbars="none">
+
+                        <LinearLayout
+                            android:id="@+id/emotion_tab_ll"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <!--<TextView
+                                android:layout_width="80dp"
+                                android:layout_height="wrap_content"
+                                android:background="@color/color_DFDFDF"
+                                android:gravity="center"
+                                android:paddingBottom="10dp"
+                                android:paddingTop="10dp"
+                                android:text="默认"
+                                android:textColor="@color/color_646464"
+                                android:textSize="14sp" />-->
+                            <!--color_F1F1F1 color_DFDFDF color_646464  color_BDBDBD-->
+
+                        </LinearLayout>
+                    </HorizontalScrollView>
+
+                    <ImageView
+                        android:id="@+id/emotion_delete_iv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="15dp"
+                        android:paddingTop="5dp"
+                        android:src="@drawable/selector_emotion_delete" />
+
+                </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>

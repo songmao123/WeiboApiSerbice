@@ -52,12 +52,14 @@ public class PhotoGridAdapter extends BaseQuickAdapter<String> {
         ViewGroup.LayoutParams params = photo_iv.getLayoutParams();
         if (position == 0) {
             photo_check_iv.setVisibility(View.GONE);
+            mask_view.setVisibility(View.GONE);
             int resId = Integer.valueOf(photoPath);
             params.width = DensityUtil.dip2px(50);
             params.height = DensityUtil.dip2px(50);
             photo_iv.setImageResource(resId);
         } else {
             photo_check_iv.setVisibility(View.VISIBLE);
+            mask_view.setVisibility(View.VISIBLE);
             Glide.with(mContext).load(photoPath).centerCrop().into(photo_iv);
             params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = ViewGroup.LayoutParams.MATCH_PARENT;

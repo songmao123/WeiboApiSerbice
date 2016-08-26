@@ -1,6 +1,14 @@
 package com.modong.service.utils;
 
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.support.v7.graphics.Palette;
+import android.text.Editable;
+import android.widget.EditText;
+
+import com.modong.service.fragment.status.util.WeiboPattern;
+
+import java.util.regex.Matcher;
 
 /**
  * Created by 青松 on 2016/8/24.
@@ -124,5 +132,37 @@ public class CommonUtils {
             }
         }
         return bgColor;
+    }
+
+    public static Bitmap zoomBitmap(Bitmap source, int width) {
+        Matrix matrix = new Matrix();
+        float scale = (float)width * 1.0F / (float)source.getWidth();
+        matrix.setScale(scale, scale);
+        Bitmap result = Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+        return result;
+    }
+
+    public void deleteFace(EditText editText) {
+        if (editText == null)
+            return;
+        Editable text = editText.getText();
+        int cursorIndex = editText.getSelectionStart();
+        if (cursorIndex == 0)
+            return;
+        int delLen = 1;// 需要删除光标之前字符的长度
+        String faceStr = text.toString().substring(0, cursorIndex);// 截取光标之前的字符串，处理光标后面也有‘[’情况
+        char charAt = faceStr.charAt(faceStr.length() - 1);
+        if (String.valueOf(charAt).equals("]")) {
+            int faceStart = faceStr.lastIndexOf("[");
+            if (faceStart > -1) {
+                String face = faceStr.substring(faceStart);// 截取‘[]’之前的文本内容
+                Matcher matcher = WeiboPattern.EMOTION_URL.matcher(face);
+                while (matcher.find()) {
+                    delLen = face.length();// 设置光标之前长度为表情长度
+                    break;
+                }
+            }
+        }
+        text.delete(cursorIndex - delLen, cursorIndex);// 删除光标之前长度为delLen的字符
     }
 }

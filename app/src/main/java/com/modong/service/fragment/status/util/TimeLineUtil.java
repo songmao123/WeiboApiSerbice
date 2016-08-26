@@ -73,7 +73,7 @@ public class TimeLineUtil {
                     if (cacheBitmap != null) {
                         bitmap = cacheBitmap;
                     } else {
-                        byte[] data = dbHelper.getEmojiBlob(key);
+                        byte[] data = dbHelper.getEmojiBlob(EmojiAssetDbHelper.DB_NAME_EMOJI,key);
                         if (data == null) continue;
                         bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                         int size = context.getResources().getDimensionPixelSize(R.dimen.emotion_size);
@@ -117,7 +117,7 @@ public class TimeLineUtil {
                     if (cacheBitmap != null) {
                         bitmap = cacheBitmap;
                     } else {
-                        byte[] data = dbHelper.getEmojiBlob(key);
+                        byte[] data = dbHelper.getEmojiBlob(EmojiAssetDbHelper.DB_NAME_EMOJI, key);
                         if (data == null) continue;
                         bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                         int size = context.getResources().getDimensionPixelSize(R.dimen.emotion_size);

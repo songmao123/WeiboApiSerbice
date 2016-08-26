@@ -103,4 +103,9 @@ public class WeiboDbConstants {
             + COLUMN_ICON + " TEXT, "
             + COLUMN_VALUE + " TEXT, "
             + COLUMN_PICID + " TEXT)";
+
+    //Emotions
+    public static final String TABLE_NAME_EMOTION = "emotion";
+    public static final String COLUMN_DESCRIPTION = "description";
+    public static final String COLUMN_NAME = "name";
 }

@@ -39,13 +39,15 @@ public class PhotoSelectPreviewActivity extends BaseActivity implements OnCheckB
     public static final String CURRENT_POSITION = "current_position";
     public static final String MAX_SELECTED_COUNT = "max_selected_count";
     public static final String PREVIEW_COMPLETE = "preview_complete";
-
+    /** 从发布微博页面直接过来预览*/
+    public static final String FROM_PUBLISH_DIRECT = "from_publish_direct";
 
     private ActivityPhotoSelectPreviewBinding mBinding;
     private ArrayList<String> mAllImages;
     private ArrayList<String> mSelectedImages;
     private int curPosition = 0;
     private int maxSelectedCount = 0;
+    private boolean fromPublishPage = false;
 
     private final ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
@@ -78,6 +80,7 @@ public class PhotoSelectPreviewActivity extends BaseActivity implements OnCheckB
             this.mSelectedImages = intent.getStringArrayListExtra(SELECTED_IMAGES);
             this.curPosition = intent.getIntExtra(CURRENT_POSITION, 0);
             this.maxSelectedCount = intent.getIntExtra(MAX_SELECTED_COUNT, 9);
+            this.fromPublishPage = intent.getBooleanExtra(FROM_PUBLISH_DIRECT, false);
         }
     }
 
@@ -116,17 +119,35 @@ public class PhotoSelectPreviewActivity extends BaseActivity implements OnCheckB
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back_arrow_iv:
-                backAction(false);
+                if (fromPublishPage) {
+                    finish();
+                } else {
+                    backAction(false);
+                }
                 break;
             case R.id.next_tv:
-                backAction(true);
+                doNextAction();
                 break;
+        }
+    }
+
+    private void doNextAction() {
+        if (fromPublishPage) { //如果直接从发布页面过来预览
+            Intent intent = new Intent();
+            intent.putStringArrayListExtra(SelectPhotoActivity.DATA_SELECTED_PHOTO, mSelectedImages);
+            setResult(RESULT_OK, intent);
+            finish();
+        } else {
+            backAction(true);
         }
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if (fromPublishPage) {
+                return super.onKeyDown(keyCode, event);
+            }
             backAction(false);
             return true;
         }

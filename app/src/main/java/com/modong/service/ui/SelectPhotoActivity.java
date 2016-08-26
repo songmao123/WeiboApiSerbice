@@ -15,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.modong.service.BaseActivity;
@@ -45,6 +46,8 @@ public class SelectPhotoActivity extends BaseActivity implements CompoundButton.
 
     public static final String MAX_SELECT_PHOTO_COUNT = "max_select_photo_count";
     public static final String DATA_SELECTED_PHOTO = "data_selected_photo";
+    /** 是否直接进入到该页面选取照片，区分于从发布微博页面进来的情况*/
+    public static final String DIRECT_SELECT_PHOTO = "direct_select_photo";
     public static final int DEFAULT_MAX_SELECT_COUNT = 9;
     public static final int REQUEST_CODE_IMAGE_PREVIEW = 1;
 
@@ -53,8 +56,9 @@ public class SelectPhotoActivity extends BaseActivity implements CompoundButton.
     private SelectPhotoFolderPop mSelectPhotoPop;
     private ArrayList<String> mPhotoItems = new ArrayList<>();
     private ArrayList<String> mSelectedPhotos = new ArrayList<>();
-    private int mMaxSelectCount = DEFAULT_MAX_SELECT_COUNT;
     private PhotoGridAdapter mPhotoGridAdapter;
+    private int mMaxSelectCount = DEFAULT_MAX_SELECT_COUNT;
+    private boolean isDirectSelectPhoto = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +76,13 @@ public class SelectPhotoActivity extends BaseActivity implements CompoundButton.
         Intent intent = getIntent();
         if (intent != null) {
             mMaxSelectCount = intent.getIntExtra(MAX_SELECT_PHOTO_COUNT, DEFAULT_MAX_SELECT_COUNT);
+            isDirectSelectPhoto = intent.getBooleanExtra(DIRECT_SELECT_PHOTO, false);
+            ArrayList<String> selectPhotos = intent.getStringArrayListExtra(DATA_SELECTED_PHOTO);
+            if (selectPhotos != null && selectPhotos.size() > 0) {
+                mSelectedPhotos.clear();
+                mSelectedPhotos.addAll(selectPhotos);
+                setNextStepText(mSelectedPhotos.size());
+            }
         }
     }
 
@@ -112,11 +123,21 @@ public class SelectPhotoActivity extends BaseActivity implements CompoundButton.
                 ActivityCompat.finishAfterTransition(this);
                 break;
             case R.id.next_tv:
-                Intent intent = new Intent();
-                intent.putStringArrayListExtra(DATA_SELECTED_PHOTO, mSelectedPhotos);
-                setResult(RESULT_OK, intent);
-                finish();
+                doNextAction();
                 break;
+        }
+    }
+
+    private void doNextAction() {
+        if (isDirectSelectPhoto) {
+            Intent intent = new Intent(this, PublishStatusActivity.class);
+            intent.putStringArrayListExtra(DATA_SELECTED_PHOTO, mSelectedPhotos);
+            startActivity(intent);
+        } else {
+            Intent data = new Intent();
+            data.putStringArrayListExtra(DATA_SELECTED_PHOTO, mSelectedPhotos);
+            setResult(RESULT_OK, data);
+            finish();
         }
     }
 
@@ -203,13 +224,17 @@ public class SelectPhotoActivity extends BaseActivity implements CompoundButton.
 
     @Override
     public void onItemClick(View view, int position) {
-        Intent intent = new Intent(this, PhotoSelectPreviewActivity.class);
-        ArrayList<String> allImages = new ArrayList<>();
-        allImages.addAll(mPhotoItems.subList(1, mPhotoItems.size()));
-        intent.putStringArrayListExtra(PhotoSelectPreviewActivity.ALL_IMAGES, allImages);
-        intent.putStringArrayListExtra(PhotoSelectPreviewActivity.SELECTED_IMAGES, mSelectedPhotos);
-        intent.putExtra(PhotoSelectPreviewActivity.CURRENT_POSITION, position - 1);
-        startActivityForResult(intent, REQUEST_CODE_IMAGE_PREVIEW);
+        if (position == 0) {
+            Toast.makeText(SelectPhotoActivity.this, "开启相机！", Toast.LENGTH_SHORT).show();
+        } else {
+            Intent intent = new Intent(this, PhotoSelectPreviewActivity.class);
+            ArrayList<String> allImages = new ArrayList<>();
+            allImages.addAll(mPhotoItems.subList(1, mPhotoItems.size()));
+            intent.putStringArrayListExtra(PhotoSelectPreviewActivity.ALL_IMAGES, allImages);
+            intent.putStringArrayListExtra(PhotoSelectPreviewActivity.SELECTED_IMAGES, mSelectedPhotos);
+            intent.putExtra(PhotoSelectPreviewActivity.CURRENT_POSITION, position - 1);
+            startActivityForResult(intent, REQUEST_CODE_IMAGE_PREVIEW);
+        }
     }
 
     @Override
@@ -219,14 +244,11 @@ public class SelectPhotoActivity extends BaseActivity implements CompoundButton.
             if (data != null) {
                 boolean isComplete = data.getBooleanExtra(PhotoSelectPreviewActivity.PREVIEW_COMPLETE, false);
                 ArrayList<String> selectPhotos = data.getStringArrayListExtra(PhotoSelectPreviewActivity.SELECTED_IMAGES);
+                mSelectedPhotos.clear();
+                mSelectedPhotos.addAll(selectPhotos);
                 if (isComplete) {
-                    Intent intent = new Intent();
-                    intent.putStringArrayListExtra(DATA_SELECTED_PHOTO, selectPhotos);
-                    setResult(RESULT_OK, intent);
-                    finish();
+                    doNextAction();
                 } else {
-                    mSelectedPhotos.clear();
-                    mSelectedPhotos.addAll(selectPhotos);
                     mPhotoGridAdapter.notifyDataSetChanged();
                     setNextStepText(mSelectedPhotos.size());
                 }
@@ -249,8 +271,10 @@ public class SelectPhotoActivity extends BaseActivity implements CompoundButton.
 
     @Override
     public void onPhotoFolderItemClicked(PhotoFolderItem item, int position) {
-        mPhotoItems.clear();
+        String folderName = item.getFolderName();
+        mBinding.toolbarInclude.photoTitleCb.setText(folderName);
 
+        mPhotoItems.clear();
         mPhotoItems.addAll(item.getPhotos());
         mPhotoGridAdapter.notifyDataSetChanged();
     }
