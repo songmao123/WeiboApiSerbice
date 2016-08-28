@@ -142,7 +142,7 @@ public class CommonUtils {
         return result;
     }
 
-    public void deleteFace(EditText editText) {
+    public static void deleteFace(EditText editText) {
         if (editText == null)
             return;
         Editable text = editText.getText();

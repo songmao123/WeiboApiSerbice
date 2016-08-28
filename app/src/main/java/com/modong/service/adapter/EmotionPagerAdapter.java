@@ -34,6 +34,15 @@ public class EmotionPagerAdapter extends PagerAdapter {
     private List<EmotionItem> mEmotionItems;
     private LayoutInflater mInflater;
     private EmotionGridItemDecoration decoration;
+    private OnEmotionClickListener listener;
+
+    public interface OnEmotionClickListener {
+        void onEmotionClick(View view, Emotion emotion,int position);
+    }
+
+    public void setOnEmotionClickListener (OnEmotionClickListener l) {
+        this.listener = l;
+    }
 
     public EmotionPagerAdapter(Context context, List<EmotionItem> emotionItems) {
         this.mContext = context;
@@ -48,11 +57,14 @@ public class EmotionPagerAdapter extends PagerAdapter {
         rootView.setLayoutManager(new GridLayoutManager(mContext, 7));
         rootView.addItemDecoration(decoration);
         EmotionItem emotionItem = mEmotionItems.get(position);
-        EmotionGridAdapter adapter = new EmotionGridAdapter(R.layout.item_emotion_item, emotionItem.getEmotionList());
+        final List<Emotion> emotionList = emotionItem.getEmotionList();
+        EmotionGridAdapter adapter = new EmotionGridAdapter(R.layout.item_emotion_item, emotionList);
         adapter.setOnRecyclerViewItemClickListener(new BaseQuickAdapter.OnRecyclerViewItemClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
-
+            public void onItemClick(View view, int pos) {
+                if (listener != null) {
+                    listener.onEmotionClick(view, emotionList.get(pos), pos);
+                }
             }
         });
         rootView.setAdapter(adapter);

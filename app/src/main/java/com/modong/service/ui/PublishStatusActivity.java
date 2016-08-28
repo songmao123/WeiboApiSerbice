@@ -3,9 +3,19 @@ package com.modong.service.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ImageSpan;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -23,11 +33,15 @@ import com.modong.service.adapter.EmotionPagerAdapter;
 import com.modong.service.adapter.PublishPhotoGridAdapter;
 import com.modong.service.databinding.ActivityPublishStatusBinding;
 import com.modong.service.db.EmojiAssetDbHelper;
+import com.modong.service.db.WeiboDbConstants;
+import com.modong.service.fragment.status.util.ImageBitmapCache;
 import com.modong.service.model.Emotion;
 import com.modong.service.model.EmotionItem;
+import com.modong.service.utils.CommonUtils;
 import com.modong.service.utils.DensityUtil;
 import com.modong.service.view.GridSpacingItemDecoration;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +52,9 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class PublishStatusActivity extends BaseActivity implements View.OnClickListener, PublishPhotoGridAdapter.OnRecyclerViewItemClickListener {
+public class PublishStatusActivity extends BaseActivity implements View.OnClickListener,
+        PublishPhotoGridAdapter.OnRecyclerViewItemClickListener,
+        EmotionPagerAdapter.OnEmotionClickListener {
 
     public static final int REQUEST_SELECT_PHOTO = 1;
     private CompositeSubscription mCompositeSubscription;
@@ -47,6 +63,8 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
     private List<EmotionItem> mEmotionItems = new ArrayList<>();
     private PublishPhotoGridAdapter mGridAdapter;
     private EmotionPagerAdapter mEmotionPagerAdapter;
+    private EmojiAssetDbHelper dbHelper;
+    private Vibrator vibrator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +100,7 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
 
     @Override
     public void initEvents() {
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         mCompositeSubscription = new CompositeSubscription();
 
         mBinding.toolbarInclude.backArrowIv.setOnClickListener(this);
@@ -94,6 +113,7 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
         mBinding.bottomLayout.emotionDeleteIv.setOnClickListener(this);
 
         mEmotionPagerAdapter = new EmotionPagerAdapter(this, mEmotionItems);
+        mEmotionPagerAdapter.setOnEmotionClickListener(this);
         mBinding.bottomLayout.emotionViewpager.setAdapter(mEmotionPagerAdapter);
 
         mBinding.inputEt.setOnTouchListener(new View.OnTouchListener() {
@@ -106,6 +126,8 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
                 return false;
             }
         });
+
+        mBinding.inputEt.setFilters(new InputFilter[]{emotionFilter});
 
         mBinding.bottomLayout.emotionViewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -132,6 +154,42 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
         });
     }
 
+    private InputFilter emotionFilter = new InputFilter() {
+
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+            // 是delete直接返回
+            if ("".equals(source)) {
+                return null;
+            }
+            CharSequence result = source;
+            if (dbHelper == null) {
+                dbHelper = new EmojiAssetDbHelper(getApplicationContext());
+            }
+            String value = dbHelper.queryEmotionValue(EmojiAssetDbHelper.DB_EMOTION, source.toString());
+            try {
+                Bitmap bitmap = ImageBitmapCache.getInstance().getBitmapFromMemCache(value);
+                if (bitmap == null) {
+                    InputStream inputStream = getAssets().open(value);
+                    bitmap = BitmapFactory.decodeStream(inputStream);
+                    int size = DensityUtil.dip2px(20);
+                    bitmap = CommonUtils.zoomBitmap(bitmap, size);
+                    ImageBitmapCache.getInstance().addBitmapToMemCache(value, bitmap);
+                    Log.i("sqsong", "Load New Bitmap! " + source.toString());
+                }
+                SpannableString emotionSpanned = new SpannableString(result);
+                ImageSpan span = new ImageSpan(getApplicationContext(), bitmap);
+                emotionSpanned.setSpan(span, 0, source.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                result =  emotionSpanned;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return result;
+        }
+
+    };
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -146,7 +204,8 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
                 startActivityForResult(intent, REQUEST_SELECT_PHOTO);
                 break;
             case R.id.publish_alt_iv:
-
+                Intent altIntent = new Intent(this, FriendsActivity.class);
+                startActivity(altIntent);
                 break;
             case R.id.publish_topic_iv:
                 String text = mBinding.inputEt.getText().toString();
@@ -160,9 +219,14 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
                 Toast.makeText(PublishStatusActivity.this, "More Function!", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.emotion_delete_iv:
-
+                deleteEmotionOrText();
                 break;
         }
+    }
+
+    private void deleteEmotionOrText() {
+        vibrator.vibrate(10);
+        CommonUtils.deleteFace(mBinding.inputEt );
     }
 
     private void toggleEmojiVisiblity() {
@@ -197,6 +261,15 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
             intent.putExtra(PhotoSelectPreviewActivity.FROM_PUBLISH_DIRECT, true);
         }
         startActivityForResult(intent, REQUEST_SELECT_PHOTO);
+    }
+
+    @Override
+    public void onEmotionClick(View view, Emotion emotion, int position) {
+        vibrator.vibrate(10);
+        String name = emotion.getName();
+        Editable editable = mBinding.inputEt.getEditableText();
+        int start = mBinding.inputEt.getSelectionStart();
+        editable.insert(start, name);
     }
 
     @Override
@@ -280,10 +353,31 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (mBinding.bottomLayout.emotionLl.getVisibility() == View.GONE) {
+            mBinding.inputEt.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showInputKeyBoard(true);
+                }
+            }, 200);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        showInputKeyBoard(false);
+        mBinding.inputEt.clearFocus();
+    }
+
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
             if (mBinding.bottomLayout.emotionLl.getVisibility() == View.VISIBLE) {
                 mBinding.bottomLayout.emotionLl.setVisibility(View.GONE);
+                mBinding.bottomLayout.publishEmojiIv.setImageResource(R.drawable.selector_publish_face);
                 return true;
             }
         }
@@ -297,4 +391,5 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
             mCompositeSubscription.unsubscribe();
         }
     }
+
 }

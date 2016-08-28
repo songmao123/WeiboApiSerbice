@@ -7,6 +7,7 @@ import com.modong.service.model.WeiboGroups;
 import com.modong.service.model.WeiboStatus;
 import com.modong.service.model.WeiboStatusList;
 import com.modong.service.model.WeiboUser;
+import com.modong.service.model.WeiboUserList;
 
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -60,4 +61,8 @@ public interface WeiboApi {
 
     @GET("place/users/photos.json")
     Observable<WeiboStatusList> getUserPhotoList(@Query("uid") long uid, @Query("page") int page/*, @Query("count") int count*/);
+
+    /** 获取用户的关注列表 */
+    @GET("friendships/friends.json")
+    Observable<WeiboUserList> getFriendsData(@Query("uid") long uid, @Query("cursor") int cursor, @Query("count") int count);
 }

@@ -133,4 +133,24 @@ public class EmojiAssetDbHelper {
         return itemList;
     }
 
+    public synchronized String queryEmotionValue(String dbName, String name) {
+        String value = name;
+        SQLiteDatabase database = this.openDatabase(dbName);
+        Cursor cursor = null;
+        try {
+            cursor = database.rawQuery("select * from emotion where name = ?", new String[]{name});
+            if (cursor != null && cursor.moveToNext()) {
+                value = cursor.getString(cursor.getColumnIndex(WeiboDbConstants.COLUMN_VALUE));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            database.close();
+        }
+        return value;
+    }
+
 }
