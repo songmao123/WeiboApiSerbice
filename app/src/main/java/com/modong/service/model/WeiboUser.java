@@ -2,7 +2,6 @@ package com.modong.service.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.StrictMode;
 
 import com.modong.service.R;
 
@@ -47,6 +46,7 @@ public class WeiboUser implements Parcelable {
     private int bi_followers_count;
     private String lang;
     private int urank;
+    private String pinyin;
 
     public WeiboUser() {}
 
@@ -88,6 +88,7 @@ public class WeiboUser implements Parcelable {
         online_status = in.readInt();
         bi_followers_count = in.readInt();
         lang = in.readString();
+        pinyin = in.readString();
     }
 
     @Override
@@ -129,6 +130,7 @@ public class WeiboUser implements Parcelable {
         dest.writeInt(online_status);
         dest.writeInt(bi_followers_count);
         dest.writeString(lang);
+        dest.writeString(pinyin);
     }
 
     @Override
@@ -446,5 +448,13 @@ public class WeiboUser implements Parcelable {
 
     public void setUrank(int urank) {
         this.urank = urank;
+    }
+
+    public String getPinyin() {
+        return pinyin;
+    }
+
+    public void setPinyin(String pinyin) {
+        this.pinyin = pinyin;
     }
 }

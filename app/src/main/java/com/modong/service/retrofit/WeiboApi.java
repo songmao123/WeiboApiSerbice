@@ -1,5 +1,7 @@
 package com.modong.service.retrofit;
 
+import com.modong.service.model.CreateOrDestoryStatus;
+import com.modong.service.model.FavoriteStatusList;
 import com.modong.service.model.RepostStatusList;
 import com.modong.service.model.SplashData;
 import com.modong.service.model.WeiboCommentList;
@@ -9,7 +11,10 @@ import com.modong.service.model.WeiboStatusList;
 import com.modong.service.model.WeiboUser;
 import com.modong.service.model.WeiboUserList;
 
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 import rx.Observable;
 
@@ -46,7 +51,6 @@ public interface WeiboApi {
     @GET("statuses/user_timeline.json")
     Observable<WeiboStatusList> getUserStatusLists(@Query("screen_name") String screenName, @Query("page") int page, @Query("count") int count);
 
-
     /** 获取单条微博信息*/
     @GET("statuses/show.json")
     Observable<WeiboStatus> getSingleWeiboStatus(@Query("id") long statusId);
@@ -59,10 +63,25 @@ public interface WeiboApi {
     @GET("comments/show.json ")
     Observable<WeiboCommentList> getCommentList(@Query("id") long statusId, @Query("page") int pageIndex);
 
+    /** 获取用户微博相册列表*/
     @GET("place/users/photos.json")
     Observable<WeiboStatusList> getUserPhotoList(@Query("uid") long uid, @Query("page") int page/*, @Query("count") int count*/);
 
     /** 获取用户的关注列表 */
     @GET("friendships/friends.json")
     Observable<WeiboUserList> getFriendsData(@Query("uid") long uid, @Query("cursor") int cursor, @Query("count") int count);
+
+    /** 添加收藏*/
+    @FormUrlEncoded
+    @POST("favorites/create.json")
+    Observable<CreateOrDestoryStatus> crateFavorite(@Field("id") long statusId);
+
+    /** 删除收藏*/
+    @FormUrlEncoded
+    @POST("favorites/destroy.json")
+    Observable<CreateOrDestoryStatus> destoryFavorite(@Field("id") long statusId);
+
+    /** 获取收藏微博列表*/
+    @GET("favorites.json")
+    Observable<FavoriteStatusList> getFavoriteStatusList(@Query("page") int page, @Query("count") int count);
 }

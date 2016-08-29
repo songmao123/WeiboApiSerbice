@@ -15,6 +15,8 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ImageSpan;
+import android.text.style.URLSpan;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -33,8 +35,10 @@ import com.modong.service.adapter.EmotionPagerAdapter;
 import com.modong.service.adapter.PublishPhotoGridAdapter;
 import com.modong.service.databinding.ActivityPublishStatusBinding;
 import com.modong.service.db.EmojiAssetDbHelper;
-import com.modong.service.db.WeiboDbConstants;
+import com.modong.service.fragment.status.util.ClickableTextViewMentionLinkOnTouchListener;
 import com.modong.service.fragment.status.util.ImageBitmapCache;
+import com.modong.service.fragment.status.util.WeiboPattern;
+import com.modong.service.fragment.status.util.WeiboURLSpan;
 import com.modong.service.model.Emotion;
 import com.modong.service.model.EmotionItem;
 import com.modong.service.utils.CommonUtils;
@@ -57,6 +61,8 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
         EmotionPagerAdapter.OnEmotionClickListener {
 
     public static final int REQUEST_SELECT_PHOTO = 1;
+    public static final int REQUEST_SELECT_MENTION = 2;
+
     private CompositeSubscription mCompositeSubscription;
     private ActivityPublishStatusBinding mBinding;
     private ArrayList<String> mSelectPhotos = new ArrayList<>();
@@ -116,17 +122,7 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
         mEmotionPagerAdapter.setOnEmotionClickListener(this);
         mBinding.bottomLayout.emotionViewpager.setAdapter(mEmotionPagerAdapter);
 
-        mBinding.inputEt.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (mBinding.bottomLayout.emotionLl.getVisibility() == View.VISIBLE) {
-                    mBinding.bottomLayout.emotionLl.setVisibility(View.GONE);
-                    mBinding.bottomLayout.publishEmojiIv.setImageResource(R.drawable.selector_publish_face);
-                }
-                return false;
-            }
-        });
-
+        mBinding.inputEt.setOnTouchListener(touchListener);
         mBinding.inputEt.setFilters(new InputFilter[]{emotionFilter});
 
         mBinding.bottomLayout.emotionViewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -154,6 +150,20 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
         });
     }
 
+    private View.OnTouchListener touchListener = new View.OnTouchListener() {
+        ClickableTextViewMentionLinkOnTouchListener listener = new ClickableTextViewMentionLinkOnTouchListener();
+
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            if (mBinding.bottomLayout.emotionLl.getVisibility() == View.VISIBLE) {
+                mBinding.bottomLayout.emotionLl.setVisibility(View.GONE);
+                mBinding.bottomLayout.publishEmojiIv.setImageResource(R.drawable.selector_publish_face);
+                mBinding.inputEt.setSelection(mBinding.inputEt.getText().length() - 1);
+            }
+            return listener.onTouch(view, motionEvent);
+        }
+    };
+
     private InputFilter emotionFilter = new InputFilter() {
 
         @Override
@@ -163,28 +173,46 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
                 return null;
             }
             CharSequence result = source;
-            if (dbHelper == null) {
-                dbHelper = new EmojiAssetDbHelper(getApplicationContext());
-            }
-            String value = dbHelper.queryEmotionValue(EmojiAssetDbHelper.DB_EMOTION, source.toString());
-            try {
-                Bitmap bitmap = ImageBitmapCache.getInstance().getBitmapFromMemCache(value);
-                if (bitmap == null) {
-                    InputStream inputStream = getAssets().open(value);
-                    bitmap = BitmapFactory.decodeStream(inputStream);
-                    int size = DensityUtil.dip2px(20);
-                    bitmap = CommonUtils.zoomBitmap(bitmap, size);
-                    ImageBitmapCache.getInstance().addBitmapToMemCache(value, bitmap);
-                    Log.i("sqsong", "Load New Bitmap! " + source.toString());
-                }
+
+            if (result.toString().startsWith("@")) {
                 SpannableString emotionSpanned = new SpannableString(result);
-                ImageSpan span = new ImageSpan(getApplicationContext(), bitmap);
-                emotionSpanned.setSpan(span, 0, source.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                result =  emotionSpanned;
-            } catch (Exception e) {
-                e.printStackTrace();
+                Linkify.addLinks(emotionSpanned, WeiboPattern.MENTION_URL, WeiboPattern.MENTION_SCHEME);
+                URLSpan[] urlSpans = emotionSpanned.getSpans(0, emotionSpanned.length(), URLSpan.class);
+                WeiboURLSpan weiboSpan = null;
+                for (URLSpan urlSpan : urlSpans) {
+                    weiboSpan = new WeiboURLSpan(urlSpan.getURL());
+                    int s = emotionSpanned.getSpanStart(urlSpan);
+                    int e = emotionSpanned.getSpanEnd(urlSpan);
+                    emotionSpanned.removeSpan(urlSpan);
+                    emotionSpanned.setSpan(weiboSpan, s, e, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+                result = emotionSpanned;
             }
 
+            if (result.toString().startsWith("[")) {
+                if (dbHelper == null) {
+                    dbHelper = new EmojiAssetDbHelper(getApplicationContext());
+                }
+                String value = dbHelper.queryEmotionValue(EmojiAssetDbHelper.DB_EMOTION, source.toString());
+                try {
+                    Bitmap bitmap = ImageBitmapCache.getInstance().getBitmapFromMemCache(value);
+                    if (bitmap == null) {
+                        InputStream inputStream = getAssets().open(value);
+                        bitmap = BitmapFactory.decodeStream(inputStream);
+                        int size = DensityUtil.dip2px(20);
+                        bitmap = CommonUtils.zoomBitmap(bitmap, size);
+                        ImageBitmapCache.getInstance().addBitmapToMemCache(value, bitmap);
+                        Log.i("sqsong", "Load New Bitmap! " + source.toString());
+                    }
+                    SpannableString emotionSpanned = new SpannableString(result);
+                    ImageSpan span = new ImageSpan(getApplicationContext(), bitmap);
+                    emotionSpanned.setSpan(span, 0, source.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    result =  emotionSpanned;
+                    Log.i("sqsong", "Input Result: " + result);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
             return result;
         }
 
@@ -205,7 +233,7 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
                 break;
             case R.id.publish_alt_iv:
                 Intent altIntent = new Intent(this, FriendsActivity.class);
-                startActivity(altIntent);
+                startActivityForResult(altIntent, REQUEST_SELECT_MENTION);
                 break;
             case R.id.publish_topic_iv:
                 String text = mBinding.inputEt.getText().toString();
@@ -216,7 +244,7 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
                 toggleEmojiVisiblity();
                 break;
             case R.id.publish_more_iv:
-                Toast.makeText(PublishStatusActivity.this, "More Function!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PublishStatusActivity.this, "更多功能,敬请期待!!!", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.emotion_delete_iv:
                 deleteEmotionOrText();
@@ -276,12 +304,18 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
+            if (data == null) return;
             if (requestCode == REQUEST_SELECT_PHOTO) {
-                if (data == null) return;
                 ArrayList<String> datas = data.getStringArrayListExtra(SelectPhotoActivity.DATA_SELECTED_PHOTO);
                 mSelectPhotos.clear();
                 mSelectPhotos.addAll(datas);
                 mGridAdapter.notifyDataSetChanged();
+            }
+            if (requestCode == REQUEST_SELECT_MENTION) {
+                String screenName = data.getStringExtra(FriendsActivity.MENTION_NAME);
+                Editable editable = mBinding.inputEt.getEditableText();
+                int start = mBinding.inputEt.getSelectionStart();
+                editable.insert(start, "@" + screenName + " ");
             }
         }
     }

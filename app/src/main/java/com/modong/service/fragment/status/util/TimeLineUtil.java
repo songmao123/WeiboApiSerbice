@@ -10,6 +10,7 @@ import android.text.Spanned;
 import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,6 +21,8 @@ import com.modong.service.model.WeiboComment;
 import com.modong.service.model.WeiboStatus;
 import com.modong.service.model.WeiboUser;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -68,17 +71,28 @@ public class TimeLineUtil {
                     int k = matcher.start();
                     int m = matcher.end();
 
-                    Bitmap cacheBitmap = ImageBitmapCache.getInstance().getBitmapFromMemCache(key);
+                    String value = dbHelper.queryEmotionValue(EmojiAssetDbHelper.DB_EMOTION, key);
+                    Bitmap cacheBitmap = ImageBitmapCache.getInstance().getBitmapFromMemCache(value);
                     Bitmap bitmap = null;
                     if (cacheBitmap != null) {
                         bitmap = cacheBitmap;
                     } else {
-                        byte[] data = dbHelper.getEmojiBlob(EmojiAssetDbHelper.DB_NAME_EMOJI,key);
-                        if (data == null) continue;
-                        bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                        int size = context.getResources().getDimensionPixelSize(R.dimen.emotion_size);
-                        bitmap = zoomBitmap(bitmap, size);
-                        ImageBitmapCache.getInstance().addBitmapToMemCache(key, bitmap);
+                        try {
+                            InputStream inputStream = context.getAssets().open(value);
+                            cacheBitmap = BitmapFactory.decodeStream(inputStream);
+                            int size = context.getResources().getDimensionPixelSize(R.dimen.emotion_size);
+                            bitmap = zoomBitmap(cacheBitmap, size);
+                            ImageBitmapCache.getInstance().addBitmapToMemCache(value, bitmap);
+                            Log.i("sqsong", "Load New Emotion Bitmap --> " + key);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+//                        byte[] data = dbHelper.getEmojiBlob(EmojiAssetDbHelper.DB_NAME_EMOJI,key);
+//                        if (data == null) continue;
+//                        bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+//                        int size = context.getResources().getDimensionPixelSize(R.dimen.emotion_size);
+//                        bitmap = zoomBitmap(bitmap, size);
+//                        ImageBitmapCache.getInstance().addBitmapToMemCache(value, bitmap);
                     }
                     ImageSpan imageSpan = new ImageSpan(context, bitmap, ImageSpan.ALIGN_BOTTOM);
                     spannStr.setSpan(imageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -112,17 +126,22 @@ public class TimeLineUtil {
                     int k = matcher.start();
                     int m = matcher.end();
 
-                    Bitmap cacheBitmap = ImageBitmapCache.getInstance().getBitmapFromMemCache(key);
+                    String value = dbHelper.queryEmotionValue(EmojiAssetDbHelper.DB_EMOTION, key);
+                    Bitmap cacheBitmap = ImageBitmapCache.getInstance().getBitmapFromMemCache(value);
                     Bitmap bitmap = null;
                     if (cacheBitmap != null) {
                         bitmap = cacheBitmap;
                     } else {
-                        byte[] data = dbHelper.getEmojiBlob(EmojiAssetDbHelper.DB_NAME_EMOJI, key);
-                        if (data == null) continue;
-                        bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                        int size = context.getResources().getDimensionPixelSize(R.dimen.emotion_size);
-                        bitmap = zoomBitmap(bitmap, size);
-                        ImageBitmapCache.getInstance().addBitmapToMemCache(key, bitmap);
+                        try {
+                            InputStream inputStream = context.getAssets().open(value);
+                            cacheBitmap = BitmapFactory.decodeStream(inputStream);
+                            int size = context.getResources().getDimensionPixelSize(R.dimen.emotion_size);
+                            bitmap = zoomBitmap(cacheBitmap, size);
+                            ImageBitmapCache.getInstance().addBitmapToMemCache(value, bitmap);
+                            Log.i("sqsong", "Load New Emotion Bitmap --> " + key);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                     ImageSpan imageSpan = new ImageSpan(context, bitmap, ImageSpan.ALIGN_BOTTOM);
                     spannStr.setSpan(imageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -172,13 +191,6 @@ public class TimeLineUtil {
                     } else {
                         buffer.append((diffTime / 3600) + "小时前");
                     }
-//                    if (diffTime < 3600 && diffTime >= 60) {
-//                        buffer.append((diffTime / 60) + "分钟前");
-//                    } else if (diffTime < 60) {
-//                        buffer.append("刚刚");
-//                    } else {
-//                        buffer.append("今天").append(" ").append(formatDate(createCal.getTimeInMillis(), "HH:mm"));
-//                    }
                 } else if (currentcal.get(Calendar.DAY_OF_MONTH) - createCal.get(Calendar.DAY_OF_MONTH) == 1) {// 前一天
                     buffer.append("昨天").append(" ").append(formatDate(createCal.getTimeInMillis(), "HH:mm"));
                 }

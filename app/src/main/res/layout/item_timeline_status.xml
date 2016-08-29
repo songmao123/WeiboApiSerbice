@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorStatusWhiteBg"
+    android:clipChildren="false"
     android:orientation="vertical">
 
     <LinearLayout
@@ -24,6 +25,7 @@
                 android:id="@+id/user_avatar_civ"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:background="?selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_account_circle_grey" />
 
             <ImageView
@@ -47,6 +49,7 @@
                 android:id="@+id/user_name_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="Google谷歌爱好者"
@@ -197,6 +200,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clipChildren="false"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -207,7 +211,6 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackground"
             android:gravity="center"
-            android:onClick="onClick"
             android:orientation="horizontal"
             android:paddingBottom="8dp"
             android:paddingTop="8dp">
@@ -215,7 +218,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_status_forward" />
+                android:src="@drawable/timeline_icon_retweet" />
 
             <TextView
                 android:id="@+id/forward_tv"
@@ -245,7 +248,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_status_comment" />
+                android:src="@drawable/timeline_icon_comment" />
 
             <TextView
                 android:id="@+id/comment_tv"
@@ -267,15 +270,18 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="?attr/selectableItemBackground"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingBottom="8dp"
             android:paddingTop="8dp">
 
             <ImageView
+                android:id="@+id/like_iv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_status_like" />
+                android:src="@drawable/timeline_icon_unlike" />
 
             <TextView
                 android:id="@+id/like_tv"

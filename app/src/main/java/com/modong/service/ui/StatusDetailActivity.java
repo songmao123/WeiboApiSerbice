@@ -14,20 +14,22 @@ import android.widget.Toast;
 
 import com.gxz.library.StickyNavLayout;
 import com.modong.service.BaseActivity;
-import com.modong.service.BaseApplication;
 import com.modong.service.R;
 import com.modong.service.adapter.SimpleFragmentPagerAdapter;
 import com.modong.service.databinding.ActivityStatusDetailBinding;
 import com.modong.service.fragment.CommentListFragment;
 import com.modong.service.fragment.RepostListFragment;
 import com.modong.service.fragment.status.util.TimeLineUtil;
+import com.modong.service.model.CreateOrDestoryStatus;
 import com.modong.service.model.WeiboStatus;
+import com.modong.service.retrofit.WeiboApi;
 import com.modong.service.retrofit.WeiboApiFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.adapter.rxjava.HttpException;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -101,6 +103,7 @@ public class StatusDetailActivity extends BaseActivity implements View.OnClickLi
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
 
         mCompositeSubscription = new CompositeSubscription();
+        mBinding.collectIv.setOnClickListener(this);
 
         String[] tabTitles = {"转发", "评论"};
         SimpleFragmentPagerAdapter mFragmentPagerAdapter = new SimpleFragmentPagerAdapter(getSupportFragmentManager(), this, tabTitles, mFragments);
@@ -178,12 +181,50 @@ public class StatusDetailActivity extends BaseActivity implements View.OnClickLi
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 break;
+            case R.id.collect_iv:
+                setFavorite();
+                break;
+        }
+    }
+
+    private void setFavorite() {
+        final boolean favorited = mWeiboStatus.isFavorited();
+        mCompositeSubscription.add(getFavoriteObservable(favorited)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Action1<CreateOrDestoryStatus>() {
+                @Override
+                public void call(CreateOrDestoryStatus createOrDestoryStatus) {
+                    if (favorited) {
+                        Toast.makeText(StatusDetailActivity.this, "已取消收藏", Toast.LENGTH_SHORT).show();
+                        mWeiboStatus.setFavorited(false);
+                        mBinding.collectIv.setImageResource(R.drawable.radar_card_around_collect);
+                    } else {
+                        Toast.makeText(StatusDetailActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
+                        mWeiboStatus.setFavorited(true);
+                        mBinding.collectIv.setImageResource(R.drawable.radar_card_around_collect_lighted);
+                    }
+                }
+            }, new Action1<Throwable>() {
+                @Override
+                public void call(Throwable throwable) {
+                    int code = ((HttpException) throwable).code();
+                    Toast.makeText(StatusDetailActivity.this, "Error Code: " + code, Toast.LENGTH_SHORT).show();
+                }
+            }));
+    }
+
+    private Observable<CreateOrDestoryStatus> getFavoriteObservable(boolean favorite) {
+        WeiboApi weiboApi = WeiboApiFactory.createWeiboApi();
+        if (favorite) {
+            return weiboApi.destoryFavorite(mWeiboStatus.getId());
+        } else {
+            return weiboApi.crateFavorite(mWeiboStatus.getId());
         }
     }
 
     private void getStatusInfo() {
-        String access_token = BaseApplication.getInstance().getAccountBean().getAccessToken().getAccess_token();
-        mCompositeSubscription.add(WeiboApiFactory.createWeiboApi(null, access_token).getSingleWeiboStatus(mStatusId)
+        mCompositeSubscription.add(WeiboApiFactory.createWeiboApi().getSingleWeiboStatus(mStatusId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new Action1<WeiboStatus>() {

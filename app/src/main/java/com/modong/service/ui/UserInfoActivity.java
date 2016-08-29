@@ -20,7 +20,6 @@ import com.modong.service.BaseApplication;
 import com.modong.service.R;
 import com.modong.service.adapter.SimpleFragmentPagerAdapter;
 import com.modong.service.databinding.ActivityUserInfoBinding;
-import com.modong.service.fragment.BlankFragment;
 import com.modong.service.fragment.user.UserInfoFragment;
 import com.modong.service.fragment.user.UserPhotoListFragment;
 import com.modong.service.fragment.user.UserStatusFragment;
@@ -120,6 +119,7 @@ public class UserInfoActivity extends BaseActivity implements AppBarLayout.OnOff
         String[] tabTitles = {"主页", "微博", "相册"};
         SimpleFragmentPagerAdapter mFragmentPagerAdapter = new SimpleFragmentPagerAdapter(getSupportFragmentManager(), this, tabTitles, mFragments);
         mBinding.viewpager.setAdapter(mFragmentPagerAdapter);
+        mBinding.viewpager.setOffscreenPageLimit(2);
         mBinding.tabLayout.setupWithViewPager(mBinding.viewpager);
         mBinding.tabLayout.setTabMode(TabLayout.MODE_FIXED);
         mBinding.viewpager.setCurrentItem(1);

@@ -55,6 +55,14 @@ public class DataInflateHelper {
         binding.statusPublishTimeTv.setText(TimeLineUtil.getPublishTime(weiboStatus.getCreated_at()));
         binding.statusFromTv.setText(Html.fromHtml(weiboStatus.getSource()).toString());
         TimeLineUtil.setImageVerified(binding.verifiedIv, weiboUser);
+
+        boolean favorited = weiboStatus.isFavorited();
+        if (favorited) {
+            binding.collectIv.setImageResource(R.drawable.radar_card_around_collect_lighted);
+        } else {
+            binding.collectIv.setImageResource(R.drawable.radar_card_around_collect);
+        }
+
         SpannableString spannableText = weiboStatus.getSpannableText();
         if (spannableText != null) {
             binding.statusContentTv.setText(weiboStatus.getSpannableText());

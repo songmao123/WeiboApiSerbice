@@ -7,9 +7,9 @@
             android:icon="@mipmap/ic_weibo"
             android:title="Weibo" />
         <item
-            android:id="@+id/nav_me"
-            android:icon="@mipmap/ic_email"
-            android:title='\@ Me' />
+            android:id="@+id/nav_favorite"
+            android:icon="@mipmap/ic_collection"
+            android:title='Favorite' />
         <!--<item
             android:id="@+id/nav_comment"
             android:icon="@mipmap/ic_comment"

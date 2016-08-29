@@ -16,6 +16,7 @@ public class WeiboStatus implements Parcelable {
     private String idstr;
     private String text;
     private String source;
+    private boolean liked;
     private boolean favorited;
     private boolean truncated;
     private String in_reply_to_status_id;
@@ -35,7 +36,6 @@ public class WeiboStatus implements Parcelable {
     private String created_at;
     private SpannableString spannableText;
 
-
     protected WeiboStatus(Parcel in) {
         id = in.readLong();
         mid = in.readLong();
@@ -43,6 +43,7 @@ public class WeiboStatus implements Parcelable {
         text = in.readString();
         source = in.readString();
         favorited = in.readByte() != 0;
+        liked = in.readByte() != 0;
         truncated = in.readByte() != 0;
         in_reply_to_status_id = in.readString();
         in_reply_to_user_id = in.readString();
@@ -69,6 +70,7 @@ public class WeiboStatus implements Parcelable {
         dest.writeString(text);
         dest.writeString(source);
         dest.writeByte((byte) (favorited ? 1 : 0));
+        dest.writeByte((byte) (liked ? 1 : 0));
         dest.writeByte((byte) (truncated ? 1 : 0));
         dest.writeString(in_reply_to_status_id);
         dest.writeString(in_reply_to_user_id);
@@ -142,6 +144,14 @@ public class WeiboStatus implements Parcelable {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public boolean isLiked() {
+        return liked;
+    }
+
+    public void setLiked(boolean liked) {
+        this.liked = liked;
     }
 
     public boolean isFavorited() {

@@ -40,7 +40,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@id/id_stickynavlayout_topview"
-
                     android:scrollbars="none">
 
                     <LinearLayout
@@ -147,12 +146,12 @@
                                 </LinearLayout>
 
                                 <ImageView
-                                    android:id="@+id/more_action_iv"
+                                    android:id="@+id/collect_iv"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginRight="2dp"
                                     android:padding="8dp"
-                                    android:src="@drawable/ic_arrow_down" />
+                                    android:src="@drawable/radar_card_around_collect" />
 
                             </LinearLayout>
 

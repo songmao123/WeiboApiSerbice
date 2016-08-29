@@ -23,7 +23,6 @@ import java.util.Map;
  */
 public class EmojiAssetDbHelper {
 
-    public static final String DB_NAME_EMOJI = "emoji.db";
     public static final String DB_EMOTION = "emotion.db";
 
     private Context context;
@@ -59,28 +58,6 @@ public class EmojiAssetDbHelper {
         os.flush();
         os.close();
         is.close();
-    }
-
-    public synchronized byte[] getEmojiBlob(String dbName, String key) {
-        long startTime = System.currentTimeMillis();
-        byte[] bytes = null;
-        SQLiteDatabase database = this.openDatabase(dbName);
-        Cursor cursor = null;
-        try {
-            cursor = database.rawQuery("select * from emoji where phrase = ?", new String[]{key});
-            if (cursor != null && cursor.moveToNext()) {
-                bytes = cursor.getBlob(cursor.getColumnIndex(WeiboDbConstants.COLUMN_PICBYTES));
-            }
-            Log.i("sqsong", "Query Emoji Cost Time: " + (System.currentTimeMillis() - startTime) + "ms");
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-            database.close();
-        }
-        return bytes;
     }
 
     public synchronized List<EmotionItem> queryEmotionList(String dbName) {

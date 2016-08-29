@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import com.modong.service.databinding.ActivityMainBinding;
 import com.modong.service.databinding.NavHeaderMainBinding;
-import com.modong.service.fragment.IncludeMeFragment;
+import com.modong.service.fragment.FavoriteFragment;
 import com.modong.service.fragment.LikeFragment;
 import com.modong.service.fragment.WeiboFragment;
 import com.modong.service.model.AccountBean;
@@ -82,7 +82,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private void initFragments() {
         mFragments.add(WeiboFragment.newInstance());
-        mFragments.add(IncludeMeFragment.newInstance());
+        mFragments.add(FavoriteFragment.newInstance());
         mFragments.add(LikeFragment.newInstance());
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -122,13 +122,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (id == R.id.nav_weibo) {
             showSelectedFragment(0);
             mBinding.appBarMain.toolbar.setTitle("全部微博");
-        } else if (id == R.id.nav_me) {
+        } else if (id == R.id.nav_favorite) {
             showSelectedFragment(1);
-            mBinding.appBarMain.toolbar.setTitle("@ 我");
+            mBinding.appBarMain.toolbar.setTitle("收藏");
         } /*else if (id == R.id.nav_comment) {
             showSelectedFragment(2);
             mBinding.appBarMain.toolbar.setTitle("评论我");
-        } */else if (id == R.id.nav_like) {
+        } */ else if (id == R.id.nav_like) {
             showSelectedFragment(3);
             mBinding.appBarMain.toolbar.setTitle("赞我");
         } else if (id == R.id.nav_share) {

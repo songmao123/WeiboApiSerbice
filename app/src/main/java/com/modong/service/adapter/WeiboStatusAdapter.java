@@ -1,10 +1,13 @@
 package com.modong.service.adapter;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.text.Html;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -95,7 +98,7 @@ public class WeiboStatusAdapter extends BaseQuickAdapter<WeiboStatus> implements
 
         int repostsCount = weiboStatus.getReposts_count();
         int commentsCount = weiboStatus.getComments_count();
-        int attitudesCount = weiboStatus.getAttitudes_count();
+        final int attitudesCount = weiboStatus.getAttitudes_count();
         if (repostsCount > 0) {
             helper.setText(R.id.forward_tv,  TimeLineUtil.getCounter(repostsCount));
         } else {
@@ -118,7 +121,44 @@ public class WeiboStatusAdapter extends BaseQuickAdapter<WeiboStatus> implements
         LinearLayout comment_ll = helper.getView(R.id.comment_ll);
         comment_ll.setOnClickListener(this);
         LinearLayout like_ll = helper.getView(R.id.like_ll);
-        like_ll.setOnClickListener(this);
+        like_ll.setOnClickListener(null);
+
+        final ImageView like_iv = helper.getView(R.id.like_iv);
+        final TextView like_tv = helper.getView(R.id.like_tv);
+        final boolean liked = weiboStatus.isLiked();
+        if (liked) {
+            like_iv.setImageResource(R.drawable.timeline_icon_like);
+            like_tv.setTextColor(mContext.getResources().getColor(R.color.colorUserName));
+        } else {
+            like_iv.setImageResource(R.drawable.timeline_icon_unlike);
+            like_tv.setTextColor(mContext.getResources().getColor(R.color.colorGrey));
+        }
+        like_ll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean liked = weiboStatus.isLiked();
+                int likeCount = weiboStatus.getAttitudes_count();
+                if (liked) {
+                    like_iv.setImageResource(R.drawable.timeline_icon_unlike);
+                    weiboStatus.setLiked(false);
+                    weiboStatus.setAttitudes_count(likeCount - 1);
+                    like_tv.setTextColor(mContext.getResources().getColor(R.color.colorGrey));
+                } else {
+                    like_iv.setImageResource(R.drawable.timeline_icon_like);
+                    weiboStatus.setLiked(true);
+                    weiboStatus.setAttitudes_count(likeCount + 1);
+                    like_tv.setTextColor(mContext.getResources().getColor(R.color.colorUserName));
+                }
+                like_tv.setText(TimeLineUtil.getCounter(weiboStatus.getAttitudes_count()));
+                ObjectAnimator scaleX = ObjectAnimator.ofFloat(like_iv, "scaleX", 1.0f, 1.5f, 1.0f);
+                ObjectAnimator scaleY = ObjectAnimator.ofFloat(like_iv, "scaleY", 1.0f, 1.5f, 1.0f);
+                AnimatorSet set = new AnimatorSet();
+                set.playTogether(scaleX, scaleY);
+                set.setDuration(800);
+                set.setInterpolator(new OvershootInterpolator());
+                set.start();
+            }
+        });
         comment_ll.setTag(weiboStatus);
 
         LinearLayout forward_status_ll = helper.getView(R.id.forward_status_ll);

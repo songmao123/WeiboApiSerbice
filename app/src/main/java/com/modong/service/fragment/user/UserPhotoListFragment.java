@@ -2,14 +2,12 @@ package com.modong.service.fragment.user;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.modong.service.BaseActivity;
 import com.modong.service.BaseApplication;
 import com.modong.service.R;
 import com.modong.service.databinding.FragmentUserPhotoListBinding;
@@ -19,7 +17,6 @@ import com.modong.service.retrofit.WeiboApiFactory;
 import com.modong.service.ui.UserInfoActivity;
 
 import retrofit2.adapter.rxjava.HttpException;
-import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -70,7 +67,7 @@ public class UserPhotoListFragment extends AbstractLazyFragment {
         if(!isPrepared || !isVisible) {
             return;
         }
-        getPhotoList();
+//        getPhotoList();
     }
 
     private void getPhotoList() {
