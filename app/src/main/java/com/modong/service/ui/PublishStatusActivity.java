@@ -71,6 +71,7 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
     private EmotionPagerAdapter mEmotionPagerAdapter;
     private EmojiAssetDbHelper dbHelper;
     private Vibrator vibrator;
+    private int softInputHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,10 +156,11 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
 
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (mBinding.bottomLayout.emotionLl.getVisibility() == View.VISIBLE) {
-                mBinding.bottomLayout.emotionLl.setVisibility(View.GONE);
+            if (mBinding.bottomLayout.emotionLl.isShown()) {
+                lockContentHeight();
+                hideEmotionLayout(true);
+                unLockContentHeight();
                 mBinding.bottomLayout.publishEmojiIv.setImageResource(R.drawable.selector_publish_face);
-                mBinding.inputEt.setSelection(mBinding.inputEt.getText().length() - 1);
             }
             return listener.onTouch(view, motionEvent);
         }
@@ -259,20 +261,62 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
 
     private void toggleEmojiVisiblity() {
         final LinearLayout emotionLl = mBinding.bottomLayout.emotionLl;
-        if (emotionLl.getVisibility() == View.GONE) {
-            showInputKeyBoard(false);
-            mBinding.bottomLayout.publishEmojiIv.setImageResource(R.drawable.selector_publish_keyboard);
-            emotionLl.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    emotionLl.setVisibility(View.VISIBLE);
-                }
-            }, 200);
-        } else {
-            emotionLl.setVisibility(View.GONE);
-            showInputKeyBoard(true);
+        if (emotionLl.isShown()) {
+            lockContentHeight();
+            hideEmotionLayout(true);
+            unLockContentHeight();
             mBinding.bottomLayout.publishEmojiIv.setImageResource(R.drawable.selector_publish_face);
+        } else {
+            lockContentHeight();
+            showEmotionLayout();
+            unLockContentHeight();
+            mBinding.bottomLayout.publishEmojiIv.setImageResource(R.drawable.selector_publish_keyboard);
         }
+//        if (emotionLl.getVisibility() == View.GONE) {
+//            showInputKeyBoard(false);
+//            mBinding.bottomLayout.publishEmojiIv.setImageResource(R.drawable.selector_publish_keyboard);
+//            emotionLl.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    emotionLl.setVisibility(View.VISIBLE);
+//                }
+//            }, 200);
+//        } else {
+//            emotionLl.setVisibility(View.GONE);
+//            showInputKeyBoard(true);
+//            mBinding.bottomLayout.publishEmojiIv.setImageResource(R.drawable.selector_publish_face);
+//        }
+    }
+
+    private void showEmotionLayout() {
+        if (softInputHeight == 0) {
+            softInputHeight = CommonUtils.getSupportSoftInputHeight(this);
+        }
+        ViewGroup.LayoutParams params = mBinding.bottomLayout.emotionLl.getLayoutParams();
+        params.height = softInputHeight;
+        showInputKeyBoard(false);
+        mBinding.bottomLayout.emotionLl.setVisibility(View.VISIBLE);
+    }
+
+    private void hideEmotionLayout(boolean showSoftInput) {
+        mBinding.bottomLayout.emotionLl.setVisibility(View.GONE);
+        showInputKeyBoard(showSoftInput);
+    }
+
+    private void lockContentHeight() {
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mBinding.contentLl.getLayoutParams();
+        params.height = mBinding.contentLl.getHeight();
+        params.weight = 0;
+    }
+
+    private void unLockContentHeight() {
+        mBinding.inputEt.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mBinding.contentLl.getLayoutParams();
+                params.weight = 1;
+            }
+        }, 200);
     }
 
     @Override
@@ -409,8 +453,15 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-            if (mBinding.bottomLayout.emotionLl.getVisibility() == View.VISIBLE) {
-                mBinding.bottomLayout.emotionLl.setVisibility(View.GONE);
+//            if (mBinding.bottomLayout.emotionLl.getVisibility() == View.VISIBLE) {
+//                mBinding.bottomLayout.emotionLl.setVisibility(View.GONE);
+//                mBinding.bottomLayout.publishEmojiIv.setImageResource(R.drawable.selector_publish_face);
+//                return true;
+//            }
+            if (mBinding.bottomLayout.emotionLl.isShown()) {
+                lockContentHeight();
+                hideEmotionLayout(false);
+                unLockContentHeight();
                 mBinding.bottomLayout.publishEmojiIv.setImageResource(R.drawable.selector_publish_face);
                 return true;
             }

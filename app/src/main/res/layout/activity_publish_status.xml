@@ -11,6 +11,7 @@
         tools:context="com.modong.service.ui.PublishStatusActivity">
 
         <LinearLayout
+            android:id="@+id/content_ll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
