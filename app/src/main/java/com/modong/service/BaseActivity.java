@@ -5,13 +5,17 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.jude.swipbackhelper.SwipeListener;
+import com.modong.service.utils.PreferencesHelper;
 
 public abstract class BaseActivity extends AppCompatActivity {
+
+    protected PreferencesHelper mPreferenceHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mPreferenceHelper = new PreferencesHelper(this);
         if (!(this instanceof MainActivity)) {
             SwipeBackHelper.onCreate(this);
             configSwipeBackHelper();
@@ -46,6 +50,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public abstract void initEvents();
+
+    public PreferencesHelper getPreferenceHelper() {
+        return mPreferenceHelper;
+    }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {

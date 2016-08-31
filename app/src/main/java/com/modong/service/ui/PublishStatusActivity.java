@@ -60,6 +60,7 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
         PublishPhotoGridAdapter.OnRecyclerViewItemClickListener,
         EmotionPagerAdapter.OnEmotionClickListener {
 
+    public static final String SOFT_INPUT_HEIGHT = "soft_input_height";
     public static final int REQUEST_SELECT_PHOTO = 1;
     public static final int REQUEST_SELECT_MENTION = 2;
 
@@ -71,7 +72,7 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
     private EmotionPagerAdapter mEmotionPagerAdapter;
     private EmojiAssetDbHelper dbHelper;
     private Vibrator vibrator;
-    private int softInputHeight;
+    private InputMethodManager inputMethodManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,6 +150,13 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
                 }
             }
         });
+
+        mBinding.inputEt.post(new Runnable() {
+            @Override
+            public void run() {
+                CommonUtils.getSupportSoftInputHeight(PublishStatusActivity.this);
+            }
+        });
     }
 
     private View.OnTouchListener touchListener = new View.OnTouchListener() {
@@ -159,7 +167,7 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
             if (mBinding.bottomLayout.emotionLl.isShown()) {
                 lockContentHeight();
                 hideEmotionLayout(true);
-                unLockContentHeight();
+                unlockContentHeightDelayed();
                 mBinding.bottomLayout.publishEmojiIv.setImageResource(R.drawable.selector_publish_face);
             }
             return listener.onTouch(view, motionEvent);
@@ -260,47 +268,43 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
     }
 
     private void toggleEmojiVisiblity() {
-        final LinearLayout emotionLl = mBinding.bottomLayout.emotionLl;
-        if (emotionLl.isShown()) {
+        if (mBinding.bottomLayout.emotionLl.isShown()) {
             lockContentHeight();
             hideEmotionLayout(true);
-            unLockContentHeight();
+            unlockContentHeightDelayed();
             mBinding.bottomLayout.publishEmojiIv.setImageResource(R.drawable.selector_publish_face);
         } else {
-            lockContentHeight();
-            showEmotionLayout();
-            unLockContentHeight();
-            mBinding.bottomLayout.publishEmojiIv.setImageResource(R.drawable.selector_publish_keyboard);
+            if (isSoftInputShown()) {
+                lockContentHeight();
+                showEmotionLayout();
+                unlockContentHeightDelayed();
+                mBinding.bottomLayout.publishEmojiIv.setImageResource(R.drawable.selector_publish_keyboard);
+            } else {
+                showEmotionLayout();
+            }
         }
-//        if (emotionLl.getVisibility() == View.GONE) {
-//            showInputKeyBoard(false);
-//            mBinding.bottomLayout.publishEmojiIv.setImageResource(R.drawable.selector_publish_keyboard);
-//            emotionLl.postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    emotionLl.setVisibility(View.VISIBLE);
-//                }
-//            }, 200);
-//        } else {
-//            emotionLl.setVisibility(View.GONE);
-//            showInputKeyBoard(true);
-//            mBinding.bottomLayout.publishEmojiIv.setImageResource(R.drawable.selector_publish_face);
-//        }
     }
 
+    private boolean isSoftInputShown() {
+        return CommonUtils.getSupportSoftInputHeight(this) != 0;
+    }
+
+
     private void showEmotionLayout() {
+        int softInputHeight = CommonUtils.getSupportSoftInputHeight(this);
         if (softInputHeight == 0) {
-            softInputHeight = CommonUtils.getSupportSoftInputHeight(this);
+            softInputHeight = mPreferenceHelper.getInt(SOFT_INPUT_HEIGHT, DensityUtil.dip2px(220));
         }
-        ViewGroup.LayoutParams params = mBinding.bottomLayout.emotionLl.getLayoutParams();
-        params.height = softInputHeight;
         showInputKeyBoard(false);
+        mBinding.bottomLayout.emotionLl.getLayoutParams().height = softInputHeight;
         mBinding.bottomLayout.emotionLl.setVisibility(View.VISIBLE);
     }
 
     private void hideEmotionLayout(boolean showSoftInput) {
         mBinding.bottomLayout.emotionLl.setVisibility(View.GONE);
-        showInputKeyBoard(showSoftInput);
+        if (showSoftInput) {
+            showInputKeyBoard(true);
+        }
     }
 
     private void lockContentHeight() {
@@ -309,12 +313,12 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
         params.weight = 0;
     }
 
-    private void unLockContentHeight() {
+    private void unlockContentHeightDelayed() {
         mBinding.inputEt.postDelayed(new Runnable() {
             @Override
             public void run() {
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mBinding.contentLl.getLayoutParams();
-                params.weight = 1;
+                ((LinearLayout.LayoutParams) mBinding.contentLl.getLayoutParams()).weight = 1;
+                mBinding.getRoot().requestLayout();
             }
         }, 200);
     }
@@ -422,8 +426,11 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
     }
 
     private void showInputKeyBoard(boolean show) {
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (inputMethodManager == null) {
+            inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        }
         if (show) {
+            mBinding.inputEt.requestFocus();
             inputMethodManager.showSoftInput(mBinding.inputEt, InputMethodManager.SHOW_FORCED);
         } else {
             inputMethodManager.hideSoftInputFromWindow(mBinding.inputEt.getWindowToken(), 0);
@@ -431,42 +438,21 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        if (mBinding.bottomLayout.emotionLl.getVisibility() == View.GONE) {
-            mBinding.inputEt.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    showInputKeyBoard(true);
-                }
-            }, 200);
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        showInputKeyBoard(false);
-        mBinding.inputEt.clearFocus();
-    }
-
-    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-//            if (mBinding.bottomLayout.emotionLl.getVisibility() == View.VISIBLE) {
-//                mBinding.bottomLayout.emotionLl.setVisibility(View.GONE);
-//                mBinding.bottomLayout.publishEmojiIv.setImageResource(R.drawable.selector_publish_face);
-//                return true;
-//            }
             if (mBinding.bottomLayout.emotionLl.isShown()) {
-                lockContentHeight();
                 hideEmotionLayout(false);
-                unLockContentHeight();
                 mBinding.bottomLayout.publishEmojiIv.setImageResource(R.drawable.selector_publish_face);
                 return true;
             }
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        hideEmotionLayout(false);
     }
 
     @Override

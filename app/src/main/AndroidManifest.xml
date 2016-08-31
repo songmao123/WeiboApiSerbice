@@ -63,7 +63,7 @@
         <activity android:name=".ui.PhotoSelectPreviewActivity" />
         <activity
             android:name=".ui.PublishStatusActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="adjustResize|stateVisible" />
         <activity android:name=".ui.FriendsActivity"></activity>
     </application>
 

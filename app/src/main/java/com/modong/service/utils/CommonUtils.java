@@ -9,9 +9,12 @@ import android.os.Build;
 import android.support.v7.graphics.Palette;
 import android.text.Editable;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.widget.EditText;
 
+import com.modong.service.BaseActivity;
 import com.modong.service.fragment.status.util.WeiboPattern;
+import com.modong.service.ui.PublishStatusActivity;
 
 import java.util.regex.Matcher;
 
@@ -171,7 +174,7 @@ public class CommonUtils {
         text.delete(cursorIndex - delLen, cursorIndex);// 删除光标之前长度为delLen的字符
     }
 
-    public static int getSupportSoftInputHeight(Activity activity) {
+    public static int getSupportSoftInputHeight(BaseActivity activity) {
         Rect r = new Rect();
         /**
          * decorView是window中的最顶层view，可以从window中通过getDecorView获取到decorView。
@@ -192,8 +195,16 @@ public class CommonUtils {
             // When SDK Level >= 20 (Android L), the softInputHeight will contain the height of softButtonsBar (if has)
             softInputHeight = softInputHeight - getSoftButtonsBarHeight(activity);
         }
-        if (softInputHeight == 0) {
-            softInputHeight = DensityUtil.dip2px(220);
+
+        if (softInputHeight < 0) {
+            Log.e("sqsong", "EmotionKeyboard--Warning: value of softInputHeight is below zero!");
+        }
+
+        if (softInputHeight > 0) {
+            PreferencesHelper helper = activity.getPreferenceHelper();
+            if (helper != null) {
+                helper.put(PublishStatusActivity.SOFT_INPUT_HEIGHT, softInputHeight);
+            }
         }
         return softInputHeight;
     }
