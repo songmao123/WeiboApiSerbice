@@ -64,6 +64,7 @@ public class FriendsActivity extends BaseActivity implements View.OnClickListene
         mAdapter = new FriendsOrderListAdapter(this, mUsers);
         mAdapter.setOnRecyclerViewItemClickListener(this);
         mBinding.recyclerView.setAdapter(mAdapter);
+        mBinding.fastscroll.setRecyclerView(mBinding.recyclerView);
 
         final StickyRecyclerHeadersDecoration headersDecor = new StickyRecyclerHeadersDecoration(mAdapter);
         mBinding.recyclerView.addItemDecoration(headersDecor);

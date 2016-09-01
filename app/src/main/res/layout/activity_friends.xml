@@ -30,10 +30,22 @@
                 layout="@layout/toolbar_photo_preview" />
         </android.support.v7.widget.Toolbar>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <com.futuremind.recyclerviewfastscroll.FastScroller
+                android:id="@+id/fastscroll"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"/>
+        </RelativeLayout>
     </LinearLayout>
 </layout>

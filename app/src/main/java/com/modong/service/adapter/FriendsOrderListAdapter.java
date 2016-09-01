@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.futuremind.recyclerviewfastscroll.SectionTitleProvider;
 import com.modong.service.R;
 import com.modong.service.fragment.status.util.TimeLineUtil;
 import com.modong.service.model.WeiboUser;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
  * Created by 青松 on 2016/8/29.
  */
 public class FriendsOrderListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements
-        StickyRecyclerHeadersAdapter<FriendsOrderListAdapter.FriendItemHeaderViewHolder> {
+        StickyRecyclerHeadersAdapter<FriendsOrderListAdapter.FriendItemHeaderViewHolder>, SectionTitleProvider {
 
     public static final int VIEW_TYPE_HEADER = 0;
     public static final int VIEW_TYPE_ITEM = 1;
@@ -32,6 +33,15 @@ public class FriendsOrderListAdapter extends RecyclerView.Adapter<RecyclerView.V
     private ArrayList<WeiboUser> mUsers;
     private LayoutInflater inflater;
     private OnRecyclerViewItemClickListener listener;
+
+    @Override
+    public String getSectionTitle(int position) {
+        if (position == 0) {
+            return "#";
+        } else {
+            return mUsers.get(position - 1).getPinyin().toUpperCase().substring(0, 1);
+        }
+    }
 
     public interface OnRecyclerViewItemClickListener {
         void onRecyclerViewHeaderClick(View view);
@@ -137,7 +147,7 @@ public class FriendsOrderListAdapter extends RecyclerView.Adapter<RecyclerView.V
         if (position == 0) {
             return -1;
         } else {
-            return mUsers.get(position).getPinyin().toUpperCase().charAt(0);
+            return mUsers.get(position - 1).getPinyin().toUpperCase().charAt(0);
         }
     }
 
