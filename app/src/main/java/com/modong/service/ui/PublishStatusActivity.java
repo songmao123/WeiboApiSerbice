@@ -264,7 +264,8 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
 
     private void deleteEmotionOrText() {
         vibrator.vibrate(10);
-        CommonUtils.deleteFace(mBinding.inputEt );
+//        CommonUtils.deleteFace(mBinding.inputEt );
+        mBinding.inputEt.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
     }
 
     private void toggleEmojiVisiblity() {
