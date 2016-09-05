@@ -108,7 +108,7 @@ public class EmotionFragment extends Fragment implements EmotionGridListAdapter.
         int paddingTB = DensityUtil.dip2px(15);
         recyclerView.setPadding(paddingTB, paddingTB, paddingTB, paddingTB);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 7));
-        EmotionGridItemDecoration decoration = new EmotionGridItemDecoration(7, DensityUtil.dip2px(23), false);
+        EmotionGridItemDecoration decoration = new EmotionGridItemDecoration(7, DensityUtil.dip2px(10), false);
         recyclerView.addItemDecoration(decoration);
         EmotionGridListAdapter adapter = new EmotionGridListAdapter(getActivity(), emotionList, this);
         recyclerView.setAdapter(adapter);
@@ -128,8 +128,7 @@ public class EmotionFragment extends Fragment implements EmotionGridListAdapter.
         if (context instanceof OnEmotionItemClickListener) {
             listener = (OnEmotionItemClickListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+            throw new RuntimeException(context.toString() + " must implement OnEmotionItemClickListener");
         }
     }
 
@@ -167,7 +166,7 @@ public class EmotionFragment extends Fragment implements EmotionGridListAdapter.
                 outRect.left = column * spacing / spanCount;
                 outRect.right = spacing - (column + 1) * spacing / spanCount;
                 if (position >= spanCount) {
-                    outRect.top = spacing;
+                    outRect.top = (int)(spacing * 2.0f);
                 }
             }
         }

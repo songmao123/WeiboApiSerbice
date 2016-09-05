@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.text.Html;
+import android.text.SpannableString;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
@@ -176,7 +177,13 @@ public class WeiboStatusAdapter extends BaseQuickAdapter<WeiboStatus> implements
             } else {
                 content = text;
             }
-            forward_status_content_tv.setText(TimeLineUtil.convertNormalStringToSpannableString(content));
+            SpannableString repostSpannableText = retweetedStatus.getRepostSpannableText();
+            if (repostSpannableText != null) {
+                forward_status_content_tv.setText(repostSpannableText);
+            } else {
+                TimeLineUtil.setSpannableText(forward_status_content_tv, retweetedStatus, content, null);
+            }
+
             LinearLayout forward_status_image_ll = helper.getView(R.id.forward_status_image_ll);
             List<WeiboPicture> retweetedPicUrls = retweetedStatus.getPic_urls();
             if (retweetedPicUrls != null && retweetedPicUrls.size() > 0) {

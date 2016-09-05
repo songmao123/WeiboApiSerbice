@@ -56,6 +56,55 @@ public class TimeLineUtil {
         return spannable;
     }
 
+    public static void setSpannableText(final TextView textView, final WeiboStatus weiboStatus, final String text, final OnSpannableTextFinishListener listener) {
+        textView.setText(text);
+        final Context context = textView.getContext();
+        new AsyncTask<String, Void, SpannableString>() {
+            @Override
+            protected SpannableString doInBackground(String... params) {
+                SpannableString spannStr = convertNormalStringToSpannableString(params[0]);
+                Matcher matcher = Pattern.compile("\\[(\\S+?)\\]").matcher(spannStr);
+                EmojiAssetDbHelper dbHelper = new EmojiAssetDbHelper(context);
+                while (matcher.find()) {
+                    if (isCancelled()) break;
+                    String key = matcher.group(0);
+                    int k = matcher.start();
+                    int m = matcher.end();
+
+                    String value = dbHelper.queryEmotionValue(EmojiAssetDbHelper.DB_EMOTION, key);
+                    Bitmap cacheBitmap = ImageBitmapCache.getInstance().getBitmapFromMemCache(value);
+                    Bitmap bitmap = null;
+                    if (cacheBitmap != null) {
+                        bitmap = cacheBitmap;
+                    } else {
+                        try {
+                            InputStream inputStream = context.getAssets().open(value);
+                            cacheBitmap = BitmapFactory.decodeStream(inputStream);
+                            int size = context.getResources().getDimensionPixelSize(R.dimen.emotion_size);
+                            bitmap = zoomBitmap(cacheBitmap, size);
+                            ImageBitmapCache.getInstance().addBitmapToMemCache(value, bitmap);
+                            Log.i("sqsong", "Load New Emotion Bitmap --> " + key);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    ImageSpan imageSpan = new ImageSpan(context, bitmap, ImageSpan.ALIGN_BOTTOM);
+                    spannStr.setSpan(imageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+                return spannStr;
+            }
+
+            @Override
+            protected void onPostExecute(SpannableString spannStr) {
+                weiboStatus.setRepostSpannableText(spannStr);
+                textView.setText(spannStr);
+                if (listener != null) {
+                    listener.onSpannableTextFinish();
+                }
+            }
+        }.execute(text);
+    }
+
     public static void setSpannableText(final TextView textView, final WeiboStatus weiboStatus, final OnSpannableTextFinishListener listener) {
         textView.setText(weiboStatus.getText());
         final Context context = textView.getContext();

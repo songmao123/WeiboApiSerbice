@@ -122,7 +122,6 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
         mBinding.bottomLayout.publishTopicIv.setOnClickListener(this);
         mBinding.bottomLayout.publishEmojiIv.setOnClickListener(this);
         mBinding.bottomLayout.publishMoreIv.setOnClickListener(this);
-        mBinding.bottomLayout.emotionDeleteIv.setOnClickListener(this);
 
         mPagerAdapter = new EmotionCategoryPagerAdapter(getSupportFragmentManager(), mFragments);
         mBinding.bottomLayout.emotionViewpager.setAdapter(mPagerAdapter);
@@ -259,16 +258,7 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
             case R.id.publish_more_iv:
                 Toast.makeText(PublishStatusActivity.this, "更多功能,敬请期待!!!", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.emotion_delete_iv:
-                deleteEmotionOrText();
-                break;
         }
-    }
-
-    private void deleteEmotionOrText() {
-        vibrator.vibrate(10);
-//        CommonUtils.deleteFace(mBinding.inputEt );
-        mBinding.inputEt.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
     }
 
     private void toggleEmojiVisiblity() {
@@ -292,7 +282,6 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
     private boolean isSoftInputShown() {
         return CommonUtils.getSupportSoftInputHeight(this) != 0;
     }
-
 
     private void showEmotionLayout() {
         mSoftInputHeight = CommonUtils.getSupportSoftInputHeight(this);
@@ -342,15 +331,6 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
         }
         startActivityForResult(intent, REQUEST_SELECT_PHOTO);
     }
-
-//    @Override
-//    public void onEmotionClick(View view, Emotion emotion, int position) {
-//        vibrator.vibrate(10);
-//        String name = emotion.getName();
-//        Editable editable = mBinding.inputEt.getEditableText();
-//        int start = mBinding.inputEt.getSelectionStart();
-//        editable.insert(start, name);
-//    }
 
     @Override
     public void onEmotionItemClick(View view, Emotion emotion, int position) {
@@ -402,7 +382,6 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
                     mEmotionItems.clear();
                     mEmotionItems.addAll(emotionItems);
                     addBottomTabNav(emotionItems);
-//                    mEmotionPagerAdapter.notifyDataSetChanged();
                     setEmotionFragments(emotionItems);
                 }
             }));
@@ -446,8 +425,6 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
         }
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
         textView.setGravity(Gravity.CENTER);
-//        int padding = DensityUtil.dip2px(10);
-//        textView.setPadding(0, padding, 0, padding);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(DensityUtil.dip2px(80), ViewGroup.LayoutParams.MATCH_PARENT);
         textView.setLayoutParams(params);
         return textView;
@@ -481,6 +458,7 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
     protected void onResume() {
         super.onResume();
         hideEmotionLayout(false);
+        mBinding.bottomLayout.publishEmojiIv.setImageResource(R.drawable.selector_publish_face);
     }
 
     @Override

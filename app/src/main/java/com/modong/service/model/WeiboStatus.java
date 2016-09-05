@@ -35,6 +35,7 @@ public class WeiboStatus implements Parcelable {
     private int mlevel;
     private String created_at;
     private SpannableString spannableText;
+    private SpannableString repostSpannableText;
 
     protected WeiboStatus(Parcel in) {
         id = in.readLong();
@@ -291,15 +292,18 @@ public class WeiboStatus implements Parcelable {
     }
 
     public SpannableString getSpannableText() {
-//        if (!TextUtils.isEmpty(spannableText)) {
-//            return spannableText;
-//        } else {
-//            return TimeLineUtil.convertNormalStringToSpannableString(text);
-//        }
         return spannableText;
     }
 
     public void setSpannableText(SpannableString spannableText) {
         this.spannableText = spannableText;
+    }
+
+    public SpannableString getRepostSpannableText() {
+        return repostSpannableText;
+    }
+
+    public void setRepostSpannableText(SpannableString repostSpannableText) {
+        this.repostSpannableText = repostSpannableText;
     }
 }

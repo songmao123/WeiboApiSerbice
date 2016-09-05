@@ -85,7 +85,14 @@ public class DataInflateHelper {
             binding.forwardStatusContentTv.setOnTouchListener(touchListener);
             String text = retweetedStatus.getText();
             String content = "@" + retweetedStatus.getUser().getName() + ": " + text;
-            binding.forwardStatusContentTv.setText(TimeLineUtil.convertNormalStringToSpannableString(content));
+//            binding.forwardStatusContentTv.setText(TimeLineUtil.convertNormalStringToSpannableString(content));
+            SpannableString repostSpannableText = retweetedStatus.getRepostSpannableText();
+            if (repostSpannableText != null) {
+                binding.forwardStatusContentTv.setText(repostSpannableText);
+            } else {
+                TimeLineUtil.setSpannableText(binding.forwardStatusContentTv, retweetedStatus, content, null);
+            }
+
             List<WeiboPicture> retweetedPicUrls = retweetedStatus.getPic_urls();
             if (retweetedPicUrls != null && retweetedPicUrls.size() > 0) {
                 binding.forwardStatusImageLl.setVisibility(View.VISIBLE);
