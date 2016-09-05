@@ -7,6 +7,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.text.Editable;
@@ -31,10 +34,10 @@ import android.widget.Toast;
 
 import com.modong.service.BaseActivity;
 import com.modong.service.R;
-import com.modong.service.adapter.EmotionPagerAdapter;
 import com.modong.service.adapter.PublishPhotoGridAdapter;
 import com.modong.service.databinding.ActivityPublishStatusBinding;
 import com.modong.service.db.EmojiAssetDbHelper;
+import com.modong.service.fragment.emotion.EmotionFragment;
 import com.modong.service.fragment.status.util.ClickableTextViewMentionLinkOnTouchListener;
 import com.modong.service.fragment.status.util.ImageBitmapCache;
 import com.modong.service.fragment.status.util.WeiboPattern;
@@ -57,8 +60,7 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 public class PublishStatusActivity extends BaseActivity implements View.OnClickListener,
-        PublishPhotoGridAdapter.OnRecyclerViewItemClickListener,
-        EmotionPagerAdapter.OnEmotionClickListener {
+        PublishPhotoGridAdapter.OnRecyclerViewItemClickListener, EmotionFragment.OnEmotionItemClickListener {
 
     public static final String SOFT_INPUT_HEIGHT = "soft_input_height";
     public static final int REQUEST_SELECT_PHOTO = 1;
@@ -69,10 +71,12 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
     private ArrayList<String> mSelectPhotos = new ArrayList<>();
     private List<EmotionItem> mEmotionItems = new ArrayList<>();
     private PublishPhotoGridAdapter mGridAdapter;
-    private EmotionPagerAdapter mEmotionPagerAdapter;
+    private List<Fragment> mFragments = new ArrayList<>();
     private EmojiAssetDbHelper dbHelper;
     private Vibrator vibrator;
     private InputMethodManager inputMethodManager;
+    private EmotionCategoryPagerAdapter mPagerAdapter;
+    public int mSoftInputHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,9 +124,8 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
         mBinding.bottomLayout.publishMoreIv.setOnClickListener(this);
         mBinding.bottomLayout.emotionDeleteIv.setOnClickListener(this);
 
-        mEmotionPagerAdapter = new EmotionPagerAdapter(this, mEmotionItems);
-        mEmotionPagerAdapter.setOnEmotionClickListener(this);
-        mBinding.bottomLayout.emotionViewpager.setAdapter(mEmotionPagerAdapter);
+        mPagerAdapter = new EmotionCategoryPagerAdapter(getSupportFragmentManager(), mFragments);
+        mBinding.bottomLayout.emotionViewpager.setAdapter(mPagerAdapter);
 
         mBinding.inputEt.setOnTouchListener(touchListener);
         mBinding.inputEt.setFilters(new InputFilter[]{emotionFilter});
@@ -154,7 +157,7 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
         mBinding.inputEt.post(new Runnable() {
             @Override
             public void run() {
-                CommonUtils.getSupportSoftInputHeight(PublishStatusActivity.this);
+                mSoftInputHeight = CommonUtils.getSupportSoftInputHeight(PublishStatusActivity.this);
             }
         });
     }
@@ -264,7 +267,8 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
 
     private void deleteEmotionOrText() {
         vibrator.vibrate(10);
-        CommonUtils.deleteFace(mBinding.inputEt );
+//        CommonUtils.deleteFace(mBinding.inputEt );
+        mBinding.inputEt.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
     }
 
     private void toggleEmojiVisiblity() {
@@ -291,12 +295,12 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
 
 
     private void showEmotionLayout() {
-        int softInputHeight = CommonUtils.getSupportSoftInputHeight(this);
-        if (softInputHeight == 0) {
-            softInputHeight = mPreferenceHelper.getInt(SOFT_INPUT_HEIGHT, DensityUtil.dip2px(220));
+        mSoftInputHeight = CommonUtils.getSupportSoftInputHeight(this);
+        if (mSoftInputHeight == 0) {
+            mSoftInputHeight = mPreferenceHelper.getInt(SOFT_INPUT_HEIGHT, DensityUtil.dip2px(220));
         }
         showInputKeyBoard(false);
-        mBinding.bottomLayout.emotionLl.getLayoutParams().height = softInputHeight;
+        mBinding.bottomLayout.emotionLl.getLayoutParams().height = mSoftInputHeight;
         mBinding.bottomLayout.emotionLl.setVisibility(View.VISIBLE);
     }
 
@@ -339,13 +343,26 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
         startActivityForResult(intent, REQUEST_SELECT_PHOTO);
     }
 
+//    @Override
+//    public void onEmotionClick(View view, Emotion emotion, int position) {
+//        vibrator.vibrate(10);
+//        String name = emotion.getName();
+//        Editable editable = mBinding.inputEt.getEditableText();
+//        int start = mBinding.inputEt.getSelectionStart();
+//        editable.insert(start, name);
+//    }
+
     @Override
-    public void onEmotionClick(View view, Emotion emotion, int position) {
+    public void onEmotionItemClick(View view, Emotion emotion, int position) {
         vibrator.vibrate(10);
-        String name = emotion.getName();
-        Editable editable = mBinding.inputEt.getEditableText();
-        int start = mBinding.inputEt.getSelectionStart();
-        editable.insert(start, name);
+        if (emotion == null) {
+            mBinding.inputEt.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
+        } else {
+            String name = emotion.getName();
+            Editable editable = mBinding.inputEt.getEditableText();
+            int start = mBinding.inputEt.getSelectionStart();
+            editable.insert(start, name);
+        }
     }
 
     @Override
@@ -385,9 +402,20 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
                     mEmotionItems.clear();
                     mEmotionItems.addAll(emotionItems);
                     addBottomTabNav(emotionItems);
-                    mEmotionPagerAdapter.notifyDataSetChanged();
+//                    mEmotionPagerAdapter.notifyDataSetChanged();
+                    setEmotionFragments(emotionItems);
                 }
             }));
+    }
+
+    private void setEmotionFragments(List<EmotionItem> emotionItems) {
+        if (emotionItems == null || emotionItems.size() <1) {
+            return;
+        }
+        for (EmotionItem item : emotionItems) {
+            mFragments.add(EmotionFragment.newInstance((ArrayList<Emotion>) item.getEmotionList()));
+        }
+        mPagerAdapter.notifyDataSetChanged();
     }
 
     private void addBottomTabNav(List<EmotionItem> emotionItems) {
@@ -418,9 +446,9 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
         }
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
         textView.setGravity(Gravity.CENTER);
-        int padding = DensityUtil.dip2px(10);
-        textView.setPadding(0, padding, 0, padding);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(DensityUtil.dip2px(80), ViewGroup.LayoutParams.WRAP_CONTENT);
+//        int padding = DensityUtil.dip2px(10);
+//        textView.setPadding(0, padding, 0, padding);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(DensityUtil.dip2px(80), ViewGroup.LayoutParams.MATCH_PARENT);
         textView.setLayoutParams(params);
         return textView;
     }
@@ -460,6 +488,26 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
         super.onDestroy();
         if (mCompositeSubscription != null) {
             mCompositeSubscription.unsubscribe();
+        }
+    }
+
+    public static class EmotionCategoryPagerAdapter extends FragmentPagerAdapter {
+
+        private List<Fragment> mFragments = new ArrayList<>();
+
+        public EmotionCategoryPagerAdapter(FragmentManager fm, List<Fragment> fragments) {
+            super(fm);
+            this.mFragments = fragments;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragments.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragments.size();
         }
     }
 
