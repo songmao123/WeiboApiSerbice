@@ -33,10 +33,6 @@ public class WeiboURLSpan extends ClickableSpan {
         this.mURL = src.readString();
     }
 
-    public int getSpanTypeId() {
-        return 11;
-    }
-
     public int describeContents() {
         return 0;
     }
@@ -62,13 +58,10 @@ public class WeiboURLSpan extends ClickableSpan {
                     .iconDefaultColorRes(R.color.finestWhite)
                     .disableIconMenu(true)
                     .show(getURL());
-         } else {
+        } else {
             Intent intent = new Intent("android.intent.action.VIEW", uri);
             intent.putExtra("com.android.browser.application_id", context.getPackageName());
             context.startActivity(intent);
-//            intent = new Intent("android.intent.action.VIEW", uri);
-//            intent.putExtra("com.android.browser.application_id", context.getPackageName());
-//            context.startActivity(intent);
         }
 
     }
@@ -90,7 +83,6 @@ public class WeiboURLSpan extends ClickableSpan {
                 Toast.makeText(widget.getContext(), "Coyp Success!", Toast.LENGTH_SHORT).show();
             }
         }
-
     }
 
     public void updateDrawState(TextPaint tp) {

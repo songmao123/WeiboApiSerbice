@@ -88,8 +88,8 @@ public class TimeLineUtil {
                             e.printStackTrace();
                         }
                     }
-                    ImageSpan imageSpan = new ImageSpan(context, bitmap, ImageSpan.ALIGN_BOTTOM);
-                    spannStr.setSpan(imageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        ImageSpan imageSpan = new ImageSpan(context, bitmap, ImageSpan.ALIGN_BOTTOM);
+                        spannStr.setSpan(imageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
                 return spannStr;
             }
@@ -136,12 +136,6 @@ public class TimeLineUtil {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-//                        byte[] data = dbHelper.getEmojiBlob(EmojiAssetDbHelper.DB_NAME_EMOJI,key);
-//                        if (data == null) continue;
-//                        bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-//                        int size = context.getResources().getDimensionPixelSize(R.dimen.emotion_size);
-//                        bitmap = zoomBitmap(bitmap, size);
-//                        ImageBitmapCache.getInstance().addBitmapToMemCache(value, bitmap);
                     }
                     ImageSpan imageSpan = new ImageSpan(context, bitmap, ImageSpan.ALIGN_BOTTOM);
                     spannStr.setSpan(imageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

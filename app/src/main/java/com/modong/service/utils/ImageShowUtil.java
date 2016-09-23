@@ -91,9 +91,12 @@ public class ImageShowUtil {
                 frame.setTag(new Pair(position, images));
                 frame.setOnClickListener(imageClickListener);
                 String imageUrl = images.get(position).getThumbnail_pic();
-                if (imageUrl.contains("thumbnail")) {
+                if (imageUrl.endsWith(".gif")) {
+                    imageUrl = imageUrl.replace("thumbnail", "bmiddle");
+                } else if (imageUrl.contains("thumbnail") && !imageUrl.endsWith(".gif")) {
                     imageUrl = imageUrl.replace("thumbnail", "large");
                 }
+
                 Glide.with(mContext).load(imageUrl).diskCacheStrategy(DiskCacheStrategy.SOURCE).centerCrop()
                         .crossFade().into(imageView);
                 linearLayout.addView(frame);
