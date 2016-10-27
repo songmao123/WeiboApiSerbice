@@ -26,6 +26,7 @@ import com.modong.service.utils.DensityUtil;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.List;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
@@ -35,11 +36,13 @@ public class ImagePreviewActivity extends BaseActivity implements ImageGalleryAd
 
     public static final String IMAGE_LIST = "image_list";
     public static final String IMAGE_POSITION = "image_position";
+    public static final String LOCAL_IMAGE = "local_image";
 
-    private ActivityImagePreviewBinding mBinding;
-    private PaletteColorType paletteColorType;
-    private List<String> imageList;
     private int position;
+    private boolean isLocal;
+    private List<String> imageList;
+    private PaletteColorType paletteColorType;
+    private ActivityImagePreviewBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +77,7 @@ public class ImagePreviewActivity extends BaseActivity implements ImageGalleryAd
         if (intent != null) {
             position = intent.getIntExtra(IMAGE_POSITION, 0);
             imageList = intent.getStringArrayListExtra(IMAGE_LIST);
+            isLocal = intent.getBooleanExtra(LOCAL_IMAGE, false);
         }
     }
 
@@ -121,38 +125,42 @@ public class ImagePreviewActivity extends BaseActivity implements ImageGalleryAd
     @Override
     public void loadFullScreenImage(final PhotoViewAttacher attacher, final ImageView iv, String imageUrl, int width, final LinearLayout bglinearLayout) {
         if (TextUtils.isEmpty(imageUrl)) return;
-        if (imageUrl.contains("thumbnail")) {
-            imageUrl = imageUrl.replace("thumbnail", "large");
-        }
-        Picasso.with(this).load(imageUrl)/*.resize(width, 0)*/.into(iv, new Callback() {
-            @Override
-            public void onError() {}
-
-            @Override
-            public void onSuccess() {
-                attacher.update();
-                Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
-                Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                    public void onGenerated(Palette palette) {
-                        applyPalette(palette, bglinearLayout);
-                    }
-                });
-            }
-        });
-
-
-        /*Glide.with(this).load(imageUrl).asBitmap()
-            .into(new SimpleTarget<Bitmap>() {
+        if (isLocal) {
+            Picasso.with(this).load(new File(imageUrl)).into(iv, new Callback() {
                 @Override
-                public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-                    iv.setImageBitmap(bitmap);
+                public void onError() {}
+
+                @Override
+                public void onSuccess() {
+                    attacher.update();
+                    Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
                     Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                         public void onGenerated(Palette palette) {
                             applyPalette(palette, bglinearLayout);
                         }
                     });
                 }
-        });*/
+            });
+        } else {
+            if (imageUrl.contains("thumbnail")) {
+                imageUrl = imageUrl.replace("thumbnail", "large");
+            }
+            Picasso.with(this).load(imageUrl).into(iv, new Callback() {
+                @Override
+                public void onError() {}
+
+                @Override
+                public void onSuccess() {
+                    attacher.update();
+                    Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
+                    Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                        public void onGenerated(Palette palette) {
+                            applyPalette(palette, bglinearLayout);
+                        }
+                    });
+                }
+            });
+        }
     }
 
     @Override
