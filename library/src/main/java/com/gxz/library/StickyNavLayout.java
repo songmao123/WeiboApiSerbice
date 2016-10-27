@@ -148,9 +148,6 @@ public class StickyNavLayout extends LinearLayout {
         //设置mTopViewHeight
         mTopViewHeight=topParams.height-stickOffset;
         Log.d(TAG, "onMeasure--mTopViewHeight:" + mTopViewHeight);
-
-
-
     }
 
     /**
@@ -177,7 +174,6 @@ public class StickyNavLayout extends LinearLayout {
             }
         });
     }
-
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -305,7 +301,7 @@ public class StickyNavLayout extends LinearLayout {
                 if (Math.abs(dy) > mTouchSlop) {
                     mDragging = true;
                     if (mInnerScrollView instanceof ScrollView) {
-                        // 如果topView没有隐藏
+
                         // 或sc的scrollY = 0 && topView隐藏 && 下拉，则拦截
                         if (!isTopHidden || (mInnerScrollView.getScrollY() == 0 && isTopHidden && dy > 0)) {
                             initVelocityTrackerIfNotExists();
@@ -464,17 +460,12 @@ public class StickyNavLayout extends LinearLayout {
 
         isTopHidden = getScrollY() == mTopViewHeight;
 
-
-        //set  listener 设置悬浮监听回调
+        //set listener 设置悬浮监听回调
         if (listener != null) {
-//            if(lastIsTopHidden!=isTopHidden){
-//                lastIsTopHidden=isTopHidden;
             listener.isStick(isTopHidden);
-//            }
             listener.scrollPercent((float) getScrollY() / (float) mTopViewHeight);
         }
     }
-//    private  boolean lastIsTopHidden;//记录上次是否悬浮
 
     @Override
     public void computeScroll() {
