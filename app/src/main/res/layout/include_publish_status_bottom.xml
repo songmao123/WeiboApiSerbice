@@ -144,7 +144,7 @@
             android:layout_height="wrap_content"
             android:background="@color/color_F2F2F2"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <View style="@style/Style_Horizontal_Line_2Px" />
 

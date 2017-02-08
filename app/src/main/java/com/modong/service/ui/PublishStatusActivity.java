@@ -240,6 +240,7 @@ public class PublishStatusActivity extends BaseActivity implements View.OnClickL
 
                 break;
             case R.id.publish_image_iv:
+                hideEmotionLayout(true);
                 Intent intent = new Intent(this, SelectPhotoActivity.class);
                 startActivityForResult(intent, REQUEST_SELECT_PHOTO);
                 break;

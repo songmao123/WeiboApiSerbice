@@ -59,11 +59,11 @@
         <activity
             android:name=".ui.SelectPhotoActivity"
             android:label="@string/title_activity_select_photo"
+            android:windowSoftInputMode="stateAlwaysHidden"
             android:theme="@style/AppTheme" />
         <activity android:name=".ui.PhotoSelectPreviewActivity" />
         <activity
-            android:name=".ui.PublishStatusActivity"
-            android:windowSoftInputMode="adjustResize|stateVisible" />
+            android:name=".ui.PublishStatusActivity" />
         <activity android:name=".ui.FriendsActivity"></activity>
     </application>
 

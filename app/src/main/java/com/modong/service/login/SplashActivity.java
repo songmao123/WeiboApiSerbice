@@ -21,7 +21,6 @@ import com.modong.service.databinding.ActivitySplashBinding;
 import com.modong.service.db.WeiboDbExecutor;
 import com.modong.service.model.AccessToken;
 import com.modong.service.model.AccountBean;
-import com.modong.service.model.SplashData;
 import com.modong.service.model.WeiboUser;
 import com.modong.service.retrofit.WeiboApiFactory;
 import com.modong.service.utils.Constants;
@@ -32,6 +31,7 @@ import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.sina.weibo.sdk.exception.WeiboException;
 
 import java.text.SimpleDateFormat;
+import java.util.Random;
 
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
@@ -103,7 +103,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
         int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
         decorView.setSystemUiVisibility(uiOptions);
 
-        decorView.setOnSystemUiVisibilityChangeListener (new View.OnSystemUiVisibilityChangeListener() {
+        decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
             @Override
             public void onSystemUiVisibilityChange(int visibility) {
                 if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
@@ -116,7 +116,11 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void fetchSplashImage() {
-        mSubscribe = WeiboApiFactory.createSplashApi().getSplashData()
+        int i = new Random().nextInt(Constants.TRANSITION_URLS.length);
+        Glide.with(getApplicationContext()).load(Constants.TRANSITION_URLS[i]).placeholder(R.drawable.img_transition_default)
+                .error(R.drawable.img_transition_default).into(mBinding.splashImage);
+
+        /*mSubscribe = WeiboApiFactory.createSplashApi().getSplashData()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<SplashData>() {
@@ -127,7 +131,12 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
                             Glide.with(getApplicationContext()).load(image).crossFade().into(mBinding.splashImage);
                         }
                     }
-                });
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        Log.i("sqsong", throwable.getMessage());
+                    }
+                });*/
     }
 
     @Override
@@ -161,8 +170,8 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Action1<AccountBean>() {
-        @Override
-        public void call(AccountBean accountBean) {
+            @Override
+            public void call(AccountBean accountBean) {
                 Intent intent = null;
                 if (accountBean != null) {
                     BaseApplication.getInstance().setAccountBean(accountBean);
